@@ -13,10 +13,12 @@ TEMPLATE = app
 
 SOURCES += src\dCache-gui.cpp\
         src\Logger.cpp\
-        src\dCacheMainWindow.cpp
+        src\dCacheMainWindow.cpp \
+        src\dCacheTools.cpp
 
 HEADERS  += include\dCacheMainWindow.h\
-            include\Logger.h
+            include\Logger.h \
+            include\dCacheTools.h
 
 FORMS    += ui\dCacheMainWindow.ui
 

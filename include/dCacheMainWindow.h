@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 #include "Logger.h"
+#include "dCacheTools.h"
 
 namespace Ui {
 class dCacheMainWindow;
@@ -23,7 +24,9 @@ signals :
 
 private:
     Ui::dCacheMainWindow *ui;
-    Logger m_logger;
+    Logger *m_logger;
+    dCacheTools *m_tools;
+
 };
 
 #endif // DCACHEMAINWINDOW_H

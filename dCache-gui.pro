@@ -11,10 +11,13 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = dCache-gui
 TEMPLATE = app
 
-
-SOURCES += src\main.cpp\
+SOURCES += src\dCache-gui.cpp\
+        src\Logger.cpp\
         src\dCacheMainWindow.cpp
 
-HEADERS  += include\dCacheMainWindow.h
+HEADERS  += include\dCacheMainWindow.h\
+            include\Logger.h
 
 FORMS    += ui\dCacheMainWindow.ui
+
+INCLUDEPATH += include

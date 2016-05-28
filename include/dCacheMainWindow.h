@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+#include "Logger.h"
+
 namespace Ui {
 class dCacheMainWindow;
 }
@@ -15,8 +17,13 @@ public:
     explicit dCacheMainWindow(QWidget *parent = 0);
     ~dCacheMainWindow();
 
+signals :
+    //Signal to Logegr
+    void log(QString type, QString message);
+
 private:
     Ui::dCacheMainWindow *ui;
+    Logger m_logger;
 };
 
 #endif // DCACHEMAINWINDOW_H

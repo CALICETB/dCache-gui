@@ -90,7 +90,7 @@ void dCacheTools::CheckProxy()
 
     checkproxy->setProcessEnvironment(env);
 
-    checkproxy->start("/usr/bin/voms-proxy-info");
+    checkproxy->start("/usr/bin/voms-proxy-info --timeleft");
     if(!checkproxy->waitForStarted())
     {
         emit log("ERROR", QString("voms-proxy-info %1").arg(checkproxy->errorString()));
@@ -107,7 +107,7 @@ void dCacheTools::readStdOut()
     while (!stream.atEnd()) {
         QString line = stream.readLine();
 
-        int found = line.indexOf("timeleft", 1,  Qt::CaseSensitive);
+        int found = line.indexOf("timeleft", 1, Qt::CaseInsensitive);
         if(found != -1)
         {
             timeleft = line;

@@ -68,8 +68,6 @@ void dCacheTools::CheckProxy()
     checkproxy = new QProcess();
     checkproxy->setProcessChannelMode(QProcess::ForwardedChannels);
 
-    connect(checkproxy, SIGNAL(readyReadStandardOutput()), this, SLOT(readyRead()));
-
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     env.insert("GRID_SECURITY_DIR", "/etc/grid-security");
     env.insert("X509_CERT_DIR", env.value("GRID_SECURITY_DIR") + "/certificates");
@@ -95,12 +93,7 @@ void dCacheTools::CheckProxy()
     checkproxy->start("/usr/bin/voms-proxy-info", args);
     if(!checkproxy->waitForStarted())
     {
-        emit log("ERROR", QString("voms-proxy-init %1").arg(checkproxy->errorString()));
+        emit log("ERROR", QString("voms-proxy-info %1").arg(checkproxy->errorString()));
         return;
     }
-}
-
-void dCacheTools::readyRead()
-{
-    emit log("INFO", checkproxy->readAllStandardOutput());
 }

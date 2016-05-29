@@ -63,7 +63,7 @@ QColor Logger::getColor(QString type)
         return QColor(Qt::blue);
     else if(type == "DEBUG")
         return QColor(Qt::blue);
-    else if(type == "VERBOSE")
+    else if(type == "INFO")
         return QColor(Qt::green);
     else if(type == "WARNING")
         return QColor(255,165,0);

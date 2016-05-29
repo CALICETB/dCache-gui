@@ -23,8 +23,6 @@ void dCacheTools::StartProxy()
     emit log("MESSAGE", "dCache-GUI : Start Proxy");
     startproxy = new QProcess();
 
-    connect(startproxy, SIGNAL(readyRead()), this, SLOT(readyRead()));
-
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     env.insert("GRID_SECURITY_DIR", "/etc/grid-security");
     env.insert("X509_CERT_DIR", env.value("GRID_SECURITY_DIR") + "/certificates");
@@ -58,7 +56,7 @@ void dCacheTools::StartProxy()
 
     if(!_password.isEmpty())
     {
-        emit log("VERBOSE", "Password received");
+        emit log("INFO", "Password received");
         startproxy->write(_password.toStdString().data());
         startproxy->closeWriteChannel();
     }
@@ -68,8 +66,9 @@ void dCacheTools::CheckProxy()
 {
     emit log("MESSAGE", "dCache-GUI : Check Proxy Validity");
     checkproxy = new QProcess();
+    checkproxy->setProcessChannelMode(QProcess::MergedChannels);
 
-    connect(checkproxy, SIGNAL(readyRead()), this, SLOT(readyRead()));
+    connect(checkproxy, SIGNAL(readyReadStandardOutput()), this, SLOT(readyRead()));
 
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     env.insert("GRID_SECURITY_DIR", "/etc/grid-security");
@@ -103,5 +102,5 @@ void dCacheTools::CheckProxy()
 
 void dCacheTools::readyRead()
 {
-    qDebug() << startproxy->readAll();
+    emit log("INFO", checkproxy->readAllStandardOutput())
 }

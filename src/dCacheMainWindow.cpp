@@ -31,6 +31,8 @@ dCacheMainWindow::dCacheMainWindow(QWidget *parent) :
     ui->StartCopy->setEnabled(false);
     ui->StopCopy->setEnabled(false);
     ui->ListFiles->setEnabled(false);
+
+    ui->ProxyValid_label->setText("<font color='Red'>Check Proxy!</font>");
 }
 
 dCacheMainWindow::~dCacheMainWindow()
@@ -80,4 +82,9 @@ void dCacheMainWindow::showPassword()
     {
         m_tools->setPassword(password);
     }
+}
+
+void dCacheMainWindow::updateProxy()
+{
+    ui->ProxyValid_label->setText("<font color='Green'>OK!</font>");
 }

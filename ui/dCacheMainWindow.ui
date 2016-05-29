@@ -134,7 +134,7 @@
     <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
-       <x>550</x>
+       <x>520</x>
        <y>10</y>
        <width>81</width>
        <height>61</height>
@@ -247,16 +247,16 @@
       </item>
      </layout>
     </widget>
-    <widget class="QWidget" name="layoutWidget">
+    <widget class="QWidget" name="">
      <property name="geometry">
       <rect>
        <x>520</x>
-       <y>90</y>
-       <width>111</width>
-       <height>16</height>
+       <y>80</y>
+       <width>74</width>
+       <height>34</height>
       </rect>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <layout class="QVBoxLayout" name="verticalLayout_6">
       <item>
        <widget class="QLabel" name="Proxy_label">
         <property name="text">

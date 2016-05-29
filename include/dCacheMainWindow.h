@@ -25,6 +25,7 @@ signals :
 public slots:
     void Configure();
     void showPassword();
+    void updateProxy();
 
 private:
     Ui::dCacheMainWindow *ui;

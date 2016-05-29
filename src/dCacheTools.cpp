@@ -22,6 +22,7 @@ void dCacheTools::StartProxy()
 {
     emit log("MESSAGE", "dCache-GUI : Start Proxy");
     startproxy = new QProcess();
+    startproxy->setProcessChannelMode(QProcess::ForwardedChannels);
 
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     env.insert("GRID_SECURITY_DIR", "/etc/grid-security");
@@ -59,6 +60,8 @@ void dCacheTools::StartProxy()
         emit log("INFO", "Password received");
         startproxy->write(_password.toStdString().data());
         startproxy->closeWriteChannel();
+        startproxy->waitForFinished();
+        emit ProxyOk();
     }
 }
 
@@ -66,7 +69,8 @@ void dCacheTools::CheckProxy()
 {
     emit log("MESSAGE", "dCache-GUI : Check Proxy Validity");
     checkproxy = new QProcess();
-    checkproxy->setProcessChannelMode(QProcess::ForwardedChannels);
+
+    connect(checkproxy, SIGNAL(readyReadStandardOutput()), this, SLOT(readStdOut()));
 
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     env.insert("GRID_SECURITY_DIR", "/etc/grid-security");
@@ -96,4 +100,15 @@ void dCacheTools::CheckProxy()
         emit log("ERROR", QString("voms-proxy-info %1").arg(checkproxy->errorString()));
         return;
     }
+    startproxy->waitForFinished();
+}
+
+void dCacheTools::readStdOut()
+{
+    checkproxy->setReadChannel(QProcess::StandardOutput);
+    QTextStream stream(&p);
+    while (!stream.atEnd()) {
+        QString line = stream.readLine();
+    }
+
 }

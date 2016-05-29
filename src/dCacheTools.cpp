@@ -102,5 +102,5 @@ void dCacheTools::CheckProxy()
 
 void dCacheTools::readyRead()
 {
-    emit log("INFO", checkproxy->readAllStandardOutput())
+    emit log("INFO", checkproxy->readAllStandardOutput());
 }

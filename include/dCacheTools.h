@@ -25,7 +25,7 @@ public slots:
     void readyRead();
 
 private:
-    QProcess *startproxy;
+    QProcess *startproxy, *checkproxy;
     QString _password;
 };
 

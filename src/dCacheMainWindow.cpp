@@ -16,6 +16,7 @@ dCacheMainWindow::dCacheMainWindow(QWidget *parent) :
     connect(this, SIGNAL(log(QString,QString)), m_logger, SLOT(Log(QString,QString)));
     connect(m_tools, SIGNAL(log(QString,QString)), m_logger, SLOT(Log(QString,QString)));
     connect(m_tools, SIGNAL(PasswordRequired()), this, SLOT(showPassword()));
+    connect(m_tools, SIGNAL(ProxyOk()), this, SLOT(updateProxy()));
 
     emit log("MESSAGE", "dCache-GUI started");
 

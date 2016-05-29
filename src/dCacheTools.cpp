@@ -22,7 +22,6 @@ void dCacheTools::StartProxy()
 {
     emit log("MESSAGE", "dCache-GUI : Start Proxy");
     startproxy = new QProcess();
-    startproxy->setProcessChannelMode(QProcess::ForwardedChannels);
 
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     env.insert("GRID_SECURITY_DIR", "/etc/grid-security");
@@ -106,7 +105,7 @@ void dCacheTools::CheckProxy()
 void dCacheTools::readStdOut()
 {
     checkproxy->setReadChannel(QProcess::StandardOutput);
-    QTextStream stream(&p);
+    QTextStream stream(checkproxy);
     while (!stream.atEnd()) {
         QString line = stream.readLine();
     }

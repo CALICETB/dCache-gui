@@ -103,16 +103,11 @@ void dCacheTools::readStdOut()
 {
     checkproxy->setReadChannel(QProcess::StandardOutput);
     QTextStream stream(checkproxy);
-    QString timeleft = "";
+
     while (!stream.atEnd()) {
         QString line = stream.readLine();
 
         int found = line.indexOf("timeleft", 1, Qt::CaseInsensitive);
-        if(found != -1)
-        {
-            timeleft = line;
-        }
+        emit log("INFO", QString::number(found));
     }
-
-    emit log("INFO", timeleft);
 }

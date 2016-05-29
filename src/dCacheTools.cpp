@@ -108,6 +108,7 @@ void dCacheTools::readStdOut()
     QTextStream stream(checkproxy);
     while (!stream.atEnd()) {
         QString line = stream.readLine();
+        qDebug() << line;
     }
 
 }

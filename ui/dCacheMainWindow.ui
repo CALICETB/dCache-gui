@@ -252,7 +252,7 @@
       <rect>
        <x>520</x>
        <y>80</y>
-       <width>74</width>
+       <width>111</width>
        <height>34</height>
       </rect>
      </property>
@@ -260,7 +260,7 @@
       <item>
        <widget class="QLabel" name="Proxy_label">
         <property name="text">
-         <string>Proxy Validity :</string>
+         <string>Proxy Validity</string>
         </property>
        </widget>
       </item>

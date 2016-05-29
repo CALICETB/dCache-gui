@@ -21,6 +21,8 @@ void dCacheTools::StartProxy()
     emit log("MESSAGE", "dCache-GUI : Start Proxy");
     startproxy = new QProcess();
 
+    connect(startproxy, SIGNAL(readyReadStandardOutput()), this, SLOT(readyRead()));
+
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     env.insert("GRID_SECURITY_DIR", "/etc/grid-security");
     env.insert("X509_CERT_DIR", env.value("GRID_SECURITY_DIR") + "/certificates");
@@ -64,4 +66,9 @@ void dCacheTools::CheckProxy()
 {
     emit log("MESSAGE", "dCache-GUI : Check Proxy Validity");
 
+}
+
+void dCacheTools::readyRead()
+{
+    emit log("VERBOSE", startproxy->readAll());
 }

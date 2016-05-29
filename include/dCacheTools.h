@@ -22,6 +22,7 @@ signals:
 public slots:
     void StartProxy();
     void CheckProxy();
+    void readyRead();
 
 private:
     QProcess *startproxy;

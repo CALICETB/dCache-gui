@@ -1,5 +1,7 @@
 #include "dCacheTools.h"
 
+#include <QDebug>
+
 dCacheTools::dCacheTools()
 {
     _password = "";
@@ -43,7 +45,7 @@ void dCacheTools::StartProxy()
     startproxy->setProcessEnvironment(env);
 
     QStringList args;
-    args << "-verify -voms calice:/calice/Role=production";
+    args << " -verify -voms calice:/calice/Role=production";
 
     startproxy->start("/usr/bin/voms-proxy-init", args);
     if(!startproxy->waitForStarted())
@@ -70,5 +72,5 @@ void dCacheTools::CheckProxy()
 
 void dCacheTools::readyRead()
 {
-    emit log("VERBOSE", startproxy->readAll());
+    QDebug() << startproxy->readAll();
 }

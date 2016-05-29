@@ -1,5 +1,5 @@
 #include "dCacheMainWindow.h"
-#include "ui_dcachemainwindow.h"
+#include "ui_dCacheMainWindow.h"
 
 #include <QInputDialog>
 

@@ -66,7 +66,7 @@ void dCacheTools::CheckProxy()
 {
     emit log("MESSAGE", "dCache-GUI : Check Proxy Validity");
     checkproxy = new QProcess();
-    checkproxy->setProcessChannelMode(QProcess::MergedChannels);
+    checkproxy->setProcessChannelMode(QProcess::ForwardedChannels);
 
     connect(checkproxy, SIGNAL(readyReadStandardOutput()), this, SLOT(readyRead()));
 

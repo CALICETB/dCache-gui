@@ -106,7 +106,7 @@ void dCacheTools::CheckProxy()
 void dCacheTools::readStdOut()
 {
     checkproxy->setReadChannel(QProcess::StandardOutput);
-    QTextStream stream(&p);
+    QTextStream stream(checkproxy);
     while (!stream.atEnd()) {
         QString line = stream.readLine();
     }

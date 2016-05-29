@@ -162,29 +162,36 @@
       <rect>
        <x>50</x>
        <y>170</y>
-       <width>281</width>
+       <width>320</width>
        <height>25</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0">
-       <widget class="QPushButton" name="StartCopy">
-        <property name="text">
-         <string>Start Copy</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
+      <item row="0" column="2">
        <widget class="QPushButton" name="StopCopy">
         <property name="text">
          <string>Stop Copy</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="2">
+      <item row="0" column="1">
+       <widget class="QPushButton" name="StartCopy">
+        <property name="text">
+         <string>Start Copy</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
        <widget class="QPushButton" name="ListFiles">
         <property name="text">
          <string>List Files in dir</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QPushButton" name="Configure">
+        <property name="text">
+         <string>Configure</string>
         </property>
        </widget>
       </item>
@@ -203,9 +210,9 @@
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_5">
         <item>
-         <widget class="QLabel" name="InputFile_label">
+         <widget class="QLabel" name="InputDir_label">
           <property name="text">
-           <string>Input File</string>
+           <string>Input Directory</string>
           </property>
          </widget>
         </item>
@@ -228,7 +235,7 @@
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
-         <widget class="QLineEdit" name="InputFile"/>
+         <widget class="QLineEdit" name="InputDir"/>
         </item>
         <item>
          <widget class="QLineEdit" name="BaseDir"/>

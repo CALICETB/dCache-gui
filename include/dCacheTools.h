@@ -1,8 +1,9 @@
 #ifndef DCACHETOOLS_H
 #define DCACHETOOLS_H
 
-#include "QString.h"
-#include "QThread.h"
+#include <QString>
+#include <QThread>
+#include <QProcess>
 
 class dCacheTools : public QThread
 {
@@ -12,13 +13,19 @@ public:
     ~dCacheTools();
 
     void run();
+    void setPassword(QString pass) {_password = pass;}
 
 signals:
-     void log(QString type, QString message);
+    void log(QString type, QString message);
+    void PasswordRequired();
 
 public slots:
-     void StartProxy();
-     void CheckProxy();
+    void StartProxy();
+    void CheckProxy();
+
+private:
+    QProcess *startproxy;
+    QString _password;
 };
 
 #endif // DCACHETOOLS_H

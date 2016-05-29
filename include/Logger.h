@@ -28,7 +28,7 @@ public:
     ~Logger();
 
     //Change color depending on message type
-    Qt::GlobalColor getColor(QString type);
+    QColor getColor(QString type);
 
 signals:
 

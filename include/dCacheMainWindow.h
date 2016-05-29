@@ -22,10 +22,17 @@ signals :
     //Signal to Logegr
     void log(QString type, QString message);
 
+public slots:
+    void Configure();
+    void showPassword();
+
 private:
     Ui::dCacheMainWindow *ui;
     Logger *m_logger;
     dCacheTools *m_tools;
+
+    QString InputDir, BaseDir, OutputDir;
+    bool isLabview, isEUDAQ, isLED;
 
 };
 

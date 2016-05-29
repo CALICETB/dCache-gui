@@ -32,7 +32,7 @@ Logger::~Logger()
 
 void Logger::Log(QString type, QString message)
 {
-    Qt::GlobalColor color = getColor(type);
+    QColor color = getColor(type);
 
     // scroll to the end of text edit
     m_pLoggingWidget->horizontalScrollBar()->setValue(m_pLoggingWidget->horizontalScrollBar()->maximum());
@@ -55,16 +55,18 @@ void Logger::Log(QString type, QString message)
 
 //-----------------------------------------------------------------------------------------------
 
-Qt::GlobalColor Logger::getColor(QString type)
+QColor Logger::getColor(QString type)
 {
     if(type == "ERROR")
-        return Qt::red;
+        return QColor(Qt::red);
     else if(type == "MESSAGE")
-        return Qt::magenta;
+        return QColor(Qt::blue);
     else if(type == "DEBUG")
-        return Qt::blue;
+        return QColor(Qt::blue);
     else if(type == "VERBOSE")
-        return Qt::green;
+        return QColor(Qt::green);
+    else if(type == "WARNING")
+        return QColor(255,165,0);
     else
-        return Qt::black;
+        return QColor(Qt::black);
 }

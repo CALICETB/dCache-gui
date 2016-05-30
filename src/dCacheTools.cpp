@@ -111,6 +111,6 @@ void dCacheTools::readStdOut()
         QString line = stream.readLine();
 
         int found = line.indexOf("timeleft", 1, Qt::CaseInsensitive);
-        emit log("INFO", QString::number(found));
+        emit log("INFO", line);
     }
 }

@@ -23,12 +23,17 @@ signals :
     void log(QString type, QString message);
 
 public slots:
+
+
+private slots:
+    void on_toolButton_clicked();
     void Configure();
     void showPassword();
     void updateProxy();
 
-private slots:
-    void on_toolButton_clicked();
+    void StartCopy();
+    void StopCopy();
+    void ListFiles();
 
 private:
     Ui::dCacheMainWindow *ui;
@@ -36,7 +41,7 @@ private:
     dCacheTools *m_tools;
 
     QString InputDir, BaseDir, OutputDir;
-    bool isLabview, isEUDAQ, isLED;
+    bool isLabview, isEUDAQ, isLED, isRaw, isSingleFile;
 
 };
 

@@ -90,7 +90,10 @@ void dCacheTools::CheckProxy()
 
     checkproxy->setProcessEnvironment(env);
 
-    checkproxy->start("/usr/bin/voms-proxy-info");
+    QStringList args;
+    args << " --timeleft";
+
+    checkproxy->start("/usr/bin/voms-proxy-info", args);
     if(!checkproxy->waitForStarted())
     {
         emit log("ERROR", QString("voms-proxy-info %1").arg(checkproxy->errorString()));

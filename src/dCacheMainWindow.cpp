@@ -26,7 +26,12 @@ dCacheMainWindow::dCacheMainWindow(QWidget *parent) :
 
     connect(ui->StartProxy, SIGNAL(clicked(bool)), m_tools, SLOT(StartProxy()));
     connect(ui->CheckProxy, SIGNAL(clicked(bool)), m_tools, SLOT(CheckProxy()));
+
     connect(ui->Configure, SIGNAL(clicked(bool)), this, SLOT(Configure()));
+    connect(ui->StartCopy, SIGNAL(clicked(bool)), this, SLOT(StartCopy()));
+    connect(ui->StopCopy, SIGNAL(clicked(bool)), this, SLOT(StopCopy()));
+    connect(ui->ListFiles, SIGNAL(clicked(bool)), this, SLOT(ListFiles()));
+
     connect(ui->Exit, SIGNAL(clicked(bool)), m_logger, SLOT(close()));
     connect(ui->Exit, SIGNAL(clicked(bool)), this, SLOT(close()));
 
@@ -53,22 +58,50 @@ void dCacheMainWindow::Configure()
     BaseDir = ui->BaseDir->text();
     OutputDir = ui->OutputDir->text();
 
+    isSingleFile = ui->SingleCheck->isChecked();
     isLabview = ui->LabviewCheck->isChecked();
     isEUDAQ = ui->EUDAQCheck->isChecked();
     isLED = ui->LEDCheck->isChecked();
+    isRaw = ui->RawCheck->isChecked();
 
-    if( (InputDir.isEmpty() || BaseDir.isEmpty() || OutputDir.isEmpty()) || (isLabview == false && isEUDAQ  == false && isLED == false) )
+    if(isSingleFile == true)
     {
-        emit log("WARNING", "No settings specified");
+        if((!InputDir.isEmpty() && !BaseDir.isEmpty()))
+        {
+            emit log("MESSAGE", "dCache Copy Settings :");
+            if(!OutputDir.isEmpty())
+                emit log("MESSAGE", QString("Input Dir %1\n\tBase Dir %2\n\tOutput Dir %3").arg(InputDir, BaseDir, OutputDir));
+            else
+                emit log("MESSAGE", QString("Input Dir %1\n\tBase Dir %2\n\tOutput Dir None").arg(InputDir, BaseDir));
+
+            ui->StartCopy->setEnabled(true);
+            ui->StopCopy->setEnabled(false);
+            ui->ListFiles->setEnabled(true);
+            ui->Configure->setEnabled(false);
+        }
+        else
+            emit log("WARNING", "Settings are missing");
     }
     else
     {
-        emit log("DEBUG", "dCache settings :");
-        emit log("DEBUG", QString("Input Dir %1, Base Dir %2, Output Dir %3").arg(InputDir, BaseDir, OutputDir));
+        if( ((InputDir.isEmpty() || BaseDir.isEmpty()) || (isLabview == false && isEUDAQ  == false && isLED == false && isRaw == false)) )
+        {
+            emit log("WARNING", "No settings specified. Is it a single file upload ??");
+            return;
+        }
+        else
+        {
+            emit log("MESSAGE", "dCache Copy Settings :");
+            if(!OutputDir.isEmpty())
+                emit log("MESSAGE", QString("Input Dir %1\n\tBase Dir %2\n\tOutput Dir %3").arg(InputDir, BaseDir, OutputDir));
+            else
+                emit log("MESSAGE", QString("Input Dir %1\n\tBase Dir %2\n\tOutput Dir None").arg(InputDir, BaseDir));
 
-        ui->StartCopy->setEnabled(true);
-        ui->StopCopy->setEnabled(true);
-        ui->ListFiles->setEnabled(true);
+            ui->StartCopy->setEnabled(true);
+            ui->StopCopy->setEnabled(false);
+            ui->ListFiles->setEnabled(true);
+            ui->Configure->setEnabled(false);
+        }
     }
 }
 
@@ -94,7 +127,15 @@ void dCacheMainWindow::updateProxy()
 
 void dCacheMainWindow::on_toolButton_clicked()
 {
-    if(!ui->SingleCheck->isChecked())
+    if(ui->SingleCheck->isChecked())
+    {
+        QString file = QFileDialog::getOpenFileName(this, tr("Choose File"),
+                                                    "/home/calice",
+                                                    tr("files : *.*"));
+
+        ui->InputDir->setText(file);
+    }
+    else
     {
         QString dir = QFileDialog::getExistingDirectory(this, tr("Choose Directory"),
                                                         "/home/calice",
@@ -103,12 +144,28 @@ void dCacheMainWindow::on_toolButton_clicked()
 
         ui->InputDir->setText(dir);
     }
-    else
-    {
-        QString file = QFileDialog::getOpenFileName(this, tr("Choose File"),
-                                                    "/home/calice",
-                                                    tr("File : *.txt, *.slcio, *.raw. *.*"));
+}
 
-        ui->InputDir->setText(file);
-    }
+void dCacheMainWindow::StartCopy()
+{
+    ui->StartCopy->setEnabled(false);
+    ui->StopCopy->setEnabled(true);
+    ui->Configure->setEnabled(false);
+
+    emit log("MESSAGE", "Start Copy");
+}
+
+void dCacheMainWindow::ListFiles()
+{
+    emit log("MESSAGE", "Listing files");
+
+}
+
+void dCacheMainWindow::StopCopy()
+{
+    ui->StartCopy->setEnabled(true);
+    ui->StopCopy->setEnabled(false);
+    ui->Configure->setEnabled(true);
+
+    emit log("MESSAGE", "Stop Copy");
 }

@@ -27,6 +27,9 @@ public slots:
     void showPassword();
     void updateProxy();
 
+private slots:
+    void on_toolButton_clicked();
+
 private:
     Ui::dCacheMainWindow *ui;
     Logger *m_logger;

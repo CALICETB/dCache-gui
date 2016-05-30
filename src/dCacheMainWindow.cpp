@@ -2,6 +2,7 @@
 #include "ui_dCacheMainWindow.h"
 
 #include <QInputDialog>
+#include <QFileDialog>
 
 dCacheMainWindow::dCacheMainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -34,6 +35,7 @@ dCacheMainWindow::dCacheMainWindow(QWidget *parent) :
     ui->ListFiles->setEnabled(false);
 
     ui->ProxyValid_label->setText("<font color='Red'>Check Proxy!</font>");
+    ui->BaseDir->setText("tb-desy/native/desyAhcal2016/AHCAL_Tesbeam_RAW_May_2016/");
 }
 
 dCacheMainWindow::~dCacheMainWindow()
@@ -88,4 +90,25 @@ void dCacheMainWindow::showPassword()
 void dCacheMainWindow::updateProxy()
 {
     ui->ProxyValid_label->setText("<font color='Green'>OK!</font>");
+}
+
+void dCacheMainWindow::on_toolButton_clicked()
+{
+    if(!ui->SingleCheck->isChecked())
+    {
+        QString dir = QFileDialog::getExistingDirectory(this, tr("Choose Directory"),
+                                                        "/home/calice",
+                                                        QFileDialog::ShowDirsOnly
+                                                        | QFileDialog::DontResolveSymlinks);
+
+        ui->InputDir->setText(dir);
+    }
+    else
+    {
+        QString file = QFileDialog::getOpenFileName(this, tr("Choose File"),
+                                                    "/home/calice",
+                                                    tr("File : *.txt, *.slcio, *.raw. *.*"));
+
+        ui->InputDir->setText(file);
+    }
 }

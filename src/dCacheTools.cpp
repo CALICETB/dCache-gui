@@ -61,6 +61,7 @@ void dCacheTools::StartProxy()
         startproxy->closeWriteChannel();
         startproxy->waitForFinished();
         emit ProxyOk();
+        startproxy->deleteLater();
     }
 }
 
@@ -99,7 +100,8 @@ void dCacheTools::CheckProxy()
         emit log("ERROR", QString("voms-proxy-info %1").arg(checkproxy->errorString()));
         return;
     }
-    startproxy->waitForFinished();
+    checkproxy->waitForFinished();
+    checkproxy->deleteLater();
 }
 
 void dCacheTools::readStdOut(QProcess *proc)
@@ -121,6 +123,8 @@ void dCacheTools::DoList(QString dir)
     emit log("INFO", "Listing called");
 
     list = new QProcess();
+
+    connect(list, SIGNAL(readyReadStandardOutput()), this, SLOT(readStdOut(list)));
 
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     env.insert("GRID_SECURITY_DIR", "/etc/grid-security");
@@ -151,4 +155,5 @@ void dCacheTools::DoList(QString dir)
         return;
     }
     list->waitForFinished();
+    list->deleteLater();
 }

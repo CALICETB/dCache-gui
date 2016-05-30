@@ -70,7 +70,7 @@ void dCacheTools::CheckProxy()
     emit log("MESSAGE", "dCache-GUI : Check Proxy Validity");
     checkproxy = new QProcess();
 
-    connect(checkproxy, SIGNAL(readyRead(QProcess*)), this, SLOT(readStdOut(QProcess*)));
+    connect(checkproxy, SIGNAL(dCacheTools::readyRead(QProcess*)), this, SLOT(readStdOut(QProcess*)));
 
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     env.insert("GRID_SECURITY_DIR", "/etc/grid-security");
@@ -111,7 +111,7 @@ void dCacheTools::DoList(QString dir)
 
     list = new QProcess();
 
-    connect(list, SIGNAL(readyRead(QProcess*)), this, SLOT(readStdOut(QProcess*)));
+    connect(list, SIGNAL(dCacheTools::readyRead(QProcess*)), this, SLOT(readStdOut(QProcess*)));
 
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     env.insert("GRID_SECURITY_DIR", "/etc/grid-security");

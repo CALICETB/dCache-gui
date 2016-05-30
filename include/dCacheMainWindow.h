@@ -21,9 +21,7 @@ public:
 signals :
     //Signal to Logegr
     void log(QString type, QString message);
-
-public slots:
-
+    void DoList(QString);
 
 private slots:
     void on_toolButton_clicked();

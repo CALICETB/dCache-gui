@@ -23,10 +23,11 @@ signals:
 public slots:
     void StartProxy();
     void CheckProxy();
-    void readStdOut();
+    void DoList(QString dir);
+    void readStdOut(QProcess *proc);
 
 private:
-    QProcess *startproxy, *checkproxy;
+    QProcess *startproxy, *checkproxy, *list;
     QString _password;
 };
 

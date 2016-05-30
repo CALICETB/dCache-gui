@@ -69,7 +69,7 @@ void dCacheTools::CheckProxy()
     emit log("MESSAGE", "dCache-GUI : Check Proxy Validity");
     checkproxy = new QProcess();
 
-    connect(checkproxy, SIGNAL(readyReadStandardOutput()), this, SLOT(readStdOut()));
+    connect(checkproxy, SIGNAL(readyReadStandardOutput()), this, SLOT(readStdOut(ckeckproxy)));
 
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     env.insert("GRID_SECURITY_DIR", "/etc/grid-security");
@@ -102,10 +102,10 @@ void dCacheTools::CheckProxy()
     startproxy->waitForFinished();
 }
 
-void dCacheTools::readStdOut()
+void dCacheTools::readStdOut(QProcess *proc)
 {
-    checkproxy->setReadChannel(QProcess::StandardOutput);
-    QTextStream stream(checkproxy);
+    proc->setReadChannel(QProcess::StandardOutput);
+    QTextStream stream(proc);
 
     while (!stream.atEnd()) {
         QString line = stream.readLine();
@@ -114,4 +114,41 @@ void dCacheTools::readStdOut()
         if(found == 0)
             emit log("INFO", line);
     }
+}
+
+void dCacheTools::DoList(QString dir)
+{
+    emit log("INFO", "Listing called");
+
+    list = new QProcess();
+
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    env.insert("GRID_SECURITY_DIR", "/etc/grid-security");
+    env.insert("X509_CERT_DIR", env.value("GRID_SECURITY_DIR") + "/certificates");
+    env.insert("X509_VOMS_DIR", env.value("GRID_SECURITY_DIR") + "/vomsdir");
+    env.insert("VOMS_USERCONF", "/etc/vomses/vomses");
+    env.insert("X509_USER_PROXY", env.value("HOME") + "/k5-ca-proxy.pem");
+    env.insert("GLOBUS_LOCATION", "/usr");
+    env.insert("SRM_PATH", "/usr/share/srm");
+    env.insert("PERL5LIB", "/usr/share/perl5");
+    env.insert("PYTHONPATH", env.value("PYTHONPATH") + ":/usr/lib64/python2.6/site-packages:/usr/lib/python2.6/site-packages");
+    env.insert("PATH", "/usr/sbin:" + env.value("PATH"));
+    env.insert("LD_PRELOAD", env.value("LD_PRELOAD") + ":/usr/lib64/libpdcap.so");
+    env.insert("DCACHE_IO_TUNNEL", "/usr/lib64/dcap/libgsiTunnel.so");
+    env.insert("DCACHE_CLIENT_ACTIVE", "1");
+    env.insert("LCG_CATALOG_TYPE", "lfc");
+    env.insert("LFC_HOST", "grid-lfc.desy.de");
+
+    list->setProcessEnvironment(env);
+
+    QStringList args;
+    args << " -l srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/" << dir;
+
+    list->start("/usr/bin/gfal-ls", args);
+    if(!list->waitForStarted())
+    {
+        emit log("ERROR", QString("gfal-ls %1").arg(list->errorString()));
+        return;
+    }
+    list->waitForFinished();
 }

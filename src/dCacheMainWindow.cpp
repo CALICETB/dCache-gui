@@ -15,9 +15,11 @@ dCacheMainWindow::dCacheMainWindow(QWidget *parent) :
     m_tools = new dCacheTools();
 
     connect(this, SIGNAL(log(QString,QString)), m_logger, SLOT(Log(QString,QString)));
+
     connect(m_tools, SIGNAL(log(QString,QString)), m_logger, SLOT(Log(QString,QString)));
     connect(m_tools, SIGNAL(PasswordRequired()), this, SLOT(showPassword()));
     connect(m_tools, SIGNAL(ProxyOk()), this, SLOT(updateProxy()));
+    connect(this, SIGNAL(DoList(QString)), m_tools, SLOT(DoList(QString)));
 
     emit log("MESSAGE", "dCache-GUI started");
 
@@ -158,7 +160,7 @@ void dCacheMainWindow::StartCopy()
 void dCacheMainWindow::ListFiles()
 {
     emit log("MESSAGE", "Listing files");
-
+    emit DoList(ui->BaseDir->text());
 }
 
 void dCacheMainWindow::StopCopy()

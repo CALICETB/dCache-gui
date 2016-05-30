@@ -70,7 +70,7 @@ void dCacheTools::CheckProxy()
     emit log("MESSAGE", "dCache-GUI : Check Proxy Validity");
     checkproxy = new QProcess();
 
-    connect(checkproxy, SIGNAL(readyReadStandardOutput()), this, SLOT(readStdOut(ckeckproxy)));
+    connect(checkproxy, SIGNAL(readyRead(QProcess*)), this, SLOT(readStdOut(QProcess*)));
 
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     env.insert("GRID_SECURITY_DIR", "/etc/grid-security");
@@ -101,21 +101,8 @@ void dCacheTools::CheckProxy()
         return;
     }
     checkproxy->waitForFinished();
+    emit readyRead(checkproxy);
     checkproxy->deleteLater();
-}
-
-void dCacheTools::readStdOut(QProcess *proc)
-{
-    proc->setReadChannel(QProcess::StandardOutput);
-    QTextStream stream(proc);
-
-    while (!stream.atEnd()) {
-        QString line = stream.readLine();
-
-        int found = line.indexOf("time", 0, Qt::CaseInsensitive);
-        if(found == 0)
-            emit log("INFO", line);
-    }
 }
 
 void dCacheTools::DoList(QString dir)
@@ -124,7 +111,7 @@ void dCacheTools::DoList(QString dir)
 
     list = new QProcess();
 
-    connect(list, SIGNAL(readyReadStandardOutput()), this, SLOT(readStdOut(list)));
+    connect(list, SIGNAL(readyRead(QProcess*)), this, SLOT(readStdOut(QProcess*)));
 
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     env.insert("GRID_SECURITY_DIR", "/etc/grid-security");
@@ -155,5 +142,20 @@ void dCacheTools::DoList(QString dir)
         return;
     }
     list->waitForFinished();
+    emit readyRead(list);
     list->deleteLater();
+}
+
+void dCacheTools::readStdOut(QProcess *proc)
+{
+    proc->setReadChannel(QProcess::StandardOutput);
+    QTextStream stream(proc);
+
+    while (!stream.atEnd()) {
+        QString line = stream.readLine();
+
+        int found = line.indexOf("time", 0, Qt::CaseInsensitive);
+        if(found == 0)
+            emit log("INFO", line);
+    }
 }

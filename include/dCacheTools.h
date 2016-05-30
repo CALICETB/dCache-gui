@@ -19,6 +19,7 @@ signals:
     void log(QString type, QString message);
     void PasswordRequired();
     void ProxyOk();
+    void readyRead(QProcess *proc);
 
 public slots:
     void StartProxy();

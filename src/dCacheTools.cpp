@@ -103,10 +103,9 @@ void dCacheTools::CheckProxy()
     checkproxy->setProcessEnvironment(env);
 
     QStringList arguments;
-    arguments << "--timeleft";
+    arguments << " --timeleft";
 
-    checkproxy->setArguments(arguments);
-    checkproxy->start("/usr/bin/voms-proxy-info");
+    checkproxy->start("/usr/bin/voms-proxy-info", arguments);
 
     if(!checkproxy->waitForStarted())
     {
@@ -151,8 +150,7 @@ void dCacheTools::DoList(QString dir)
     QStringList arguments;
     arguments << QString::fromStdString(str);
 
-    list->setArguments(arguments);
-    list->start("/usr/bin/gfal-ls");
+    list->start("/usr/bin/gfal-ls", arguments);
 
     if(!list->waitForStarted())
     {

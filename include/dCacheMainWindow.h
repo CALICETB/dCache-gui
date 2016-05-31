@@ -2,6 +2,7 @@
 #define DCACHEMAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTimer>
 
 #include "Logger.h"
 #include "dCacheTools.h"
@@ -21,13 +22,13 @@ public:
 signals :
     //Signal to Logegr
     void log(QString type, QString message);
-    void DoList(QString);
 
 private slots:
     void on_toolButton_clicked();
     void Configure();
     void showPassword();
     void updateProxy(QString status);
+    void updateMainWindow();
 
     void StartCopy();
     void StopCopy();
@@ -39,9 +40,12 @@ private:
     Ui::dCacheMainWindow *ui;
     Logger *m_logger;
     dCacheTools *m_tools;
+    QTimer *timer;
 
     QString InputDir, BaseDir, OutputDir;
-    bool isLabview, isEUDAQ, isLED, isRaw, isSingleFile;
+    bool isLabview, isEUDAQ, isLED, isRaw, isOther, isSingleFile;
+
+    int timeleft, timertime, type;
 
 };
 

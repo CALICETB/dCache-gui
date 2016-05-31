@@ -14,8 +14,11 @@ dCacheMainWindow::dCacheMainWindow(QWidget *parent) :
     m_logger = new Logger();
     m_tools = new dCacheTools();
 
+    timertime = 1000;
+    timeleft = 0;
+    type = -1;
+
     connect(this, SIGNAL(log(QString,QString)), m_logger, SLOT(Log(QString,QString)));
-    connect(this, SIGNAL(DoList(QString)), m_tools, SLOT(DoList(QString)));
 
     connect(m_tools, SIGNAL(log(QString,QString)), m_logger, SLOT(Log(QString,QString)));
     connect(m_tools, SIGNAL(PasswordRequired()), this, SLOT(showPassword()));
@@ -38,9 +41,15 @@ dCacheMainWindow::dCacheMainWindow(QWidget *parent) :
     ui->StartCopy->setEnabled(false);
     ui->StopCopy->setEnabled(false);
     ui->ListFiles->setEnabled(false);
+    ui->toolButton->setEnabled(false);
+    ui->InputDir->setReadOnly(true);
 
     ui->ProxyValid_label->setText("<font color='Red'>Check Proxy!</font>");
     ui->BaseDir->setText("tb-desy/native/desyAhcal2016/AHCAL_Testbeam_Raw_May_2016");
+
+    timer = new QTimer();
+    connect(timer, SIGNAL(timeout()), this, SLOT(updateMainWindow()));
+    timer->start(timertime);
 }
 
 dCacheMainWindow::~dCacheMainWindow()
@@ -53,12 +62,6 @@ void dCacheMainWindow::Configure()
     InputDir = ui->InputDir->text();
     BaseDir = ui->BaseDir->text();
     OutputDir = ui->OutputDir->text();
-
-    isSingleFile = ui->SingleCheck->isChecked();
-    isLabview = ui->LabviewCheck->isChecked();
-    isEUDAQ = ui->EUDAQCheck->isChecked();
-    isLED = ui->LEDCheck->isChecked();
-    isRaw = ui->RawCheck->isChecked();
 
     if(isSingleFile == true)
     {
@@ -80,7 +83,7 @@ void dCacheMainWindow::Configure()
     }
     else
     {
-        if( ((InputDir.isEmpty() || BaseDir.isEmpty()) || (isLabview == false && isEUDAQ  == false && isLED == false && isRaw == false)) )
+        if( ((InputDir.isEmpty() || BaseDir.isEmpty()) || type == -1) )
         {
             emit log("WARNING", "No settings specified. Is it a single file upload ??");
             return;
@@ -118,28 +121,45 @@ void dCacheMainWindow::showPassword()
 
 void dCacheMainWindow::updateProxy(QString status)
 {
+    //emit log("INFO", status);
+    timeleft = status.toInt();
     ui->ProxyValid_label->setText(status);
+    ui->ListFiles->setEnabled(true);
 }
 
 void dCacheMainWindow::on_toolButton_clicked()
 {
-    if(ui->SingleCheck->isChecked())
-    {
-        QString file = QFileDialog::getOpenFileName(this, tr("Choose File"),
-                                                    "/home/calice",
-                                                    tr("files : *.*"));
+    QString file;
 
-        ui->InputDir->setText(file);
+    if(isSingleFile)
+    {
+        if(type == 1)
+            file = QFileDialog::getOpenFileName(this, tr("Choose File"),
+                                                "/home/calice",
+                                                tr("Labview file : *.txt"));
+
+        else if(type == 2)
+            file = QFileDialog::getOpenFileName(this, tr("Choose File"),
+                                                "/home/calice",
+                                                tr("EUDAQ file : *.slcio"));
+        else if(type == 3)
+            file = QFileDialog::getOpenFileName(this, tr("Choose File"),
+                                                "/home/calice",
+                                                tr("Raw file : *.raw"));
+        else
+            file = QFileDialog::getOpenFileName(this, tr("Choose File"),
+                                                "/home/calice",
+                                                tr("Any type : *.*"));
     }
     else
     {
-        QString dir = QFileDialog::getExistingDirectory(this, tr("Choose Directory"),
-                                                        "/home/calice",
-                                                        QFileDialog::ShowDirsOnly
-                                                        | QFileDialog::DontResolveSymlinks);
-
-        ui->InputDir->setText(dir);
+        file = QFileDialog::getExistingDirectory(this, tr("Choose Directory"),
+                                                 "/home/calice",
+                                                 QFileDialog::ShowDirsOnly
+                                                 | QFileDialog::DontResolveSymlinks);
     }
+
+    ui->InputDir->setText(file);
 }
 
 void dCacheMainWindow::StartCopy()
@@ -148,13 +168,12 @@ void dCacheMainWindow::StartCopy()
     ui->StopCopy->setEnabled(true);
     ui->Configure->setEnabled(false);
 
-    emit log("MESSAGE", "Start Copy");
+    m_tools->Copy(ui->InputDir->text(), ui->BaseDir->text(), ui->OutputDir->text(), type);
 }
 
 void dCacheMainWindow::ListFiles()
 {
-    emit log("MESSAGE", "Listing files");
-    emit DoList(ui->BaseDir->text());
+    m_tools->DoList(ui->BaseDir->text());
 }
 
 void dCacheMainWindow::StopCopy()
@@ -176,4 +195,34 @@ void dCacheMainWindow::Close()
     delete m_logger;
 
     this->close();
+}
+
+void dCacheMainWindow::updateMainWindow()
+{
+    isSingleFile = ui->SingleCheck->isChecked();
+    isLabview = ui->LabviewCheck->isChecked();
+    isEUDAQ = ui->EUDAQCheck->isChecked();
+    isLED = ui->LEDCheck->isChecked();
+    isRaw = ui->RawCheck->isChecked();
+    isOther = ui->OtherCheck->isChecked();
+
+    if(isLabview || isLED)
+        type = 1;
+    if(isEUDAQ)
+        type = 2;
+    if(isRaw)
+        type = 3;
+    if(isOther)
+        type = 4;
+
+    if(type != -1)
+        ui->toolButton->setEnabled(true);
+
+    if(timeleft == 0)
+        ui->ProxyValid_label->setText("<font color='Red'>Check Proxy!</font>");
+    else
+    {
+        timeleft = timeleft - timertime/1000;
+        ui->ProxyValid_label->setText(QString::number(timeleft));
+    }
 }

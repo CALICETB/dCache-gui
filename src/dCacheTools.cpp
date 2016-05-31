@@ -121,7 +121,7 @@ void dCacheTools::DoList(QString dir)
     emit log("INFO", "Listing called");
 
     list = new QProcess();
-    list->setProcessChannelMode(QProcess::ForwardedOutputChannel);
+    list->setProcessChannelMode(QProcess::ForwardedChannels);
 
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     env.insert("GRID_SECURITY_DIR", "/etc/grid-security");

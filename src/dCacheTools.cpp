@@ -141,7 +141,7 @@ void dCacheTools::DoList(QString dir)
     list->setProcessEnvironment(env);
 
     QStringList args;
-    args << " -l srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/" << dir;
+    args << " -l " << "srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/" << dir;
 
     list->start("/usr/bin/gfal-ls", args);
     if(!list->waitForStarted())
@@ -150,8 +150,20 @@ void dCacheTools::DoList(QString dir)
         return;
     }
     list->waitForFinished();
-    emit readyRead(list, "ListDir");
-    list->deleteLater();
+
+    if(list->exitCode() == 0)
+    {
+        emit readyRead(list, "ListDir");
+        list->deleteLater();
+    }
+    else
+    {
+        emit log("ERROR", list->errorString());
+        list->deleteLater();
+    }
+
+
+
 }
 
 void dCacheTools::readStdOut(QProcess *proc, QString proc_name)
@@ -172,6 +184,7 @@ void dCacheTools::readStdOut(QProcess *proc, QString proc_name)
     }
     else
     {
+        proc->setProcessChannelMode(QProcess::ForwardedOutputChannel);
         proc->setReadChannel(QProcess::StandardOutput);
         QTextStream stream(proc);
 

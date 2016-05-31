@@ -15,11 +15,11 @@ dCacheMainWindow::dCacheMainWindow(QWidget *parent) :
     m_tools = new dCacheTools();
 
     connect(this, SIGNAL(log(QString,QString)), m_logger, SLOT(Log(QString,QString)));
+    connect(this, SIGNAL(DoList(QString)), m_tools, SLOT(DoList(QString)));
 
     connect(m_tools, SIGNAL(log(QString,QString)), m_logger, SLOT(Log(QString,QString)));
     connect(m_tools, SIGNAL(PasswordRequired()), this, SLOT(showPassword()));
-    connect(m_tools, SIGNAL(ProxyOk()), this, SLOT(updateProxy()));
-    connect(this, SIGNAL(DoList(QString)), m_tools, SLOT(DoList(QString)));
+    connect(m_tools, SIGNAL(ProxyStatus(QString)), this, SLOT(updateProxy(QString)));
 
     emit log("MESSAGE", "dCache-GUI started");
 
@@ -33,9 +33,7 @@ dCacheMainWindow::dCacheMainWindow(QWidget *parent) :
     connect(ui->StartCopy, SIGNAL(clicked(bool)), this, SLOT(StartCopy()));
     connect(ui->StopCopy, SIGNAL(clicked(bool)), this, SLOT(StopCopy()));
     connect(ui->ListFiles, SIGNAL(clicked(bool)), this, SLOT(ListFiles()));
-
-    connect(ui->Exit, SIGNAL(clicked(bool)), m_logger, SLOT(close()));
-    connect(ui->Exit, SIGNAL(clicked(bool)), this, SLOT(close()));
+    connect(ui->Exit, SIGNAL(clicked(bool)), this, SLOT(Close()));
 
     ui->StartCopy->setEnabled(false);
     ui->StopCopy->setEnabled(false);
@@ -47,10 +45,6 @@ dCacheMainWindow::dCacheMainWindow(QWidget *parent) :
 
 dCacheMainWindow::~dCacheMainWindow()
 {
-    emit log("MESSAGE", "dCache-GUI exiting");
-    m_logger->deleteLater();
-    m_tools->terminate();
-
     delete ui;
 }
 
@@ -122,9 +116,9 @@ void dCacheMainWindow::showPassword()
     }
 }
 
-void dCacheMainWindow::updateProxy()
+void dCacheMainWindow::updateProxy(QString status)
 {
-    ui->ProxyValid_label->setText("<font color='Green'>OK!</font>");
+    ui->ProxyValid_label->setText(status);
 }
 
 void dCacheMainWindow::on_toolButton_clicked()
@@ -170,4 +164,16 @@ void dCacheMainWindow::StopCopy()
     ui->Configure->setEnabled(true);
 
     emit log("MESSAGE", "Stop Copy");
+}
+
+void dCacheMainWindow::Close()
+{
+    emit log("MESSAGE", "dCache-GUI exiting");
+    m_logger->close();
+    m_tools->terminate();
+
+    delete m_tools;
+    delete m_logger;
+
+    this->close();
 }

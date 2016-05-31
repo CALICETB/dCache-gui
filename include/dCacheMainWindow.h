@@ -27,11 +27,13 @@ private slots:
     void on_toolButton_clicked();
     void Configure();
     void showPassword();
-    void updateProxy();
+    void updateProxy(QString status);
 
     void StartCopy();
     void StopCopy();
     void ListFiles();
+
+    void Close();
 
 private:
     Ui::dCacheMainWindow *ui;

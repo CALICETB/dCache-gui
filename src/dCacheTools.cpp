@@ -5,6 +5,8 @@
 dCacheTools::dCacheTools()
 {
     _password = "";
+
+    connect(this, SIGNAL(readyRead(QProcess*, QString)), this, SLOT(readStdOut(QProcess*, QString)));
 }
 
 dCacheTools::~dCacheTools()
@@ -60,8 +62,18 @@ void dCacheTools::StartProxy()
         startproxy->write(_password.toStdString().data());
         startproxy->closeWriteChannel();
         startproxy->waitForFinished();
-        emit ProxyOk();
-        startproxy->deleteLater();
+
+        if(startproxy->exitCode() == 0)
+        {
+            emit ProxyStatus("<font color=Green> OK </font>");
+            emit readyRead(startproxy, "StartProxy");
+            startproxy->deleteLater();
+        }
+        else
+        {
+            emit ProxyStatus(startproxy->errorString());
+            startproxy->deleteLater();
+        }
     }
 }
 
@@ -69,8 +81,6 @@ void dCacheTools::CheckProxy()
 {
     emit log("MESSAGE", "dCache-GUI : Check Proxy Validity");
     checkproxy = new QProcess();
-
-    connect(checkproxy, SIGNAL(dCacheTools::readyRead(QProcess*)), this, SLOT(readStdOut(QProcess*)));
 
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     env.insert("GRID_SECURITY_DIR", "/etc/grid-security");
@@ -101,7 +111,7 @@ void dCacheTools::CheckProxy()
         return;
     }
     checkproxy->waitForFinished();
-    emit readyRead(checkproxy);
+    emit readyRead(checkproxy, "CheckProxy");
     checkproxy->deleteLater();
 }
 
@@ -110,8 +120,6 @@ void dCacheTools::DoList(QString dir)
     emit log("INFO", "Listing called");
 
     list = new QProcess();
-
-    connect(list, SIGNAL(dCacheTools::readyRead(QProcess*)), this, SLOT(readStdOut(QProcess*)));
 
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     env.insert("GRID_SECURITY_DIR", "/etc/grid-security");
@@ -142,20 +150,35 @@ void dCacheTools::DoList(QString dir)
         return;
     }
     list->waitForFinished();
-    emit readyRead(list);
+    emit readyRead(list, "ListDir");
     list->deleteLater();
 }
 
-void dCacheTools::readStdOut(QProcess *proc)
+void dCacheTools::readStdOut(QProcess *proc, QString proc_name)
 {
-    proc->setReadChannel(QProcess::StandardOutput);
-    QTextStream stream(proc);
+    if(proc_name == "CheckProxy")
+    {
+        proc->setReadChannel(QProcess::StandardOutput);
+        QTextStream stream(proc);
 
-    while (!stream.atEnd()) {
-        QString line = stream.readLine();
+        while (!stream.atEnd())
+        {
+            QString line = stream.readLine();
 
-        int found = line.indexOf("time", 0, Qt::CaseInsensitive);
-        if(found == 0)
+            int found = line.indexOf("time", 0, Qt::CaseInsensitive);
+            if(found == 0)
+                emit log("INFO", line);
+        }
+    }
+    else
+    {
+        proc->setReadChannel(QProcess::StandardOutput);
+        QTextStream stream(proc);
+
+        while (!stream.atEnd())
+        {
+            QString line = stream.readLine();
             emit log("INFO", line);
+        }
     }
 }

@@ -18,14 +18,14 @@ public:
 signals:
     void log(QString type, QString message);
     void PasswordRequired();
-    void ProxyOk();
-    void readyRead(QProcess *proc);
+    void ProxyStatus(QString status);
+    void readyRead(QProcess *proc, QString proc_name);
 
 public slots:
     void StartProxy();
     void CheckProxy();
     void DoList(QString dir);
-    void readStdOut(QProcess *proc);
+    void readStdOut(QProcess *proc, QString proc_name);
 
 private:
     QProcess *startproxy, *checkproxy, *list;

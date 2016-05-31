@@ -150,6 +150,8 @@ void dCacheTools::DoList(QString dir)
     QStringList arguments;
     arguments << QString::fromStdString(str);
 
+    emit log("DEBUG", arguments.join(""));
+
     list->start("/usr/bin/gfal-ls", arguments);
 
     if(!list->waitForStarted())

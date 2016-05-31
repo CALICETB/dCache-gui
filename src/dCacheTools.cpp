@@ -24,6 +24,7 @@ void dCacheTools::StartProxy()
 {
     emit log("MESSAGE", "dCache-GUI : Start Proxy");
     startproxy = new QProcess();
+    startproxy->setProcessChannelMode(QProcess::ForwardedOutputChannel);
 
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     env.insert("GRID_SECURITY_DIR", "/etc/grid-security");
@@ -120,6 +121,7 @@ void dCacheTools::DoList(QString dir)
     emit log("INFO", "Listing called");
 
     list = new QProcess();
+    list->setProcessChannelMode(QProcess::ForwardedOutputChannel);
 
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     env.insert("GRID_SECURITY_DIR", "/etc/grid-security");
@@ -142,6 +144,8 @@ void dCacheTools::DoList(QString dir)
 
     QStringList args;
     args << " -l " << "srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/" << dir;
+
+    emit log("DEBUG", args.join(""));
 
     list->start("/usr/bin/gfal-ls", args);
     if(!list->waitForStarted())
@@ -184,7 +188,6 @@ void dCacheTools::readStdOut(QProcess *proc, QString proc_name)
     }
     else
     {
-        proc->setProcessChannelMode(QProcess::ForwardedOutputChannel);
         proc->setReadChannel(QProcess::StandardOutput);
         QTextStream stream(proc);
 

@@ -143,11 +143,11 @@ void dCacheTools::DoList(QString dir)
     list->setProcessEnvironment(env);
 
     QStringList args;
-    args << " -l " << "srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/" << dir;
+    args << " -l srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/" << dir;
 
     emit log("DEBUG", args.join(""));
 
-    list->start("/usr/bin/gfal-ls", args);
+    list->start("gfal-ls", args);
     if(!list->waitForStarted())
     {
         emit log("ERROR", QString("gfal-ls %1").arg(list->errorString()));

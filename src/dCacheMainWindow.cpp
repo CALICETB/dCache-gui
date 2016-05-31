@@ -40,7 +40,7 @@ dCacheMainWindow::dCacheMainWindow(QWidget *parent) :
     ui->ListFiles->setEnabled(false);
 
     ui->ProxyValid_label->setText("<font color='Red'>Check Proxy!</font>");
-    ui->BaseDir->setText("tb-desy/native/desyAhcal2016/AHCAL_Tesbeam_RAW_May_2016/");
+    ui->BaseDir->setText("tb-desy/native/desyAhcal2016/AHCAL_Testbeam_Raw_May_2016");
 }
 
 dCacheMainWindow::~dCacheMainWindow()

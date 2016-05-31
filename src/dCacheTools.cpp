@@ -102,10 +102,12 @@ void dCacheTools::CheckProxy()
 
     checkproxy->setProcessEnvironment(env);
 
-    QStringList args;
-    args << " --timeleft";
+    QStringList arguments;
+    arguments << "--timeleft";
 
-    checkproxy->start("/usr/bin/voms-proxy-info", args);
+    checkproxy->setArguments(arguments);
+    checkproxy->start("/usr/bin/voms-proxy-info");
+
     if(!checkproxy->waitForStarted())
     {
         emit log("ERROR", QString("voms-proxy-info %1").arg(checkproxy->errorString()));
@@ -142,12 +144,16 @@ void dCacheTools::DoList(QString dir)
 
     list->setProcessEnvironment(env);
 
-    QStringList args;
-    args << " -l srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/" << dir;
+    std::string str = " -l ";
+    str += "srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/";
+    str += dir.toStdString();
 
-    emit log("DEBUG", args.join(""));
+    QStringList arguments;
+    arguments << QString::fromStdString(str);
 
-    list->start("gfal-ls", args);
+    list->setArguments(arguments);
+    list->start("/usr/bin/gfal-ls");
+
     if(!list->waitForStarted())
     {
         emit log("ERROR", QString("gfal-ls %1").arg(list->errorString()));

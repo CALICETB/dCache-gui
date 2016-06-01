@@ -188,8 +188,15 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
     }
     else
     {
-        QDir dir(Input);
+        QString filetype;
+        if(type == 1)
+            filetype = "txt";
+        if(type == 2)
+            filetype = "slcio";
+        if(type == 3)
+            filetype = "raw";
 
+        QDir dir(Input);
         dir.setFilter(QDir::Files | QDir::NoSymLinks);
         dir.setSorting(QDir::Time);
 
@@ -201,6 +208,7 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
             emit log("DEBUG", QString("file : %1 \t Time : %2").arg(fileInfo.fileName(), (fileInfo.lastModified()).toString(Qt::ISODate)));
 
             std::string filename = (fileInfo.fileName()).toStdString();
+            if(fileInfo.completeSuffix() != filetype && type != 4) continue;
 
             str = "/usr/bin/gfal-copy --dry-run -n 5 -t 6000 ";
             str += "file:/";

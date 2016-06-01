@@ -26,6 +26,8 @@ dCacheMainWindow::dCacheMainWindow(QWidget *parent) :
     connect(m_tools, SIGNAL(log(QString,QString)), m_logger, SLOT(Log(QString,QString)));
     connect(m_tools, SIGNAL(PasswordRequired()), this, SLOT(showPassword()));
     connect(m_tools, SIGNAL(ProxyStatus(QString)), this, SLOT(updateProxy(QString)));
+    connect(m_tools, SIGNAL(ProxyDestroyed()), m_logger, SLOT(close()));
+    connect(m_tools, SIGNAL(ProxyDestroyed()), m_tools, SLOT(quit()));
 
     emit log("MESSAGE", "dCache-GUI started");
 
@@ -54,9 +56,6 @@ dCacheMainWindow::dCacheMainWindow(QWidget *parent) :
 
     ui->ProxyValid_label->setText("<font color='Red'>Check Proxy!</font>");
     ui->BaseDir->setText("tb-desy/native/desyAhcal2016/AHCAL_Testbeam_Raw_May_2016");
-
-    timer = new QTimer();
-    connect(timer, SIGNAL(timeout()), this, SLOT(updateMainWindow()));
 }
 
 dCacheMainWindow::~dCacheMainWindow()
@@ -132,7 +131,6 @@ void dCacheMainWindow::updateProxy(QString status)
     timeleft = status.toInt();
 
     this->updateMainWindow();
-    timer->start(timertime);
 }
 
 void dCacheMainWindow::on_toolButton_clicked()
@@ -207,9 +205,6 @@ void dCacheMainWindow::Close()
 
     m_tools->StopCopy();
     m_tools->DestroyProxy(timeleft);
-
-    connect(m_tools, SIGNAL(ProxyDestroyed()), m_logger, SLOT(close()));
-    connect(m_tools, SIGNAL(ProxyDestroyed()), m_tools, SLOT(quit()));
 
     delete m_tools;
     delete m_logger;

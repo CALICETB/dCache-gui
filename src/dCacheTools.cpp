@@ -12,8 +12,6 @@ dCacheTools::dCacheTools()
     _password = "";
     dCachetool = new QProcess();
     dCachetool->setProcessChannelMode(QProcess::SeparateChannels);
-
-    connect(this, SIGNAL(readyRead(QProcess*)), this, SLOT(readStdOut(QProcess*)));
 }
 
 dCacheTools::~dCacheTools()
@@ -54,13 +52,11 @@ void dCacheTools::StartProxy()
         {
             int timeleft = 60*60*12;
             emit ProxyStatus(QString::number(timeleft));
-            emit readyRead(dCachetool);
         }
         else
         {
             int timeleft = 0;
             emit ProxyStatus(QString::number(timeleft));
-            emit readyRead(dCachetool);
         }
     }
 }
@@ -109,24 +105,9 @@ void dCacheTools::DoList(QString dir)
 
     dCachetool->waitForFinished(-1);
 
-    if(dCachetool->exitCode() == 0)
-    {
-        emit readyRead(dCachetool);
-    }
-    else
+    if(dCachetool->exitCode() != 0)
     {
         emit log("ERROR", dCachetool->errorString());
-    }
-}
-
-void dCacheTools::readStdOut(QProcess *proc)
-{
-    proc->setReadChannel(QProcess::StandardOutput);
-    QTextStream stream(proc);
-
-    while (!stream.atEnd())
-    {
-        QString line = stream.readLine();
     }
 }
 
@@ -165,6 +146,7 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
         str += OutputDir.toStdString();
         str += filename;
         */
+
         emit log("DEBUG", QString::fromStdString(str));
 
         dCachetool->start(QString::fromStdString(str));
@@ -177,11 +159,7 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
 
         dCachetool->waitForFinished(-1);
 
-        if(dCachetool->exitCode() == 0)
-        {
-            emit readyRead(dCachetool);
-        }
-        else
+        if(dCachetool->exitCode() != 0)
         {
             emit log("ERROR", dCachetool->errorString());
         }
@@ -205,7 +183,7 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
         for (int i = 0; i < list.size(); ++i)
         {
             QFileInfo fileInfo = list.at(i);
-            emit log("DEBUG", QString("file : %1 \t Time : %2").arg(fileInfo.fileName(), (fileInfo.lastModified()).toString(Qt::ISODate)));
+            //emit log("DEBUG", QString("file : %1 \t Time : %2").arg(fileInfo.fileName(), (fileInfo.lastModified()).toString(Qt::ISODate)));
 
             std::string filename = (fileInfo.fileName()).toStdString();
             if(fileInfo.completeSuffix() != filetype && type != 4) continue;
@@ -227,7 +205,8 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
             str += OutputDir.toStdString();
             str += filename;
             */
-            emit log("DEBUG", QString::fromStdString(str));
+
+            //emit log("DEBUG", QString::fromStdString(str));
 
             dCachetool->start(QString::fromStdString(str));
 
@@ -239,11 +218,7 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
 
             dCachetool->waitForFinished(-1);
 
-            if(dCachetool->exitCode() == 0)
-            {
-                emit readyRead(dCachetool);
-            }
-            else
+            if(dCachetool->exitCode() != 0)
             {
                 emit log("ERROR", dCachetool->errorString());
             }
@@ -278,11 +253,7 @@ void dCacheTools::DestroyProxy(int timeleft)
 
         dCachetool->waitForFinished(-1);
 
-        if(dCachetool->exitCode() == 0)
-        {
-            emit readyRead(dCachetool);
-        }
-        else
+        if(dCachetool->exitCode() != 0)
         {
             emit log("ERROR", dCachetool->errorString());
         }

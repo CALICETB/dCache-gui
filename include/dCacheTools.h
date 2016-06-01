@@ -20,7 +20,6 @@ signals:
     void PasswordRequired();
     void ProxyStatus(QString status);
     void ProxyDestroyed();
-    void readyRead(QProcess *proc);
 
 public slots:
     void StartProxy();
@@ -30,7 +29,6 @@ public slots:
     void StopCopy();
     void DoList(QString dir);
 
-    void readStdOut(QProcess *proc);
     void SetEnv();
 
 private:

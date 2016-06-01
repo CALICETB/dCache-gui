@@ -12,6 +12,18 @@ SET( ${PROJECT_NAME}_VERSION_MAJOR 1 )
 SET( ${PROJECT_NAME}_VERSION_MINOR 0 )
 SET( ${PROJECT_NAME}_VERSION_PATCH 0 )
 
+###############################
+# Require C++11
+INCLUDE( CheckCXXCompilerFlag )
+
+CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
+
+IF( COMPILER_SUPPORTS_CXX11 )
+  SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+ELSE()
+        MESSAGE( SEND_ERROR "DQMCore requires C++11 support. Please upgrade your compiler !" )
+ENDIF()
+
 # ----- Generate DOXYGEN documentation (optionnal) -----
 OPTION( INSTALL_DOC "Set to OFF to skip build/install Documentation" OFF )
 

@@ -48,7 +48,7 @@ void dCacheTools::StartProxy()
         emit log("INFO", "Password received");
         dCachetool->write(_password.toStdString().data());
         dCachetool->closeWriteChannel();
-        dCachetool->waitForFinished();
+        dCachetool->waitForFinished(-1);
 
         if(dCachetool->exitCode() == 0)
         {
@@ -76,7 +76,7 @@ void dCacheTools::CheckProxy()
         emit log("ERROR", QString("voms-proxy-info %1").arg(dCachetool->errorString()));
         return;
     }
-    dCachetool->waitForFinished();
+    dCachetool->waitForFinished(-1);
 
     if(dCachetool->exitCode() == 0)
     {
@@ -107,7 +107,7 @@ void dCacheTools::DoList(QString dir)
         return;
     }
 
-    dCachetool->waitForFinished();
+    dCachetool->waitForFinished(-1);
 
     if(dCachetool->exitCode() == 0)
     {
@@ -175,7 +175,7 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
             return;
         }
 
-        dCachetool->waitForFinished();
+        dCachetool->waitForFinished(-1);
 
         if(dCachetool->exitCode() == 0)
         {
@@ -227,12 +227,12 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
                 return;
             }
 
-            dCachetool->waitForFinished();
+            dCachetool->waitForFinished(-1);
 
             if(dCachetool->exitCode() == 0)
             {
                 emit readyRead(dCachetool);
-                sleep(1000);
+                sleep(5000);
             }
             else
             {
@@ -245,12 +245,12 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
 void dCacheTools::StopCopy()
 {
     emit log("INFO", "Waiting for last Copy");
-    dCachetool->waitForFinished();
+    dCachetool->waitForFinished(-1);
 }
 
 void dCacheTools::DestroyProxy(int timeleft)
 {
-    dCachetool->waitForFinished();
+    dCachetool->waitForFinished(-1);
 
     if(timeleft > 0)
     {
@@ -267,7 +267,7 @@ void dCacheTools::DestroyProxy(int timeleft)
             return;
         }
 
-        dCachetool->waitForFinished();
+        dCachetool->waitForFinished(-1);
 
         if(dCachetool->exitCode() == 0)
         {

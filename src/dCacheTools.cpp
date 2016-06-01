@@ -24,7 +24,7 @@ dCacheTools::~dCacheTools()
 
 void dCacheTools::run()
 {
-
+    exec();
 }
 
 void dCacheTools::StartProxy()

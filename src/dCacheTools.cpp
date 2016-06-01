@@ -142,6 +142,8 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
 
     QLocale::setDefault(QLocale::English);
 
+    dCachetool->setProcessChannelMode(QProcess::ForwardedChannels);
+
     std::string str;
     if(isSingleFile)
     {
@@ -230,6 +232,7 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
             if(dCachetool->exitCode() == 0)
             {
                 emit readyRead(dCachetool);
+                sleep(1000);
             }
             else
             {

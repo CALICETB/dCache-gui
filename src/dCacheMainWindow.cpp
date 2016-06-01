@@ -32,7 +32,7 @@ dCacheMainWindow::dCacheMainWindow(QWidget *parent) :
     emit log("MESSAGE", "dCache-GUI started");
 
     m_logger->show();
-    m_tools->run();
+    m_tools->start();
 
     connect(ui->StartProxy, SIGNAL(clicked(bool)), m_tools, SLOT(StartProxy()));
     connect(ui->CheckProxy, SIGNAL(clicked(bool)), m_tools, SLOT(CheckProxy()));

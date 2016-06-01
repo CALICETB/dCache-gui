@@ -192,7 +192,7 @@ void dCacheMainWindow::ListFiles()
 
 void dCacheMainWindow::StopCopy()
 {
-    ui->StartCopy->setEnabled(true);
+    ui->StartCopy->setEnabled(false);
     ui->StopCopy->setEnabled(false);
     ui->Configure->setEnabled(true);
 
@@ -217,6 +217,7 @@ void dCacheMainWindow::Close()
 
     m_tools->StopCopy();
     m_tools->DestroyProxy(timeleft);
+    m_tools->quit();
 
     delete m_tools;
     delete m_logger;

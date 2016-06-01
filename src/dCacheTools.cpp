@@ -4,6 +4,7 @@
 #include <QTextStream>
 #include <QDir>
 #include <QDateTime>
+#include <QCoreApplication>
 
 #include <boost/filesystem.hpp>
 
@@ -24,7 +25,7 @@ dCacheTools::~dCacheTools()
 
 void dCacheTools::run()
 {
-    exec();
+    QCoreApplication::processEvents();
 }
 
 void dCacheTools::StartProxy()

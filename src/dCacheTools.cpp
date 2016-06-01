@@ -150,7 +150,7 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
 
         emit log("DEBUG", QString::fromStdString(str));
 
-        dCacheCopy->start(QString::fromStdString(str));
+        dCacheCopy->startDetached(QString::fromStdString(str));
 
         if(!dCacheCopy->waitForStarted())
         {
@@ -209,7 +209,7 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
 
             //emit log("DEBUG", QString::fromStdString(str));
 
-            dCacheCopy->start(QString::fromStdString(str));
+            dCacheCopy->startDetached(QString::fromStdString(str));
 
             if(!dCacheCopy->waitForStarted())
             {

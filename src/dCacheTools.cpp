@@ -213,6 +213,7 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
             str = "/usr/bin/gfal-copy --dry-run -n 5 -t 6000 ";
             str += "file:/";
             str += Input.toStdString();
+            str += filename;
             str += " srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/";
             str += BaseDir.toStdString();
             str += "/";
@@ -232,7 +233,6 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
             if(!dCachetool->waitForStarted())
             {
                 emit log("ERROR", QString("gfal-copy %1").arg(dCachetool->errorString()));
-                return;
             }
 
             dCachetool->waitForFinished(-1);

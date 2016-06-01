@@ -24,6 +24,9 @@ ELSE()
         MESSAGE( SEND_ERROR "Ddache-gui requires C++11 support. Please upgrade your compiler !" )
 ENDIF()
 
+## Modules path cmake
+set ( CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+
 # ----- Generate DOXYGEN documentation (optionnal) -----
 OPTION( INSTALL_DOC "Set to OFF to skip build/install Documentation" OFF )
 
@@ -41,7 +44,7 @@ endif()
 
 endif()
 
-set(Boost_NO_BOOST_CMAKE        ON)
+set(Boost_NO_BOOST_CMAKE         ON)
 set(Boost_USE_STATIC_LIBS        ON) # only find static libs
 set(Boost_USE_MULTITHREADED      ON)
 set(Boost_USE_STATIC_RUNTIME    OFF)

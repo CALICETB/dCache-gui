@@ -54,7 +54,6 @@ dCacheMainWindow::dCacheMainWindow(QWidget *parent) :
 
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(updateMainWindow()));
-    timer->start(timertime);
 }
 
 dCacheMainWindow::~dCacheMainWindow()
@@ -130,6 +129,7 @@ void dCacheMainWindow::updateProxy(QString status)
     timeleft = status.toInt();
 
     this->updateMainWindow();
+    timer->start(timertime);
 }
 
 void dCacheMainWindow::on_toolButton_clicked()

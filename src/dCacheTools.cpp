@@ -148,7 +148,7 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
         boost::filesystem::path p(Input.toStdString());
         std::string filename = p.filename().string();
 
-        str = "/usr/bin/gfal-copy -n 5 -t 6000 ";
+        str = "/usr/bin/gfal-copy --dry-run -n 5 -t 6000 ";
         str += "file:/";
         str += Input.toStdString();
         str += " srm://dcache-se-desy.de/pnfs/desy.de/calice/";
@@ -156,10 +156,15 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
         str += "/";
         str += OutputDir.toStdString();
         str += filename;
+        str += " lfn:/grid/calice/";
+        str += BaseDir.toStdString();
+        str += "/";
+        str += OutputDir.toStdString();
+        str += filename;
 
         emit log("DEBUG", QString::fromStdString(str));
 
-        //dCachetool->start(QString::fromStdString(str));
+        dCachetool->start(QString::fromStdString(str));
     }
     else
     {
@@ -177,7 +182,7 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
 
             std::string filename = (fileInfo.fileName()).toStdString();
 
-            str = "/usr/bin/gfal-copy -n 5 -t 6000 ";
+            str = "/usr/bin/gfal-copy --dry-run -n 5 -t 6000 ";
             str += "file:/";
             str += Input.toStdString();
             str += " srm://dcache-se-desy.de/pnfs/desy.de/calice/";
@@ -185,10 +190,15 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
             str += "/";
             str += OutputDir.toStdString();
             str += filename;
+            str += " lfn:/grid/calice/";
+            str += BaseDir.toStdString();
+            str += "/";
+            str += OutputDir.toStdString();
+            str += filename;
 
             emit log("DEBUG", QString::fromStdString(str));
 
-            //dCachetool->start(QString::fromStdString(str));
+            dCachetool->start(QString::fromStdString(str));
         }
     }
 
@@ -225,7 +235,7 @@ void dCacheTools::DestroyProxy(int timeleft)
     {
         emit log("INFO", "Destroying Proxy");
 
-        dCachetool->start("/usr/bin/rm $X509_USER_PROXY");
+        dCachetool->start("/bin/rm $X509_USER_PROXY");
 
         if(!dCachetool->waitForStarted())
         {

@@ -33,6 +33,7 @@ private slots:
     void StartCopy();
     void StopCopy();
     void ListFiles();
+    void CheckCopy();
 
     void Close();
 

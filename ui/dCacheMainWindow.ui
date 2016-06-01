@@ -56,7 +56,7 @@
      <rect>
       <x>150</x>
       <y>130</y>
-      <width>361</width>
+      <width>431</width>
       <height>20</height>
      </rect>
     </property>
@@ -149,9 +149,9 @@
    <widget class="QPushButton" name="StopCopy">
     <property name="geometry">
      <rect>
-      <x>360</x>
-      <y>319</y>
-      <width>141</width>
+      <x>220</x>
+      <y>320</y>
+      <width>121</width>
       <height>41</height>
      </rect>
     </property>
@@ -162,8 +162,8 @@
    <widget class="QPushButton" name="StartCopy">
     <property name="geometry">
      <rect>
-      <x>210</x>
-      <y>320</y>
+      <x>220</x>
+      <y>270</y>
       <width>121</width>
       <height>41</height>
      </rect>
@@ -177,19 +177,19 @@
      <rect>
       <x>360</x>
       <y>270</y>
-      <width>141</width>
+      <width>121</width>
       <height>41</height>
      </rect>
     </property>
     <property name="text">
-     <string>List Files in dir</string>
+     <string>List Files</string>
     </property>
    </widget>
    <widget class="QPushButton" name="Configure">
     <property name="geometry">
      <rect>
-      <x>210</x>
-      <y>270</y>
+      <x>280</x>
+      <y>10</y>
       <width>121</width>
       <height>41</height>
      </rect>
@@ -247,43 +247,6 @@
         <string>41000</string>
        </property>
       </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>320</x>
-      <y>20</y>
-      <width>231</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_3">
-     <item>
-      <widget class="QLabel" name="Proxy_label">
-       <property name="text">
-        <string>Proxy Validity</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
-        <widget class="QLabel" name="ProxyValid_label">
-         <property name="text">
-          <string>None!</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="sec_label">
-         <property name="text">
-          <string>secs</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
      </item>
     </layout>
    </widget>
@@ -353,6 +316,45 @@
     <property name="text">
      <string>Single File</string>
     </property>
+   </widget>
+   <widget class="QPushButton" name="CheckCopy">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>320</y>
+      <width>121</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Check Copy</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>441</x>
+      <y>11</y>
+      <width>131</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <widget class="QLabel" name="Proxy_label">
+       <property name="text">
+        <string>Proxy Validity</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="ProxyValid_label">
+       <property name="text">
+        <string>None!</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
  </widget>

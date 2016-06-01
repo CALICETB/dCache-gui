@@ -1,6 +1,11 @@
 #include "dCacheTools.h"
 
-#include <QDebug>
+#include <QLocale>
+#include <QTextStream>
+#include <QDir>
+#include <QDateTime>
+
+#include <boost/filesystem.hpp>
 
 dCacheTools::dCacheTools()
 {
@@ -129,8 +134,114 @@ void dCacheTools::SetEnv()
     dCachetool->setProcessEnvironment(env);
 }
 
-void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int type)
+void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int type, bool isSingleFile)
 {
     emit log("MESSAGE", "gfal-cp");
 
+    QLocale::setDefault(QLocale::English);
+
+    std::string str;
+    if(isSingleFile)
+    {
+        boost::filesystem::path p(Input.toStdString());
+        std::string filename = p.filename().string();
+
+        str = "/usr/bin/gfal-copy -n 5 -t 6000 ";
+        str += "file://";
+        str += Input.toStdString();
+        str += " srm://dcache-se-desy.de/pnfs/desy.de/calice/";
+        str += BaseDir.toStdString();
+        str += "/";
+        str += OutputDir.toStdString();
+        str += "/";
+        str += filename;
+
+        emit log("DEBUG", QString::fromStdString(str));
+
+        //dCachetool->start(QString::fromStdString(str));
+    }
+    else
+    {
+        QDir dir(Input);
+
+        dir.setFilter(QDir::Files | QDir::NoSymLinks);
+        dir.setSorting(QDir::Time);
+
+        QFileInfoList list = dir.entryInfoList();
+
+        for (int i = 0; i < list.size(); ++i)
+        {
+            QFileInfo fileInfo = list.at(i);
+            emit log("DEBUG", QString("file : %1 \t Time : %2").arg(fileInfo.fileName(), (fileInfo.lastModified()).toString(Qt::ISODate)));
+
+            std::string filename = (fileInfo.fileName()).toStdString();
+
+            str = "/usr/bin/gfal-copy -n 5 -t 6000 ";
+            str += "file://";
+            str += Input.toStdString();
+            str += " srm://dcache-se-desy.de/pnfs/desy.de/calice/";
+            str += BaseDir.toStdString();
+            str += "/";
+            str += OutputDir.toStdString();
+            str += "/";
+            str += filename;
+
+            emit log("DEBUG", QString::fromStdString(str));
+
+            //dCachetool->start(QString::fromStdString(str));
+        }
+    }
+
+
+    if(!dCachetool->waitForStarted())
+    {
+        emit log("ERROR", QString("Destroy Proxy %1").arg(dCachetool->errorString()));
+        return;
+    }
+
+    dCachetool->waitForFinished();
+
+    if(dCachetool->exitCode() == 0)
+    {
+        emit readyRead(dCachetool);
+    }
+    else
+    {
+        emit log("ERROR", dCachetool->errorString());
+    }
+}
+
+void dCacheTools::StopCopy()
+{
+    emit log("INFO", "Waiting for last Copy");
+    dCachetool->waitForFinished();
+}
+
+void dCacheTools::DestroyProxy(int timeleft)
+{
+    dCachetool->waitForFinished();
+
+    if(timeleft > 0)
+    {
+        emit log("INFO", "Destroying Proxy");
+
+        dCachetool->start("/usr/bin/rm $X509_USER_PROXY");
+
+        if(!dCachetool->waitForStarted())
+        {
+            emit log("ERROR", QString("Destroy Proxy %1").arg(dCachetool->errorString()));
+            return;
+        }
+
+        dCachetool->waitForFinished();
+
+        if(dCachetool->exitCode() == 0)
+        {
+            emit readyRead(dCachetool);
+        }
+        else
+        {
+            emit log("ERROR", dCachetool->errorString());
+        }
+    }
 }

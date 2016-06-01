@@ -35,14 +35,19 @@ dCacheMainWindow::dCacheMainWindow(QWidget *parent) :
     connect(ui->Configure, SIGNAL(clicked(bool)), this, SLOT(Configure()));
     connect(ui->StartCopy, SIGNAL(clicked(bool)), this, SLOT(StartCopy()));
     connect(ui->StopCopy, SIGNAL(clicked(bool)), this, SLOT(StopCopy()));
+    connect(ui->CheckCopy, SIGNAL(clicked(bool)), this, SLOT(CheckCopy()));
     connect(ui->ListFiles, SIGNAL(clicked(bool)), this, SLOT(ListFiles()));
     connect(ui->Exit, SIGNAL(clicked(bool)), this, SLOT(Close()));
 
+    ui->CheckProxy->setEnabled(false);
     ui->StartCopy->setEnabled(false);
     ui->StopCopy->setEnabled(false);
     ui->ListFiles->setEnabled(false);
     ui->toolButton->setEnabled(false);
     ui->InputDir->setReadOnly(true);
+    ui->BaseDir->setReadOnly(true);
+    ui->OutputDir->setReadOnly(true);
+    ui->Configure->setEnabled(false);
 
     ui->ProxyValid_label->setText("<font color='Red'>Check Proxy!</font>");
     ui->BaseDir->setText("tb-desy/native/desyAhcal2016/AHCAL_Testbeam_Raw_May_2016");
@@ -123,7 +128,9 @@ void dCacheMainWindow::updateProxy(QString status)
 {
     //emit log("INFO", status);
     timeleft = status.toInt();
-    ui->ProxyValid_label->setText(status);
+
+    this->updateMainWindow();
+
     ui->ListFiles->setEnabled(true);
 }
 
@@ -168,7 +175,7 @@ void dCacheMainWindow::StartCopy()
     ui->StopCopy->setEnabled(true);
     ui->Configure->setEnabled(false);
 
-    m_tools->Copy(ui->InputDir->text(), ui->BaseDir->text(), ui->OutputDir->text(), type);
+    m_tools->Copy(ui->InputDir->text(), ui->BaseDir->text(), ui->OutputDir->text(), type, isSingleFile);
 }
 
 void dCacheMainWindow::ListFiles()
@@ -183,11 +190,23 @@ void dCacheMainWindow::StopCopy()
     ui->Configure->setEnabled(true);
 
     emit log("MESSAGE", "Stop Copy");
+
+    m_tools->StopCopy();
+}
+
+void dCacheMainWindow::CheckCopy()
+{
+
+
 }
 
 void dCacheMainWindow::Close()
 {
     emit log("MESSAGE", "dCache-GUI exiting");
+
+    m_tools->StopCopy();
+    m_tools->DestroyProxy(timeleft);
+
     m_logger->close();
     m_tools->terminate();
 
@@ -216,13 +235,38 @@ void dCacheMainWindow::updateMainWindow()
         type = 4;
 
     if(type != -1)
+    {
         ui->toolButton->setEnabled(true);
+        ui->InputDir->setReadOnly(false);
+        ui->BaseDir->setReadOnly(false);
+        ui->OutputDir->setReadOnly(false);
+
+        ui->ListFiles->setEnabled(true);
+        ui->Configure->setEnabled(true);
+    }
 
     if(timeleft == 0)
+    {
+        ui->StartCopy->setEnabled(false);
+        ui->StopCopy->setEnabled(false);
+        ui->CheckCopy->setEnabled(false);
+        ui->ListFiles->setEnabled(false);
+        ui->Configure->setEnabled(false);
+        ui->InputDir->setReadOnly(true);
+        ui->BaseDir->setReadOnly(true);
+        ui->OutputDir->setReadOnly(true);
+
         ui->ProxyValid_label->setText("<font color='Red'>Check Proxy!</font>");
+    }
     else
     {
         timeleft = timeleft - timertime/1000;
-        ui->ProxyValid_label->setText(QString::number(timeleft));
+        int hours = timeleft/3600;
+        int minutes = timeleft%3600/60;
+
+        if(timeleft%2 == 0)
+            ui->ProxyValid_label->setText(QString("%1 : %2 time left").arg(QString::number(hours), QString::number(minutes)));
+        else
+            ui->ProxyValid_label->setText(QString("%1   %2 time left").arg(QString::number(hours), QString::number(minutes)));
     }
 }

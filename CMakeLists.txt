@@ -21,37 +21,43 @@ CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
 IF( COMPILER_SUPPORTS_CXX11 )
   SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 ELSE()
-        MESSAGE( SEND_ERROR "DQMCore requires C++11 support. Please upgrade your compiler !" )
+        MESSAGE( SEND_ERROR "Ddache-gui requires C++11 support. Please upgrade your compiler !" )
 ENDIF()
 
 # ----- Generate DOXYGEN documentation (optionnal) -----
 OPTION( INSTALL_DOC "Set to OFF to skip build/install Documentation" OFF )
 
 # ----- Install doc -----
-IF( INSTALL_DOC )
+if( INSTALL_DOC )
 
-FIND_PACKAGE( Doxygen )
+find_package( Doxygen )
 
-IF( DOXYGEN_FOUND )
-ADD_SUBDIRECTORY( ./doc )
-ELSE()
-MESSAGE( SEND_ERROR "Could not find doxygen required to build documentation" )
-MESSAGE( "Please install doxygen or set INSTALL_DOC to OFF" )
-MESSAGE( "" )
-ENDIF()
+if( DOXYGEN_FOUND )
+add_subdirectory( ./doc )
+else()
+message( SEND_ERROR "Could not find doxygen required to build documentation" )
+message( "Please install doxygen or set INSTALL_DOC to OFF" )
+endif()
 
-ENDIF()
+endif()
+
+set(Boost_USE_STATIC_LIBS        ON) # only find static libs
+set(Boost_USE_MULTITHREADED      ON)
+set(Boost_USE_STATIC_RUNTIME    OFF)
+
+find_package(Boost 1.36.0 COMPONENTS filesystem REQUIRED)
+set(LIBS ${LIBS} ${Boost_LIBRARIES})
 
 find_package(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
 
-SET(CMAKE_AUTOMOC ON)
+SET(CMAKE_AUTOMOC OFF)
 SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # include directories
 set( HEADER_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include )
 set( UI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ui )
 
-INCLUDE_DIRECTORIES (${HEADER_DIR})
+include_directories (${HEADER_DIR} ${Boost_INCLUDE_DIRS})
 
 # require proper c++
 ADD_DEFINITIONS( "-pedantic -Wunused-value -O2" )

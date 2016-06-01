@@ -15,7 +15,9 @@ public:
     void run();
     void setPassword(QString pass) {_password = pass;}
     void DoList(QString dir);
-    void Copy(QString Input, QString BaseDir, QString OutputDir, int type);
+    void Copy(QString Input, QString BaseDir, QString OutputDir, int type, bool isSingleFile);
+    void StopCopy();
+    void DestroyProxy(int timeleft);
 
 signals:
     void log(QString type, QString message);

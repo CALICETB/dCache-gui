@@ -141,10 +141,10 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
     emit log("MESSAGE", "gfal-cp");
 
     QLocale::setDefault(QLocale::English);
-
     dCachetool->setProcessChannelMode(QProcess::ForwardedChannels);
 
     std::string str;
+
     if(isSingleFile)
     {
         boost::filesystem::path p(Input.toStdString());
@@ -198,7 +198,7 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
 
         QDir dir(Input);
         dir.setFilter(QDir::Files | QDir::NoSymLinks);
-        dir.setSorting(QDir::Time);
+        dir.setSorting(QDir::Time | QDir::Reversed);
 
         QFileInfoList list = dir.entryInfoList();
 
@@ -227,7 +227,7 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
             */
             emit log("DEBUG", QString::fromStdString(str));
 
-            dCachetool->start(QString::fromStdString(str));
+            //dCachetool->start(QString::fromStdString(str));
 
             if(!dCachetool->waitForStarted())
             {

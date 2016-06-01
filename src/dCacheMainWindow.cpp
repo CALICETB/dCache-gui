@@ -178,6 +178,10 @@ void dCacheMainWindow::StartCopy()
     ui->StopCopy->setEnabled(true);
     ui->Configure->setEnabled(false);
 
+    ui->InputDir->setReadOnly(true);
+    ui->BaseDir->setReadOnly(true);
+    ui->OutputDir->setReadOnly(true);
+
     emit DoCopy(ui->InputDir->text(), ui->BaseDir->text(), ui->OutputDir->text(), type, isSingleFile);
 }
 
@@ -191,6 +195,10 @@ void dCacheMainWindow::StopCopy()
     ui->StartCopy->setEnabled(true);
     ui->StopCopy->setEnabled(false);
     ui->Configure->setEnabled(true);
+
+    ui->InputDir->setReadOnly(false);
+    ui->BaseDir->setReadOnly(false);
+    ui->OutputDir->setReadOnly(false);
 
     emit log("MESSAGE", "Stop Copy");
 

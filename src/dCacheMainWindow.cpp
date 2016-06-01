@@ -19,6 +19,9 @@ dCacheMainWindow::dCacheMainWindow(QWidget *parent) :
     type = -1;
 
     connect(this, SIGNAL(log(QString,QString)), m_logger, SLOT(Log(QString,QString)));
+    connect(this, SIGNAL(DoListing(QString)), m_tools, SLOT(DoList(QString)));
+    connect(this, SIGNAL(DoCopy(QString, QString, QString, int, bool)), m_tools, SLOT(Copy(QString, QString, QString, int, bool)));
+    connect(this, SIGNAL(DoStopCopy()), m_tools, SLOT(StopCopy()));
 
     connect(m_tools, SIGNAL(log(QString,QString)), m_logger, SLOT(Log(QString,QString)));
     connect(m_tools, SIGNAL(PasswordRequired()), this, SLOT(showPassword()));
@@ -173,12 +176,12 @@ void dCacheMainWindow::StartCopy()
     ui->StopCopy->setEnabled(true);
     ui->Configure->setEnabled(false);
 
-    m_tools->Copy(ui->InputDir->text(), ui->BaseDir->text(), ui->OutputDir->text(), type, isSingleFile);
+    emit DoCopy(ui->InputDir->text(), ui->BaseDir->text(), ui->OutputDir->text(), type, isSingleFile);
 }
 
 void dCacheMainWindow::ListFiles()
 {
-    m_tools->DoList(ui->BaseDir->text());
+    emit DoListing(ui->BaseDir->text());
 }
 
 void dCacheMainWindow::StopCopy()
@@ -189,7 +192,7 @@ void dCacheMainWindow::StopCopy()
 
     emit log("MESSAGE", "Stop Copy");
 
-    m_tools->StopCopy();
+    emit DoStopCopy();
 }
 
 void dCacheMainWindow::CheckCopy()

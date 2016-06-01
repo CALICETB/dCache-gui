@@ -232,7 +232,6 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
             if(dCachetool->exitCode() == 0)
             {
                 emit readyRead(dCachetool);
-                sleep(5000);
             }
             else
             {

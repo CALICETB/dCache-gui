@@ -14,21 +14,22 @@ public:
 
     void run();
     void setPassword(QString pass) {_password = pass;}
-    void DoList(QString dir);
-    void Copy(QString Input, QString BaseDir, QString OutputDir, int type, bool isSingleFile);
-    void StopCopy();
-    void DestroyProxy(int timeleft);
 
 signals:
     void log(QString type, QString message);
     void PasswordRequired();
     void ProxyStatus(QString status);
-    void readyRead(QProcess *proc);
     void ProxyDestroyed();
+    void readyRead(QProcess *proc);
 
 public slots:
     void StartProxy();
     void CheckProxy();
+    void DestroyProxy(int timeleft);
+    void Copy(QString Input, QString BaseDir, QString OutputDir, int type, bool isSingleFile);
+    void StopCopy();
+    void DoList(QString dir);
+
     void readStdOut(QProcess *proc);
     void SetEnv();
 

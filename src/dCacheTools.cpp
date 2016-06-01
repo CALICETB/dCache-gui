@@ -122,7 +122,8 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
     emit log("MESSAGE", "gfal-cp");
 
     QLocale::setDefault(QLocale::English);
-    dCachetool->setProcessChannelMode(QProcess::ForwardedChannels);
+    QProcess *dCacheCopy = new QProcess();
+    dCacheCopy->setProcessChannelMode(QProcess::ForwardedChannels);
 
     std::string str;
 
@@ -149,19 +150,19 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
 
         emit log("DEBUG", QString::fromStdString(str));
 
-        dCachetool->start(QString::fromStdString(str));
+        dCacheCopy->start(QString::fromStdString(str));
 
-        if(!dCachetool->waitForStarted())
+        if(!dCacheCopy->waitForStarted())
         {
-            emit log("ERROR", QString("gfal-copy %1").arg(dCachetool->errorString()));
+            emit log("ERROR", QString("gfal-copy %1").arg(dCacheCopy->errorString()));
             return;
         }
 
-        dCachetool->waitForFinished(-1);
+        dCacheCopy->waitForFinished(-1);
 
-        if(dCachetool->exitCode() != 0)
+        if(dCacheCopy->exitCode() != 0)
         {
-            emit log("ERROR", dCachetool->errorString());
+            emit log("ERROR", dCacheCopy->errorString());
         }
     }
     else
@@ -208,22 +209,24 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
 
             //emit log("DEBUG", QString::fromStdString(str));
 
-            dCachetool->start(QString::fromStdString(str));
+            dCacheCopy->start(QString::fromStdString(str));
 
-            if(!dCachetool->waitForStarted())
+            if(!dCacheCopy->waitForStarted())
             {
-                emit log("ERROR", QString("gfal-copy %1").arg(dCachetool->errorString()));
+                emit log("ERROR", QString("gfal-copy %1").arg(dCacheCopy->errorString()));
                 return;
             }
 
-            dCachetool->waitForFinished(-1);
+            dCacheCopy->waitForFinished(-1);
 
-            if(dCachetool->exitCode() != 0)
+            if(dCacheCopy->exitCode() != 0)
             {
-                emit log("ERROR", dCachetool->errorString());
+                emit log("ERROR", dCacheCopy->errorString());
             }
         }
     }
+
+    dCacheCopy->deleteLater();
 }
 
 void dCacheTools::StopCopy()

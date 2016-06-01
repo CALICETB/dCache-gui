@@ -151,17 +151,18 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
         str = "/usr/bin/gfal-copy --dry-run -n 5 -t 6000 ";
         str += "file:/";
         str += Input.toStdString();
-        str += " srm://dcache-se-desy.de/pnfs/desy.de/calice/";
+        str += " srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/";
         str += BaseDir.toStdString();
         str += "/";
         str += OutputDir.toStdString();
         str += filename;
+        /*
         str += " lfn:/grid/calice/";
         str += BaseDir.toStdString();
         str += "/";
         str += OutputDir.toStdString();
         str += filename;
-
+        */
         emit log("DEBUG", QString::fromStdString(str));
 
         dCachetool->start(QString::fromStdString(str));
@@ -185,17 +186,18 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
             str = "/usr/bin/gfal-copy --dry-run -n 5 -t 6000 ";
             str += "file:/";
             str += Input.toStdString();
-            str += " srm://dcache-se-desy.de/pnfs/desy.de/calice/";
+            str += " srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/";
             str += BaseDir.toStdString();
             str += "/";
             str += OutputDir.toStdString();
             str += filename;
+            /*
             str += " lfn:/grid/calice/";
             str += BaseDir.toStdString();
             str += "/";
             str += OutputDir.toStdString();
             str += filename;
-
+            */
             emit log("DEBUG", QString::fromStdString(str));
 
             dCachetool->start(QString::fromStdString(str));

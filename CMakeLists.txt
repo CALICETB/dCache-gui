@@ -19,13 +19,22 @@ INCLUDE( CheckCXXCompilerFlag )
 CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
 
 IF( COMPILER_SUPPORTS_CXX11 )
-  SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 ELSE()
-        MESSAGE( SEND_ERROR "Ddache-gui requires C++11 support. Please upgrade your compiler !" )
+MESSAGE( SEND_ERROR "Ddache-gui requires C++11 support. Please upgrade your compiler !" )
 ENDIF()
 
 ## Modules path cmake
 set ( CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+
+find_package(Git)
+if(GIT_FOUND)
+    message("git found: ${GIT_EXECUTABLE}")
+    execute_process(
+      COMMAND git pull
+      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    )
+endif()
 
 # ----- Generate DOXYGEN documentation (optionnal) -----
 OPTION( INSTALL_DOC "Set to OFF to skip build/install Documentation" OFF )
@@ -33,14 +42,14 @@ OPTION( INSTALL_DOC "Set to OFF to skip build/install Documentation" OFF )
 # ----- Install doc -----
 if( INSTALL_DOC )
 
-find_package( Doxygen )
+    find_package( Doxygen )
 
-if( DOXYGEN_FOUND )
-add_subdirectory( ./doc )
-else()
-message( SEND_ERROR "Could not find doxygen required to build documentation" )
-message( "Please install doxygen or set INSTALL_DOC to OFF" )
-endif()
+    if( DOXYGEN_FOUND )
+        add_subdirectory( ./doc )
+    else()
+        message( SEND_ERROR "Could not find doxygen required to build documentation" )
+        message( "Please install doxygen or set INSTALL_DOC to OFF" )
+    endif()
 
 endif()
 

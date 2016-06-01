@@ -32,7 +32,7 @@ public slots:
     void SetEnv();
 
 private:
-    QProcess *dCachetool;
+    QProcess *dCachetool, *dCacheCopy;
     QString _password;
     QProcessEnvironment env;
 };

@@ -11,7 +11,9 @@ dCacheTools::dCacheTools()
 {
     _password = "";
     dCachetool = new QProcess();
+    dCacheCopy = new QProcess();
     dCachetool->setProcessChannelMode(QProcess::SeparateChannels);
+    dCacheCopy->setProcessChannelMode(QProcess::SeparateChannels);
 }
 
 dCacheTools::~dCacheTools()
@@ -115,6 +117,7 @@ void dCacheTools::SetEnv()
 {
     env = QProcessEnvironment::systemEnvironment();
     dCachetool->setProcessEnvironment(env);
+    dCacheCopy->setProcessEnvironment(env);
 }
 
 void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int type, bool isSingleFile)
@@ -122,7 +125,7 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
     emit log("MESSAGE", "gfal-cp");
 
     QLocale::setDefault(QLocale::English);
-    dCachetool->setProcessChannelMode(QProcess::ForwardedChannels);
+    dCacheCopy->setProcessChannelMode(QProcess::ForwardedChannels);
 
     std::string str;
 
@@ -149,19 +152,19 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
 
         emit log("DEBUG", QString::fromStdString(str));
 
-        dCachetool->startDetached(QString::fromStdString(str));
+        dCacheCopy->startDetached(QString::fromStdString(str));
 
-        if(!dCachetool->waitForStarted())
+        if(!dCacheCopy->waitForStarted())
         {
-            emit log("ERROR", QString("gfal-copy %1").arg(dCachetool->errorString()));
+            emit log("ERROR", QString("gfal-copy %1").arg(dCacheCopy->errorString()));
             return;
         }
 
-        dCachetool->waitForFinished(-1);
+        dCacheCopy->waitForFinished(-1);
 
-        if(dCachetool->exitCode() != 0)
+        if(dCacheCopy->exitCode() != 0)
         {
-            emit log("ERROR", dCachetool->errorString());
+            emit log("ERROR", dCacheCopy->errorString());
         }
     }
     else
@@ -208,19 +211,19 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
 
             emit log("DEBUG", QString::fromStdString(str));
 
-            dCachetool->startDetached(QString::fromStdString(str));
+            dCacheCopy->startDetached(QString::fromStdString(str));
 
-            if(!dCachetool->waitForStarted())
+            if(!dCacheCopy->waitForStarted())
             {
-                emit log("ERROR", QString("gfal-copy %1").arg(dCachetool->errorString()));
+                emit log("ERROR", QString("gfal-copy %1").arg(dCacheCopy->errorString()));
                 //return;
             }
 
-            dCachetool->waitForFinished(-1);
+            dCacheCopy->waitForFinished(-1);
 
-            if(dCachetool->exitCode() != 0)
+            if(dCacheCopy->exitCode() != 0)
             {
-                emit log("ERROR", dCachetool->errorString());
+                emit log("ERROR", dCacheCopy->errorString());
             }
         }
     }
@@ -229,12 +232,12 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
 void dCacheTools::StopCopy()
 {
     emit log("INFO", "Waiting for last Copy");
-    dCachetool->waitForFinished(-1);
+    dCacheCopy->terminate();
 }
 
 void dCacheTools::DestroyProxy(int timeleft)
 {
-    dCachetool->waitForFinished(-1);
+    dCacheCopy->terminate();
 
     if(timeleft > 0)
     {

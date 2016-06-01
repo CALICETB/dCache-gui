@@ -149,13 +149,12 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
         std::string filename = p.filename().string();
 
         str = "/usr/bin/gfal-copy -n 5 -t 6000 ";
-        str += "file://";
+        str += "file:/";
         str += Input.toStdString();
         str += " srm://dcache-se-desy.de/pnfs/desy.de/calice/";
         str += BaseDir.toStdString();
         str += "/";
         str += OutputDir.toStdString();
-        str += "/";
         str += filename;
 
         emit log("DEBUG", QString::fromStdString(str));
@@ -179,13 +178,12 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
             std::string filename = (fileInfo.fileName()).toStdString();
 
             str = "/usr/bin/gfal-copy -n 5 -t 6000 ";
-            str += "file://";
+            str += "file:/";
             str += Input.toStdString();
             str += " srm://dcache-se-desy.de/pnfs/desy.de/calice/";
             str += BaseDir.toStdString();
             str += "/";
             str += OutputDir.toStdString();
-            str += "/";
             str += filename;
 
             emit log("DEBUG", QString::fromStdString(str));
@@ -197,7 +195,7 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
 
     if(!dCachetool->waitForStarted())
     {
-        emit log("ERROR", QString("Destroy Proxy %1").arg(dCachetool->errorString()));
+        emit log("ERROR", QString("gfal-copy %1").arg(dCachetool->errorString()));
         return;
     }
 
@@ -246,4 +244,6 @@ void dCacheTools::DestroyProxy(int timeleft)
             emit log("ERROR", dCachetool->errorString());
         }
     }
+
+    emit ProxyDestroyed();
 }

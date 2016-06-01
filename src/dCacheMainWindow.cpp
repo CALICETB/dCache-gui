@@ -205,8 +205,8 @@ void dCacheMainWindow::Close()
     m_tools->StopCopy();
     m_tools->DestroyProxy(timeleft);
 
-    m_logger->close();
-    m_tools->terminate();
+    connect(m_tools, SIGNAL(ProxyDestroyed()), m_logger, SLOT(close()));
+    connect(m_tools, SIGNAL(ProxyDestroyed()), m_tools, SLOT(quit()));
 
     delete m_tools;
     delete m_logger;

@@ -166,6 +166,23 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
         emit log("DEBUG", QString::fromStdString(str));
 
         dCachetool->start(QString::fromStdString(str));
+
+        if(!dCachetool->waitForStarted())
+        {
+            emit log("ERROR", QString("gfal-copy %1").arg(dCachetool->errorString()));
+            return;
+        }
+
+        dCachetool->waitForFinished();
+
+        if(dCachetool->exitCode() == 0)
+        {
+            emit readyRead(dCachetool);
+        }
+        else
+        {
+            emit log("ERROR", dCachetool->errorString());
+        }
     }
     else
     {
@@ -201,25 +218,24 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
             emit log("DEBUG", QString::fromStdString(str));
 
             dCachetool->start(QString::fromStdString(str));
+
+            if(!dCachetool->waitForStarted())
+            {
+                emit log("ERROR", QString("gfal-copy %1").arg(dCachetool->errorString()));
+                return;
+            }
+
+            dCachetool->waitForFinished();
+
+            if(dCachetool->exitCode() == 0)
+            {
+                emit readyRead(dCachetool);
+            }
+            else
+            {
+                emit log("ERROR", dCachetool->errorString());
+            }
         }
-    }
-
-
-    if(!dCachetool->waitForStarted())
-    {
-        emit log("ERROR", QString("gfal-copy %1").arg(dCachetool->errorString()));
-        return;
-    }
-
-    dCachetool->waitForFinished();
-
-    if(dCachetool->exitCode() == 0)
-    {
-        emit readyRead(dCachetool);
-    }
-    else
-    {
-        emit log("ERROR", dCachetool->errorString());
     }
 }
 

@@ -48,7 +48,7 @@ void dCacheTools::StartProxy()
         emit log("INFO", "Password received");
         dCachetool->write(_password.toStdString().data());
         dCachetool->closeWriteChannel();
-        dCachetool->waitForFinished(-1);
+        dCachetool->waitForFinished();
 
         if(dCachetool->exitCode() == 0)
         {
@@ -74,7 +74,7 @@ void dCacheTools::CheckProxy()
         emit log("ERROR", QString("voms-proxy-info %1").arg(dCachetool->errorString()));
         return;
     }
-    dCachetool->waitForFinished(-1);
+    dCachetool->waitForFinished();
 
     if(dCachetool->exitCode() == 0)
     {
@@ -105,7 +105,7 @@ void dCacheTools::DoList(QString dir)
         return;
     }
 
-    dCachetool->waitForFinished(-1);
+    dCachetool->waitForFinished();
 
     if(dCachetool->exitCode() != 0)
     {
@@ -152,7 +152,7 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
 
         emit log("DEBUG", QString::fromStdString(str));
 
-        dCacheCopy->startDetached(QString::fromStdString(str));
+        dCacheCopy->start(QString::fromStdString(str));
 
         if(!dCacheCopy->waitForStarted())
         {
@@ -160,7 +160,7 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
             return;
         }
 
-        dCacheCopy->waitForFinished(-1);
+        dCacheCopy->waitForFinished();
 
         if(dCacheCopy->exitCode() != 0)
         {
@@ -211,7 +211,7 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
 
             emit log("DEBUG", QString::fromStdString(str));
 
-            dCacheCopy->startDetached(QString::fromStdString(str));
+            dCacheCopy->start(QString::fromStdString(str));
 
             if(!dCacheCopy->waitForStarted())
             {
@@ -219,7 +219,7 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
                 //return;
             }
 
-            dCacheCopy->waitForFinished(-1);
+            dCacheCopy->waitForFinished();
 
             if(dCacheCopy->exitCode() != 0)
             {
@@ -232,12 +232,12 @@ void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int ty
 void dCacheTools::StopCopy()
 {
     emit log("INFO", "Waiting for last Copy");
-    dCacheCopy->terminate();
+    dCacheCopy->waitForFinished();
 }
 
 void dCacheTools::DestroyProxy(int timeleft)
 {
-    dCacheCopy->terminate();
+    dCacheCopy->waitForFinished();
 
     if(timeleft > 0)
     {
@@ -254,7 +254,7 @@ void dCacheTools::DestroyProxy(int timeleft)
             return;
         }
 
-        dCachetool->waitForFinished(-1);
+        dCachetool->waitForFinished();
 
         if(dCachetool->exitCode() != 0)
         {

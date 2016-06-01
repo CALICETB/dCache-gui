@@ -58,7 +58,9 @@ void dCacheTools::StartProxy()
         }
         else
         {
-            emit ProxyStatus(dCachetool->errorString());
+            int timeleft = 0;
+            emit ProxyStatus(QString::number(timeleft));
+            emit readyRead(dCachetool);
         }
     }
 }

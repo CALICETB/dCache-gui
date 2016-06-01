@@ -130,8 +130,6 @@ void dCacheMainWindow::updateProxy(QString status)
     timeleft = status.toInt();
 
     this->updateMainWindow();
-
-    ui->ListFiles->setEnabled(true);
 }
 
 void dCacheMainWindow::on_toolButton_clicked()
@@ -260,6 +258,10 @@ void dCacheMainWindow::updateMainWindow()
     }
     else
     {
+        ui->CheckProxy->setEnabled(true);
+        ui->Configure->setEnabled(true);
+        ui->ListFiles->setEnabled(true);
+
         timeleft = timeleft - timertime/1000;
         int hours = timeleft/3600;
         int minutes = timeleft%3600/60;

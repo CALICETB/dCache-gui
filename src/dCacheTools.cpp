@@ -237,7 +237,10 @@ void dCacheTools::DestroyProxy(int timeleft)
     {
         emit log("INFO", "Destroying Proxy");
 
-        dCachetool->start("/bin/rm $X509_USER_PROXY");
+        QString proxy = "/bin/rm ";
+        proxy.append(env.value("X509_USER_PROXY"));
+
+        dCachetool->start(proxy);
 
         if(!dCachetool->waitForStarted())
         {

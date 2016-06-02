@@ -4,8 +4,6 @@
 #include <QDir>
 #include <QDateTime>
 
-#include <boost/filesystem.hpp>
-
 dCacheTools::dCacheTools()
 {
 	m_copy = false;
@@ -18,6 +16,9 @@ dCacheTools::dCacheTools()
 	m_type = -1;
 	m_isSingleFile = false;
 	m_stop = false;
+
+	nfiles = 0;
+	idxProcess = 0;
 }
 
 dCacheTools::~dCacheTools()
@@ -86,35 +87,69 @@ void dCacheTools::Copy()
 
 	QLocale::setDefault(QLocale::English);
 
-	if(m_isSingleFile)
+	QDir dir(m_dir);
+	dir.setFilter(QDir::Files | QDir::NoSymLinks);
+	dir.setSorting(QDir::Time | QDir::Reversed);
+
+	list = dir.entryInfoList();
+	nfiles = list.size();
+
+	if(nfiles > 0)
 	{
-		nfiles = 1;
+		QString filetype;
+		if(m_type == 1)
+			filetype = "txt";
+		if(m_type == 2)
+			filetype = "slcio";
+		if(m_type == 3)
+			filetype = "raw";
+
 		idxProcess = 0;
 
-		boost::filesystem::path p(m_dir.toStdString());
-		std::string filename = p.filename().string();
+		QFileInfo fileInfo = list.at(idxProcess);
 
-		std::string str = "/usr/bin/gfal-copy --dry-run -n 5 -t 6000 ";
-		str += "file:/";
-		str += m_dir.toStdString();
-		str += " srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/";
-		str += m_base.toStdString();
-		str += "/";
-		str += m_output.toStdString();
-		str += filename;
-		/*
-        str += " lfn:/grid/calice/";
-        str += BaseDir.toStdString();
-        str += "/";
-        str += OutputDir.toStdString();
-        str += filename;
-		 */
+		QString filename = fileInfo.fileName();
+		QDateTime fileTime = fileInfo.lastModified();
+		QDateTime current = QDateTime::currentDateTime();
+
+		emit log("DEBUG", QString("File : %1 \n "
+				"Last Modification : %2 \n "
+				"Current time : %3").arg(filename, fileTime.toString(Qt::LocalDate), current.toString(Qt::LocalDate)));
+
+		if(current.toTime_t() - fileTime.toTime_t() < 350)
+		{
+			emit log("DEBUG", "File too young. Will be copied later");
+			idxProcess++;
+			this->goToNextFile();
+			return;
+		}
+
+		if(fileInfo.completeSuffix() != filetype && m_type != 4)
+			m_stop = true;
 
 		if(m_stop)
 		{
 			this->StopCopy();
 			return;
 		}
+
+		std::string str = "/usr/bin/gfal-copy --dry-run -n 5 -t 6000 ";
+		str += "file:/";
+		str += m_dir.toStdString();
+		str += "/";
+		str += filename.toStdString();
+		str += " srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/";
+		str += m_base.toStdString();
+		str += "/";
+		str += m_output.toStdString();
+		str += filename.toStdString();
+		/*
+            str += " lfn:/grid/calice/";
+            str += BaseDir.toStdString();
+            str += "/";
+            str += OutputDir.toStdString();
+            str += filename;
+		 */
 
 		emit log("DEBUG", QString::fromStdString(str));
 
@@ -125,92 +160,11 @@ void dCacheTools::Copy()
 		if(!dCacheCopy->waitForStarted())
 		{
 			emit log("ERROR", QString("gfal-copy %1").arg(dCacheCopy->errorString()));
-			return;
+			//return;
 		}
 
 		connect(dCacheCopy, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(finishedProcess(int, QProcess::ExitStatus)));
 	}
-	else
-	{
-		QDir dir(m_dir);
-		dir.setFilter(QDir::Files | QDir::NoSymLinks);
-		dir.setSorting(QDir::Time | QDir::Reversed);
-
-		list = dir.entryInfoList();
-		nfiles = list.size();
-
-		if(nfiles > 0)
-		{
-			QString filetype;
-			if(m_type == 1)
-				filetype = "txt";
-			if(m_type == 2)
-				filetype = "slcio";
-			if(m_type == 3)
-				filetype = "raw";
-
-			idxProcess = 0;
-
-			QFileInfo fileInfo = list.at(idxProcess);
-
-			QString filename = fileInfo.fileName();
-			QDateTime fileTime = fileInfo.lastModified();
-			QDateTime current = QDateTime::currentDateTime();
-
-			emit log("DEBUG", QString("File : %1 \n "
-					"Last Modification : %2 \n "
-					"Current time : %3").arg(filename, fileTime.toString(Qt::LocalDate), current.toString(Qt::LocalDate)));
-
-			if(current.toTime_t() - fileTime.toTime_t() < 350)
-			{
-				emit log("DEBUG", "File too young. Will be copied later");
-				return;
-			}
-
-			if(fileInfo.completeSuffix() != filetype && m_type != 4)
-				m_stop = true;
-
-			if(m_stop)
-			{
-				this->StopCopy();
-				return;
-			}
-
-			std::string str = "/usr/bin/gfal-copy --dry-run -n 5 -t 6000 ";
-			str += "file:/";
-			str += m_dir.toStdString();
-			str += "/";
-			str += filename.toStdString();
-			str += " srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/";
-			str += m_base.toStdString();
-			str += "/";
-			str += m_output.toStdString();
-			str += filename.toStdString();
-			/*
-            str += " lfn:/grid/calice/";
-            str += BaseDir.toStdString();
-            str += "/";
-            str += OutputDir.toStdString();
-            str += filename;
-			 */
-
-			emit log("DEBUG", QString::fromStdString(str));
-
-			dCacheCopy = new QProcess();
-			dCacheCopy->setProcessChannelMode(QProcess::ForwardedChannels);
-			dCacheCopy->start(QString::fromStdString(str));
-
-			if(!dCacheCopy->waitForStarted())
-			{
-				emit log("ERROR", QString("gfal-copy %1").arg(dCacheCopy->errorString()));
-				//return;
-			}
-
-			connect(dCacheCopy, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(finishedProcess(int, QProcess::ExitStatus)));
-		}
-	}
-
-	m_copy = false;
 }
 
 void dCacheTools::StopCopy()
@@ -250,10 +204,6 @@ void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus
 		if(m_type == 3)
 			filetype = "raw";
 
-		/* create QProcess object */
-		dCacheCopy = new QProcess();
-		dCacheCopy->setProcessChannelMode(QProcess::ForwardedChannels);
-
 		QFileInfo fileInfo = list.at(idxProcess);
 
 		QString filename = fileInfo.fileName();
@@ -267,6 +217,8 @@ void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus
 		if(current.toTime_t() - fileTime.toTime_t() < 350)
 		{
 			emit log("DEBUG", "File too young. Will be copied later");
+			idxProcess++;
+			this->goToNextFile();
 			return;
 		}
 
@@ -298,6 +250,9 @@ void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus
 
 		emit log("DEBUG", QString::fromStdString(str));
 
+		/* create QProcess object */
+		dCacheCopy = new QProcess();
+		dCacheCopy->setProcessChannelMode(QProcess::ForwardedChannels);
 		dCacheCopy->start(QString::fromStdString(str));
 
 		/* show output */
@@ -312,5 +267,89 @@ void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus
 		idxProcess++;
 	}
 	else
+	{
+		m_copy = false;
 		emit CopyFinished();
+	}
+}
+
+void dCacheTools::goToNextFile()
+{
+	if(idxProcess < nfiles)
+	{
+		QString filetype;
+		if(m_type == 1)
+			filetype = "txt";
+		if(m_type == 2)
+			filetype = "slcio";
+		if(m_type == 3)
+			filetype = "raw";
+
+		QFileInfo fileInfo = list.at(idxProcess);
+
+		QString filename = fileInfo.fileName();
+		QDateTime fileTime = fileInfo.lastModified();
+		QDateTime current = QDateTime::currentDateTime();
+
+		emit log("DEBUG", QString("File : %1 \n "
+				"Last Modification : %2 \n "
+				"Current time : %3").arg(filename, fileTime.toString(Qt::LocalDate), current.toString(Qt::LocalDate)));
+
+		if(current.toTime_t() - fileTime.toTime_t() < 350)
+		{
+			emit log("DEBUG", "File too young. Will be copied later");
+			idxProcess++;
+			this->goToNextFile();
+			return;
+		}
+
+		if(fileInfo.completeSuffix() != filetype && m_type != 4) m_stop = true;
+
+		std::string str = "/usr/bin/gfal-copy --dry-run -n 5 -t 6000 ";
+		str += "file:/";
+		str += m_dir.toStdString();
+		str += "/";
+		str += filename.toStdString();
+		str += " srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/";
+		str += m_base.toStdString();
+		str += "/";
+		str += m_output.toStdString();
+		str += filename.toStdString();
+		/*
+    	            str += " lfn:/grid/calice/";
+    	            str += BaseDir.toStdString();
+    	            str += "/";
+    	            str += OutputDir.toStdString();
+    	            str += filename;
+		 */
+
+		if(m_stop)
+		{
+			this->StopCopy();
+			return;
+		}
+
+		emit log("DEBUG", QString::fromStdString(str));
+
+		/* create QProcess object */
+		dCacheCopy = new QProcess();
+		dCacheCopy->setProcessChannelMode(QProcess::ForwardedChannels);
+		dCacheCopy->start(QString::fromStdString(str));
+
+		/* show output */
+		if(!dCacheCopy->waitForStarted())
+		{
+			emit log("ERROR", QString("gfal-copy %1").arg(dCacheCopy->errorString()));
+			//return;
+		}
+
+		connect(dCacheCopy, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(finishedProcess(int, QProcess::ExitStatus)));
+
+		idxProcess++;
+	}
+	else
+	{
+		m_copy = false;
+		emit CopyFinished();
+	}
 }

@@ -30,6 +30,7 @@ public:
 
 	signals:
 	void log(QString type, QString message);
+	void CopyFinished();
 
 	public slots:
 	void Configure(QString Input, QString BaseDir, QString OutputDir, int type, bool isSingleFile);

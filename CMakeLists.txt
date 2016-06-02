@@ -19,14 +19,17 @@ INCLUDE( CheckCXXCompilerFlag )
 CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
 
 IF( COMPILER_SUPPORTS_CXX11 )
-SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -std=c++11")
 ELSE()
-MESSAGE( SEND_ERROR "Ddache-gui requires C++11 support. Please upgrade your compiler !" )
+MESSAGE( SEND_ERROR "dCache-gui requires C++11 support. Please upgrade your compiler !" )
 ENDIF()
+
+## Prefix path cmake
+set (CMAKE_PREFIX_PATH "/home/calice/Qt/5.6/gcc_64")
 
 ## Modules path cmake
 set ( CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
-
+ 
 find_package(Git)
 if(GIT_FOUND)
     message("git found: ${GIT_EXECUTABLE}")
@@ -53,14 +56,6 @@ if( INSTALL_DOC )
 
 endif()
 
-set(Boost_NO_BOOST_CMAKE         ON)
-set(Boost_USE_STATIC_LIBS        ON) # only find static libs
-set(Boost_USE_MULTITHREADED      ON)
-set(Boost_USE_STATIC_RUNTIME    OFF)
-
-find_package(Boost 1.36.0 COMPONENTS system filesystem REQUIRED)
-set(LIBS ${LIBS} ${Boost_LIBRARIES})
-
 find_package(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
 
 SET(CMAKE_AUTOMOC OFF)
@@ -75,5 +70,13 @@ include_directories (${HEADER_DIR} ${Boost_INCLUDE_DIRS})
 # require proper c++
 ADD_DEFINITIONS( "-pedantic -Wunused-value -O2" )
 ADD_DEFINITIONS("-Wno-long-long -Wreturn-type -Werror")
+
+set(Boost_NO_BOOST_CMAKE         ON)
+set(Boost_USE_STATIC_LIBS        ON) # only find static libs
+set(Boost_USE_MULTITHREADED      ON)
+set(Boost_USE_STATIC_RUNTIME    OFF)
+
+find_package(Boost 1.36.0 COMPONENTS system filesystem REQUIRED)
+set(LIBS ${LIBS} ${Boost_LIBRARIES})
 
 subdirs(src)

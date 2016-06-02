@@ -188,7 +188,13 @@ void dCacheTools::Copy()
 				break;
 			}
 
-			dCacheCopy->waitForFinished(-1);
+			while(1)
+			{
+				if(dCacheCopy->state() == QProcess::Running)
+					continue;
+				else
+					break;
+			}
 		}
 	}
 

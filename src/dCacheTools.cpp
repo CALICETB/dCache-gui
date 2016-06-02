@@ -187,6 +187,8 @@ void dCacheTools::Copy()
 				this->StopCopy();
 				break;
 			}
+
+			dCacheCopy->waitForFinished(-1);
 		}
 	}
 

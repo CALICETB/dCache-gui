@@ -88,6 +88,9 @@ void dCacheTools::Copy()
 
 	if(m_isSingleFile)
 	{
+		nfiles = 1;
+		idxProcess = 0;
+
 		boost::filesystem::path p(m_dir.toStdString());
 		std::string filename = p.filename().string();
 
@@ -107,6 +110,12 @@ void dCacheTools::Copy()
         str += filename;
 		 */
 
+		if(m_stop)
+		{
+			this->StopCopy();
+			return;
+		}
+
 		emit log("DEBUG", QString::fromStdString(str));
 
 		dCacheCopy = new QProcess();
@@ -119,8 +128,7 @@ void dCacheTools::Copy()
 			return;
 		}
 
-		if(m_stop)
-			this->StopCopy();
+		connect(dCacheCopy, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(finishedProcess(int, QProcess::ExitStatus)));
 	}
 	else
 	{
@@ -147,7 +155,14 @@ void dCacheTools::Copy()
 			emit log("DEBUG", QString("file : %1 \t Time : %2").arg(fileInfo.fileName(), (fileInfo.lastModified()).toString(Qt::ISODate)));
 
 			std::string filename = (fileInfo.fileName()).toStdString();
-			if(fileInfo.completeSuffix() != filetype && m_type != 4) m_stop = true;
+			if(fileInfo.completeSuffix() != filetype && m_type != 4)
+				m_stop = true;
+
+			if(m_stop)
+			{
+				this->StopCopy();
+				return;
+			}
 
 			std::string str = "/usr/bin/gfal-copy --dry-run -n 5 -t 6000 ";
 			str += "file:/";
@@ -188,17 +203,20 @@ void dCacheTools::Copy()
 
 void dCacheTools::StopCopy()
 {
-	emit log("INFO", "Waiting for last Copy");
-	dCacheCopy->waitForFinished();
-
-	if(dCacheCopy->exitCode() != 0)
+	if(dCacheCopy->state() == QProcess::Running)
 	{
-		emit log("ERROR", dCacheCopy->errorString());
+		emit log("INFO", "Waiting for last Copy");
+		dCacheCopy->waitForFinished();
+
+		if(dCacheCopy->exitCode() != 0)
+		{
+			emit log("ERROR", dCacheCopy->errorString());
+		}
+
+		m_stop = false;
+
+		dCacheCopy->deleteLater();
 	}
-
-	m_stop = false;
-
-	dCacheCopy->deleteLater();
 }
 
 void dCacheTools::Check()
@@ -248,10 +266,15 @@ void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus
     	            str += filename;
 		 */
 
+		if(m_stop)
+		{
+			this->StopCopy();
+			return;
+		}
+
 		emit log("DEBUG", QString::fromStdString(str));
 
 		dCacheCopy->start(QString::fromStdString(str));
-
 
 		/* show output */
 		if(!dCacheCopy->waitForStarted())

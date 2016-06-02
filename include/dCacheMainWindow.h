@@ -26,9 +26,6 @@ public:
 	//Signal to Logger
 	void log(QString type, QString message);
 	void Configure_dCacheTool(QString InputDir, QString BaseDir, QString OutputDir, int type, bool isSingleFile);
-	void DoCopy();
-	void DoList();
-	void DoCheck();
 
 	private slots:
 	void on_toolButton_clicked();

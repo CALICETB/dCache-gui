@@ -152,9 +152,15 @@ void dCacheTools::Copy()
 			idxProcess = 0;
 
 			QFileInfo fileInfo = list.at(idxProcess);
-			emit log("DEBUG", QString("file : %1 \t Time : %2").arg(fileInfo.fileName(), (fileInfo.lastModified()).toString(Qt::ISODate)));
 
-			std::string filename = (fileInfo.fileName()).toStdString();
+			QString filename = fileInfo.fileName();
+			QDateTime fileTime = fileInfo.lastModified();
+			QDateTime current = QDateTime::currentDateTime();
+
+			emit log("DEBUG", QString("file : %1 \n "
+					"Last Modification : %2 \n "
+					"Current time : %3").arg(filename, fileTime.toString(Qt::LocalDate), current.toString(Qt::LocalDate)));
+
 			if(fileInfo.completeSuffix() != filetype && m_type != 4)
 				m_stop = true;
 
@@ -168,12 +174,12 @@ void dCacheTools::Copy()
 			str += "file:/";
 			str += m_dir.toStdString();
 			str += "/";
-			str += filename;
+			str += filename.toStdString();
 			str += " srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/";
 			str += m_base.toStdString();
 			str += "/";
 			str += m_output.toStdString();
-			str += filename;
+			str += filename.toStdString();
 			/*
             str += " lfn:/grid/calice/";
             str += BaseDir.toStdString();
@@ -243,21 +249,27 @@ void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus
 		dCacheCopy->setProcessChannelMode(QProcess::ForwardedChannels);
 
 		QFileInfo fileInfo = list.at(idxProcess);
-		emit log("DEBUG", QString("file : %1 \t Time : %2").arg(fileInfo.fileName(), (fileInfo.lastModified()).toString(Qt::ISODate)));
 
-		std::string filename = (fileInfo.fileName()).toStdString();
+		QString filename = fileInfo.fileName();
+		QDateTime fileTime = fileInfo.lastModified();
+		QDateTime current = QDateTime::currentDateTime();
+
+		emit log("DEBUG", QString("file : %1 \n "
+				"Last Modification : %2 \n "
+				"Current time : %3").arg(filename, fileTime.toString(Qt::LocalDate), current.toString(Qt::LocalDate)));
+
 		if(fileInfo.completeSuffix() != filetype && m_type != 4) m_stop = true;
 
 		std::string str = "/usr/bin/gfal-copy --dry-run -n 5 -t 6000 ";
 		str += "file:/";
 		str += m_dir.toStdString();
 		str += "/";
-		str += filename;
+		str += filename.toStdString();
 		str += " srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/";
 		str += m_base.toStdString();
 		str += "/";
 		str += m_output.toStdString();
-		str += filename;
+		str += filename.toStdString();
 		/*
     	            str += " lfn:/grid/calice/";
     	            str += BaseDir.toStdString();

@@ -2,10 +2,9 @@
 #define PROXYTOOLS_H
 
 #include <QString>
-#include <QThread>
 #include <QProcess>
 
-class ProxyTools : public QThread
+class ProxyTools : public QObject
 {
 	Q_OBJECT
 public:

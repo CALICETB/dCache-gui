@@ -219,7 +219,6 @@ void dCacheMainWindow::Close()
 	m_tools->StopCopy();
 	m_proxy->DestroyProxy(timeleft);
 	m_tools->quit();
-	m_proxy->quit();
 
 	delete m_tools;
 	delete m_proxy;

@@ -17,12 +17,6 @@ ProxyTools::~ProxyTools()
 
 }
 
-void ProxyTools::run()
-{
-
-
-}
-
 void ProxyTools::StartProxy()
 {
 	this->SetEnv();

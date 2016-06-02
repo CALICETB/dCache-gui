@@ -287,6 +287,6 @@ void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus
 
 		idxProcess++;
 	}
-
-	emit CopyFinished();
+	else
+		emit CopyFinished();
 }

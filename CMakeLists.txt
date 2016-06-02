@@ -62,8 +62,6 @@ SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 set( HEADER_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include )
 set( UI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ui )
 
-include_directories (${HEADER_DIR} ${Boost_INCLUDE_DIRS})
-
 # require proper c++
 ADD_DEFINITIONS( "-pedantic -Wunused-value -O2" )
 ADD_DEFINITIONS("-Wno-long-long -Wreturn-type -Werror")
@@ -75,5 +73,7 @@ set(Boost_USE_STATIC_RUNTIME    OFF)
 
 find_package(Boost 1.36.0 COMPONENTS system filesystem REQUIRED)
 set(LIBS ${LIBS} ${Boost_LIBRARIES})
+
+include_directories (${HEADER_DIR} ${Boost_INCLUDE_DIRS})
 
 subdirs(src)

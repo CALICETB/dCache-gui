@@ -189,12 +189,14 @@ void dCacheMainWindow::StartCopy()
 	ui->BaseDir->setReadOnly(true);
 	ui->OutputDir->setReadOnly(true);
 
+	this->init();
 	m_tools->setFlags(true, false, false);
 	m_tools->start();
 }
 
 void dCacheMainWindow::ListFiles()
 {
+	this->init();
 	m_tools->setFlags(false, false, true);
 	m_tools->start();
 }
@@ -215,6 +217,7 @@ void dCacheMainWindow::StopCopy()
 
 void dCacheMainWindow::CheckCopy()
 {
+	this->init();
 	m_tools->setFlags(false, true, false);
 	m_tools->start();
 }

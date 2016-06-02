@@ -157,9 +157,15 @@ void dCacheTools::Copy()
 			QDateTime fileTime = fileInfo.lastModified();
 			QDateTime current = QDateTime::currentDateTime();
 
-			emit log("DEBUG", QString("file : %1 \n "
+			emit log("DEBUG", QString("File : %1 \n "
 					"Last Modification : %2 \n "
 					"Current time : %3").arg(filename, fileTime.toString(Qt::LocalDate), current.toString(Qt::LocalDate)));
+
+			if(current.toTime_t() - fileTime.toTime_t() < 350)
+			{
+				emit log("DEBUG", "File too young. Will be copied later");
+				return;
+			}
 
 			if(fileInfo.completeSuffix() != filetype && m_type != 4)
 				m_stop = true;
@@ -254,9 +260,15 @@ void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus
 		QDateTime fileTime = fileInfo.lastModified();
 		QDateTime current = QDateTime::currentDateTime();
 
-		emit log("DEBUG", QString("file : %1 \n "
+		emit log("DEBUG", QString("File : %1 \n "
 				"Last Modification : %2 \n "
 				"Current time : %3").arg(filename, fileTime.toString(Qt::LocalDate), current.toString(Qt::LocalDate)));
+
+		if(current.toTime_t() - fileTime.toTime_t() < 350)
+		{
+			emit log("DEBUG", "File too young. Will be copied later");
+			return;
+		}
 
 		if(fileInfo.completeSuffix() != filetype && m_type != 4) m_stop = true;
 

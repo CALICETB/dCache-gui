@@ -173,6 +173,7 @@ void dCacheTools::Copy()
 		}
 
 		connect(dCacheCopy, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(finishedProcess(int, QProcess::ExitStatus)));
+		idxProcess++;
 	}
 }
 
@@ -272,7 +273,6 @@ void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus
 		}
 
 		connect(dCacheCopy, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(finishedProcess(int, QProcess::ExitStatus)));
-
 		idxProcess++;
 	}
 	else
@@ -353,7 +353,6 @@ void dCacheTools::goToNextFile()
 		}
 
 		connect(dCacheCopy, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(finishedProcess(int, QProcess::ExitStatus)));
-
 		idxProcess++;
 	}
 	else

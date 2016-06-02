@@ -222,6 +222,7 @@ void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus
 
 		/* create QProcess object */
 		dCacheCopy = new QProcess();
+		dCacheCopy->setProcessChannelMode(QProcess::ForwardedChannels);
 
 		QFileInfo fileInfo = list.at(idxProcess);
 		emit log("DEBUG", QString("file : %1 \t Time : %2").arg(fileInfo.fileName(), (fileInfo.lastModified()).toString(Qt::ISODate)));

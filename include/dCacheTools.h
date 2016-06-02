@@ -7,34 +7,23 @@
 
 class dCacheTools : public QThread
 {
-    Q_OBJECT
+	Q_OBJECT
 public:
-    dCacheTools();
-    ~dCacheTools();
+	dCacheTools();
+	~dCacheTools();
 
-    void run();
-    void setPassword(QString pass) {_password = pass;}
+	void run();
 
-signals:
-    void log(QString type, QString message);
-    void PasswordRequired();
-    void ProxyStatus(QString status);
-    void ProxyDestroyed();
+	signals:
+	void log(QString type, QString message);
 
-public slots:
-    void StartProxy();
-    void CheckProxy();
-    void DestroyProxy(int timeleft);
-    void Copy(QString Input, QString BaseDir, QString OutputDir, int type, bool isSingleFile);
-    void StopCopy();
-    void DoList(QString dir);
+	public slots:
+	void Copy(QString Input, QString BaseDir, QString OutputDir, int type, bool isSingleFile);
+	void StopCopy();
+	void DoList(QString dir);
 
-    void SetEnv();
-
-private:
-    QProcess *dCachetool, *dCacheCopy;
-    QString _password;
-    QProcessEnvironment env;
+	private:
+	QProcess *dCacheCopy;
 };
 
 #endif // DCACHETOOLS_H

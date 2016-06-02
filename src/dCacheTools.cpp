@@ -4,16 +4,12 @@
 #include <QTextStream>
 #include <QDir>
 #include <QDateTime>
-#include <QCoreApplication>
 
 #include <boost/filesystem.hpp>
 
 dCacheTools::dCacheTools()
 {
-    _password = "";
-    dCachetool = new QProcess();
     dCacheCopy = new QProcess();
-    dCachetool->setProcessChannelMode(QProcess::SeparateChannels);
     dCacheCopy->setProcessChannelMode(QProcess::SeparateChannels);
 }
 
@@ -25,100 +21,34 @@ dCacheTools::~dCacheTools()
 
 void dCacheTools::run()
 {
-    QCoreApplication::processEvents();
+
 }
 
-void dCacheTools::StartProxy()
-{
-    this->SetEnv();
-    emit log("MESSAGE", "dCache-GUI : Start Proxy");
-
-    dCachetool->setProcessChannelMode(QProcess::SeparateChannels);
-
-    dCachetool->start("/usr/bin/voms-proxy-init -verify -voms calice:/calice/Role=production");
-    if(!dCachetool->waitForStarted())
-    {
-        emit log("ERROR", QString("voms-proxy-init %1").arg(dCachetool->errorString()));
-        return;
-    }
-
-    emit PasswordRequired();
-
-    if(!_password.isEmpty())
-    {
-        emit log("INFO", "Password received");
-        dCachetool->write(_password.toStdString().data());
-        dCachetool->closeWriteChannel();
-        dCachetool->waitForFinished();
-
-        if(dCachetool->exitCode() == 0)
-        {
-            int timeleft = 60*60*12;
-            emit ProxyStatus(QString::number(timeleft));
-        }
-        else
-        {
-            int timeleft = 0;
-            emit ProxyStatus(QString::number(timeleft));
-        }
-    }
-}
-
-void dCacheTools::CheckProxy()
-{
-    dCachetool->setProcessChannelMode(QProcess::SeparateChannels);
-
-    dCachetool->start("/usr/bin/voms-proxy-info --timeleft");
-
-    if(!dCachetool->waitForStarted())
-    {
-        emit log("ERROR", QString("voms-proxy-info %1").arg(dCachetool->errorString()));
-        return;
-    }
-    dCachetool->waitForFinished();
-
-    if(dCachetool->exitCode() == 0)
-    {
-        int timeleft = atoi(dCachetool->readAllStandardOutput().data());
-        emit ProxyStatus(QString::number(timeleft));
-    }
-    else
-    {
-        emit log("ERROR", dCachetool->errorString());
-    }
-}
 
 void dCacheTools::DoList(QString dir)
 {
     emit log("INFO", "Listing called");
 
-    dCachetool->setProcessChannelMode(QProcess::ForwardedChannels);
+    dCacheCopy->setProcessChannelMode(QProcess::ForwardedChannels);
 
     std::string str = "/usr/bin/gfal-ls -l ";
     str += "srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/";
     str += dir.toStdString();
 
-    dCachetool->start(QString::fromStdString(str));
+    dCacheCopy->start(QString::fromStdString(str));
 
-    if(!dCachetool->waitForStarted())
+    if(!dCacheCopy->waitForStarted())
     {
-        emit log("ERROR", QString("gfal-ls %1").arg(dCachetool->errorString()));
+        emit log("ERROR", QString("gfal-ls %1").arg(dCacheCopy->errorString()));
         return;
     }
 
-    dCachetool->waitForFinished();
+    dCacheCopy->waitForFinished();
 
-    if(dCachetool->exitCode() != 0)
+    if(dCacheCopy->exitCode() != 0)
     {
-        emit log("ERROR", dCachetool->errorString());
+        emit log("ERROR", dCacheCopy->errorString());
     }
-}
-
-void dCacheTools::SetEnv()
-{
-    env = QProcessEnvironment::systemEnvironment();
-    dCachetool->setProcessEnvironment(env);
-    dCacheCopy->setProcessEnvironment(env);
 }
 
 void dCacheTools::Copy(QString Input, QString BaseDir, QString OutputDir, int type, bool isSingleFile)
@@ -234,34 +164,4 @@ void dCacheTools::StopCopy()
 {
     emit log("INFO", "Waiting for last Copy");
     dCacheCopy->waitForFinished();
-}
-
-void dCacheTools::DestroyProxy(int timeleft)
-{
-    dCacheCopy->waitForFinished();
-
-    if(timeleft > 0)
-    {
-        emit log("INFO", "Destroying Proxy");
-
-        QString proxy = "/bin/rm ";
-        proxy.append(env.value("X509_USER_PROXY"));
-
-        dCachetool->start(proxy);
-
-        if(!dCachetool->waitForStarted())
-        {
-            emit log("ERROR", QString("Destroy Proxy %1").arg(dCachetool->errorString()));
-            return;
-        }
-
-        dCachetool->waitForFinished();
-
-        if(dCachetool->exitCode() != 0)
-        {
-            emit log("ERROR", dCachetool->errorString());
-        }
-    }
-
-    emit ProxyDestroyed();
 }

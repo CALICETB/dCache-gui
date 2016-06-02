@@ -33,9 +33,18 @@ void dCacheTools::Configure(QString Input, QString BaseDir, QString OutputDir, i
 	m_output = OutputDir;
 	m_type = type;
 	m_isSingleFile = isSingleFile;
+}
 
+void dCacheTools::init()
+{
 	dCacheCopy = new QProcess();
 	dCacheCopy->setProcessChannelMode(QProcess::SeparateChannels);
+}
+
+void dCacheTools::start()
+{
+	this->init();
+	this->run();
 }
 
 void dCacheTools::run()

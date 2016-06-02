@@ -13,6 +13,8 @@ public:
 	~dCacheTools();
 
 	void run();
+	void init();
+
 	void Copy();
 	void Check();
 	void List();
@@ -23,7 +25,6 @@ public:
 		m_check = check;
 		m_list = list;
 	}
-
 	void setStopFlag(bool stop) {m_stop = stop;}
 
 	signals:
@@ -31,6 +32,7 @@ public:
 
 	public slots:
 	void Configure(QString Input, QString BaseDir, QString OutputDir, int type, bool isSingleFile);
+	void start();
 
 	private:
 	QProcess *dCacheCopy;

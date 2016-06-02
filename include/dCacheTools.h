@@ -18,6 +18,14 @@ public:
 	void List();
 	void StopCopy();
 
+	void setFlags(bool copy, bool check, bool list) {
+		m_copy = copy;
+		m_check = check;
+		m_list = list;
+	}
+
+	void setStopFlag(bool stop) {m_stop = stop;}
+
 	signals:
 	void log(QString type, QString message);
 

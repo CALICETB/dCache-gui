@@ -144,9 +144,14 @@ void dCacheTools::Copy()
 
 		std::string str = "/usr/bin/gfal-copy --dry-run -n 5 -t 6000 ";
 		str += "file:/";
-		str += m_dir.toStdString();
-		str += "/";
-		str += filename.toStdString();
+		if(m_isSingleFile)
+			str += m_dir.toStdString();
+		else
+		{
+			str += m_dir.toStdString();
+			str += "/";
+			str += filename.toStdString();
+		}
 		str += " srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/";
 		str += m_base.toStdString();
 		str += "/";
@@ -236,9 +241,14 @@ void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus
 
 		std::string str = "/usr/bin/gfal-copy --dry-run -n 5 -t 6000 ";
 		str += "file:/";
-		str += m_dir.toStdString();
-		str += "/";
-		str += filename.toStdString();
+		if(m_isSingleFile)
+			str += m_dir.toStdString();
+		else
+		{
+			str += m_dir.toStdString();
+			str += "/";
+			str += filename.toStdString();
+		}
 		str += " srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/";
 		str += m_base.toStdString();
 		str += "/";
@@ -316,9 +326,14 @@ void dCacheTools::goToNextFile()
 
 		std::string str = "/usr/bin/gfal-copy --dry-run -n 5 -t 6000 ";
 		str += "file:/";
-		str += m_dir.toStdString();
-		str += "/";
-		str += filename.toStdString();
+		if(m_isSingleFile)
+			str += m_dir.toStdString();
+		else
+		{
+			str += m_dir.toStdString();
+			str += "/";
+			str += filename.toStdString();
+		}
 		str += " srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/";
 		str += m_base.toStdString();
 		str += "/";

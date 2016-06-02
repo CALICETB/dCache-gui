@@ -68,6 +68,8 @@ void dCacheMainWindow::init()
 
 	connect(this, SIGNAL(Configure_dCacheTool(QString, QString, QString, int, bool)), m_tools, SLOT(Configure(QString, QString, QString, int, bool)));
 	connect(m_tools, SIGNAL(log(QString,QString)), m_logger, SLOT(Log(QString,QString)));
+
+	emit Configure_dCacheTool(InputDir, BaseDir, OutputDir, type, isSingleFile);
 }
 
 void dCacheMainWindow::Configure()
@@ -90,8 +92,6 @@ void dCacheMainWindow::Configure()
 			ui->StopCopy->setEnabled(false);
 			ui->ListFiles->setEnabled(true);
 			ui->Configure->setEnabled(false);
-
-			emit Configure_dCacheTool(InputDir, BaseDir, OutputDir, type, isSingleFile);
 		}
 		else
 			emit log("WARNING", "Settings are missing");
@@ -115,8 +115,6 @@ void dCacheMainWindow::Configure()
 			ui->StopCopy->setEnabled(false);
 			ui->ListFiles->setEnabled(true);
 			ui->Configure->setEnabled(false);
-
-			emit Configure_dCacheTool(InputDir, BaseDir, OutputDir, type, isSingleFile);
 		}
 	}
 }

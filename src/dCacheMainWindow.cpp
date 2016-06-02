@@ -21,6 +21,9 @@ ui(new Ui::dCacheMainWindow)
 
 	connect(this, SIGNAL(log(QString,QString)), m_logger, SLOT(Log(QString,QString)));
 	connect(this, SIGNAL(Configure_dCacheTool(QString, QString, QString, int, bool)), m_tools, SLOT(Configure(QString, QString, QString, int, bool)));
+	connect(this, SIGNAL(DoCopy()), m_tools, SLOT(start()));
+	connect(this, SIGNAL(DoList()), m_tools, SLOT(start()));
+	connect(this, SIGNAL(DoCheck()), m_tools, SLOT(start()));
 
 	connect(m_tools, SIGNAL(log(QString,QString)), m_logger, SLOT(Log(QString,QString)));
 
@@ -186,13 +189,13 @@ void dCacheMainWindow::StartCopy()
 	ui->OutputDir->setReadOnly(true);
 
 	m_tools->setFlags(true, false, false);
-	m_tools->start();
+	emit DoCopy();
 }
 
 void dCacheMainWindow::ListFiles()
 {
 	m_tools->setFlags(false, false, true);
-	m_tools->start();
+	emit DoList();
 }
 
 void dCacheMainWindow::StopCopy()
@@ -212,7 +215,7 @@ void dCacheMainWindow::StopCopy()
 void dCacheMainWindow::CheckCopy()
 {
 	m_tools->setFlags(false, true, false);
-	m_tools->start();
+	emit DoCheck();
 }
 
 void dCacheMainWindow::Close()

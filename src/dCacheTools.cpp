@@ -9,9 +9,6 @@
 
 dCacheTools::dCacheTools()
 {
-	dCacheCopy = new QProcess();
-	dCacheCopy->setProcessChannelMode(QProcess::SeparateChannels);
-
 	m_copy = false;
 	m_check = false;
 	m_list = false;
@@ -26,8 +23,7 @@ dCacheTools::dCacheTools()
 
 dCacheTools::~dCacheTools()
 {
-
-
+	dCacheCopy->deleteLater();
 }
 
 void dCacheTools::Configure(QString Input, QString BaseDir, QString OutputDir, int type, bool isSingleFile)
@@ -37,6 +33,9 @@ void dCacheTools::Configure(QString Input, QString BaseDir, QString OutputDir, i
 	m_output = OutputDir;
 	m_type = type;
 	m_isSingleFile = isSingleFile;
+
+	dCacheCopy = new QProcess();
+	dCacheCopy->setProcessChannelMode(QProcess::SeparateChannels);
 }
 
 void dCacheTools::run()

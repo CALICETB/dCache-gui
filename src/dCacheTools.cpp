@@ -204,6 +204,8 @@ void dCacheTools::StopCopy()
 	}
 
 	m_stop = false;
+
+	dCacheCopy->deleteLater();
 }
 
 void dCacheTools::Check()

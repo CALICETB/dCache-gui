@@ -20,6 +20,8 @@ public:
 	explicit dCacheMainWindow(QWidget *parent = 0);
 	~dCacheMainWindow();
 
+	void init();
+
 	signals :
 	//Signal to Logger
 	void log(QString type, QString message);

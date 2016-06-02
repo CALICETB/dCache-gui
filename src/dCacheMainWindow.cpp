@@ -12,7 +12,6 @@ ui(new Ui::dCacheMainWindow)
 	this->setWindowTitle("dCache GUI");
 
 	m_logger = new Logger();
-	m_tools = new dCacheTools();
 	m_proxy = new ProxyTools();
 
 	timertime = 1000;
@@ -20,12 +19,6 @@ ui(new Ui::dCacheMainWindow)
 	type = -1;
 
 	connect(this, SIGNAL(log(QString,QString)), m_logger, SLOT(Log(QString,QString)));
-	connect(this, SIGNAL(Configure_dCacheTool(QString, QString, QString, int, bool)), m_tools, SLOT(Configure(QString, QString, QString, int, bool)));
-	connect(this, SIGNAL(DoCopy()), m_tools, SLOT(start()));
-	connect(this, SIGNAL(DoList()), m_tools, SLOT(start()));
-	connect(this, SIGNAL(DoCheck()), m_tools, SLOT(start()));
-
-	connect(m_tools, SIGNAL(log(QString,QString)), m_logger, SLOT(Log(QString,QString)));
 
 	connect(m_proxy, SIGNAL(log(QString,QString)), m_logger, SLOT(Log(QString,QString)));
 	connect(m_proxy, SIGNAL(PasswordRequired()), this, SLOT(showPassword()));
@@ -67,6 +60,17 @@ ui(new Ui::dCacheMainWindow)
 dCacheMainWindow::~dCacheMainWindow()
 {
 	delete ui;
+}
+
+void dCacheMainWindow::init()
+{
+	m_tools = new dCacheTools();
+
+	connect(this, SIGNAL(Configure_dCacheTool(QString, QString, QString, int, bool)), m_tools, SLOT(Configure(QString, QString, QString, int, bool)));
+	connect(this, SIGNAL(DoCopy()), m_tools, SLOT(start()));
+	connect(this, SIGNAL(DoList()), m_tools, SLOT(start()));
+	connect(this, SIGNAL(DoCheck()), m_tools, SLOT(start()));
+	connect(m_tools, SIGNAL(log(QString,QString)), m_logger, SLOT(Log(QString,QString)));
 }
 
 void dCacheMainWindow::Configure()

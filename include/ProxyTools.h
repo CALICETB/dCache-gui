@@ -30,7 +30,6 @@ public:
 	QProcess *proxytool;
 	QProcessEnvironment env;
 	QString _password;
-	bool b_start, b_check, b_destroy;
 };
 
 #endif // PROXYTOOLS_H

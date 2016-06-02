@@ -23,9 +23,7 @@ public:
 	signals :
 	//Signal to Logger
 	void log(QString type, QString message);
-	void DoCopy(QString input, QString base, QString output, int type, bool issinglefile);
-	void DoStopCopy();
-	void DoListing(QString dir);
+	void Configure_dCacheTool(QString InputDir, QString BaseDir, QString OutputDir, int type, bool isSingleFile);
 
 	private slots:
 	void on_toolButton_clicked();

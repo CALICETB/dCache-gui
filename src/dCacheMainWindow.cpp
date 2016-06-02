@@ -20,9 +20,7 @@ ui(new Ui::dCacheMainWindow)
 	type = -1;
 
 	connect(this, SIGNAL(log(QString,QString)), m_logger, SLOT(Log(QString,QString)));
-	connect(this, SIGNAL(DoListing(QString)), m_tools, SLOT(DoList(QString)));
-	connect(this, SIGNAL(DoCopy(QString, QString, QString, int, bool)), m_tools, SLOT(Copy(QString, QString, QString, int, bool)));
-	connect(this, SIGNAL(DoStopCopy()), m_tools, SLOT(StopCopy()));
+	connect(this, SIGNAL(Configure_dCacheTool(QString, QString, QString, int, bool)), m_tools, SLOT(Configure(QString, QString, QString, int, bool)));
 
 	connect(m_tools, SIGNAL(log(QString,QString)), m_logger, SLOT(Log(QString,QString)));
 
@@ -88,6 +86,8 @@ void dCacheMainWindow::Configure()
 			ui->StopCopy->setEnabled(false);
 			ui->ListFiles->setEnabled(true);
 			ui->Configure->setEnabled(false);
+
+			emit Configure_dCacheTool(InputDir, BaseDir, OutputDir, type, isSingleFile);
 		}
 		else
 			emit log("WARNING", "Settings are missing");
@@ -111,6 +111,8 @@ void dCacheMainWindow::Configure()
 			ui->StopCopy->setEnabled(false);
 			ui->ListFiles->setEnabled(true);
 			ui->Configure->setEnabled(false);
+
+			emit Configure_dCacheTool(InputDir, BaseDir, OutputDir, type, isSingleFile);
 		}
 	}
 }
@@ -183,12 +185,12 @@ void dCacheMainWindow::StartCopy()
 	ui->BaseDir->setReadOnly(true);
 	ui->OutputDir->setReadOnly(true);
 
-	emit DoCopy(ui->InputDir->text(), ui->BaseDir->text(), ui->OutputDir->text(), type, isSingleFile);
+	m_tools->start();
 }
 
 void dCacheMainWindow::ListFiles()
 {
-	emit DoListing(ui->BaseDir->text());
+	m_tools->start();
 }
 
 void dCacheMainWindow::StopCopy()
@@ -202,21 +204,17 @@ void dCacheMainWindow::StopCopy()
 	ui->OutputDir->setReadOnly(false);
 
 	emit log("MESSAGE", "Stop Copy");
-
-	emit DoStopCopy();
 }
 
 void dCacheMainWindow::CheckCopy()
 {
-
-
+	m_tools->start();
 }
 
 void dCacheMainWindow::Close()
 {
 	emit log("MESSAGE", "dCache-GUI exiting");
 
-	m_tools->StopCopy();
 	m_proxy->DestroyProxy(timeleft);
 	m_tools->quit();
 

@@ -4,9 +4,6 @@ ProxyTools::ProxyTools()
 {
 
 _password = "";
-b_start = false;
-b_check = false;
-b_destroy = false;
 proxytool = new QProcess();
 
 }

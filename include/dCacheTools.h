@@ -13,17 +13,22 @@ public:
 	~dCacheTools();
 
 	void run();
+	void Copy();
+	void Check();
+	void List();
+	void StopCopy();
 
 	signals:
 	void log(QString type, QString message);
 
 	public slots:
-	void Copy(QString Input, QString BaseDir, QString OutputDir, int type, bool isSingleFile);
-	void StopCopy();
-	void DoList(QString dir);
+	void Configure(QString Input, QString BaseDir, QString OutputDir, int type, bool isSingleFile);
 
 	private:
 	QProcess *dCacheCopy;
+	bool m_copy, m_check, m_list, m_isSingleFile, m_stop;
+	QString m_dir, m_base, m_output;
+	int m_type;
 };
 
 #endif // DCACHETOOLS_H

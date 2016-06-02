@@ -87,12 +87,21 @@ void dCacheTools::Copy()
 
 	QLocale::setDefault(QLocale::English);
 
-	QDir dir(m_dir);
-	dir.setFilter(QDir::Files | QDir::NoSymLinks);
-	dir.setSorting(QDir::Time | QDir::Reversed);
+	if(m_isSingleFile)
+	{
+		QFileInfo file(m_dir);
+		list.push_back(file);
+		nfiles = list.size();
+	}
+	else
+	{
+		QDir dir(m_dir);
+		dir.setFilter(QDir::Files | QDir::NoSymLinks);
+		dir.setSorting(QDir::Time | QDir::Reversed);
 
-	list = dir.entryInfoList();
-	nfiles = list.size();
+		list = dir.entryInfoList();
+		nfiles = list.size();
+	}
 
 	if(nfiles > 0)
 	{

@@ -202,7 +202,7 @@ void dCacheTools::Copy()
 
 		if(filesize < 100000)
 		{
-			emit log("DEBUG", QString("File too small %1. Will be copied later").arg(QString::number(filesize)));
+			emit log("DEBUG", QString("File too small %1  kb. Will be copied later").arg(QString::number(filesize)));
 			idxProcess++;
 			this->goToNextFile();
 			return;
@@ -384,7 +384,7 @@ void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus
 
 		if(filesize < 100000)
 		{
-			emit log("DEBUG", QString("File too small %1. Will be copied later").arg(QString::number(filesize)));
+			emit log("DEBUG", QString("File too small %1 kb. Will be copied later").arg(QString::number(filesize)));
 			idxProcess++;
 			this->goToNextFile();
 			return;
@@ -482,7 +482,7 @@ void dCacheTools::goToNextFile()
 
 		if(filesize < 100000)
 		{
-			emit log("DEBUG", QString("File too small %1. Will be copied later").arg(QString::number(filesize)));
+			emit log("DEBUG", QString("File too small %1 kb. Will be copied later").arg(QString::number(filesize)));
 			idxProcess++;
 			this->goToNextFile();
 			return;

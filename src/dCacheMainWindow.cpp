@@ -190,6 +190,7 @@ void dCacheMainWindow::StartCopy()
 	ui->StartCopy->setEnabled(false);
 	ui->StopCopy->setEnabled(true);
 	ui->Configure->setEnabled(false);
+	ui->ListFiles->setEnabled(false);
 
 	ui->InputDir->setReadOnly(true);
 	ui->BaseDir->setReadOnly(true);
@@ -212,6 +213,7 @@ void dCacheMainWindow::StopCopy()
 	ui->StartCopy->setEnabled(true);
 	ui->StopCopy->setEnabled(false);
 	ui->Configure->setEnabled(true);
+	ui->ListFiles->setEnabled(true);
 
 	ui->InputDir->setReadOnly(false);
 	ui->BaseDir->setReadOnly(false);
@@ -297,7 +299,6 @@ void dCacheMainWindow::updateMainWindow()
 	else
 	{
 		ui->CheckProxy->setEnabled(true);
-		ui->Configure->setEnabled(true);
 		ui->ListFiles->setEnabled(true);
 
 		timeleft = timeleft - timertime*2/1000;

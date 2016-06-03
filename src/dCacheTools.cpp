@@ -21,6 +21,7 @@ dCacheTools::dCacheTools()
 
 	nfiles = 0;
 	idxProcess = 0;
+	Threaddelay = 5;
 }
 
 dCacheTools::~dCacheTools()
@@ -185,7 +186,7 @@ void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus
 {
 	emit log("INFO", QString("Completed with exit code %1").arg(QString::number(exitCode)));
 
-	this->delay(10);
+	this->delay(Threaddelay);
 
 	if(idxProcess < nfiles)
 	{
@@ -254,7 +255,7 @@ void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus
 
 void dCacheTools::goToNextFile()
 {
-	this->delay(10);
+	this->delay(Threaddelay);
 
 	if(idxProcess < nfiles)
 	{

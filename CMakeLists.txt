@@ -4,6 +4,7 @@ CMAKE_MINIMUM_REQUIRED( VERSION 2.6 FATAL_ERROR )
 
 #As of CMake 2.6.0 the ELSE() and ENDIF() constructs can be empty
 SET( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS TRUE )
+cmake_policy(SET CMP0020 NEW)
 
 # ----- project name -----
 PROJECT( DCACHE_GUI )
@@ -15,8 +16,10 @@ SET( ${PROJECT_NAME}_VERSION_PATCH 0 )
 SET( ${PROJECT_NAME}_VERSION
     "${${PROJECT_NAME}_MAJOR_VERSION}.${${PROJECT_NAME}_MINOR_VERSION}.${${PROJECT_NAME}_PATCH_LEVEL}" )
 
-###############################
-# Require C++11
+#################################################################
+# Require C++11                                                 #
+#################################################################
+
 INCLUDE( CheckCXXCompilerFlag )
 
 CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
@@ -27,24 +30,13 @@ ELSE()
 MESSAGE( SEND_ERROR "dCache-gui requires C++11 support. Please upgrade your compiler !" )
 ENDIF()
 
-## Modules path cmake
+#################################################################
+# cmake modules                                                 #
+#################################################################
+
 set ( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 
 INCLUDE( FULL_INSTALL_PATH )
- 
-################################################################
-# Git                                                          #
-################################################################
- 
-find_package(Git)
-if(GIT_FOUND)
-    message("Git found: ${GIT_EXECUTABLE}")
-    message("Pulling last dCache-gui version")
-    execute_process(
-      COMMAND git pull
-      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    )
-endif()
 
 #################################################################
 # installation options                                          #
@@ -94,7 +86,42 @@ INSTALL( FILES ${DCACHE_GUI_BINARY_DIR}/DCACHE_GUIConfig.cmake
 ################################################################
 # documentation                                                #
 ################################################################
+
+SET ( BUILD_DOCUMENTATION ON )
+MARK_AS_ADVANCED( BUILD_DOCUMENTATION )
+
+IF( BUILD_DOCUMENTATION )
 INCLUDE( Documentation )
+ENDIF()
+
+################################################################
+# Git                                                          #
+################################################################
+
+SET ( USE_GIT ON )
+MARK_AS_ADVANCED( USE_GIT )
+
+IF( USE_GIT )
+FIND_PACKAGE( Git )
+IF( GIT_FOUND )
+
+	MESSAGE( STATUS "" )
+    MESSAGE( STATUS "---------------------------------------" )
+    MESSAGE( STATUS "    Git found: ${GIT_EXECUTABLE}       " )
+    MESSAGE( STATUS "    Pulling last dCache-gui version    " )
+    MESSAGE( STATUS "---------------------------------------" )
+    MESSAGE( STATUS "" )
+    
+    EXECUTE_PROCESS(
+      COMMAND git pull
+      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    )
+ELSE ( GIT_FOUND )
+    MESSAGE( WARNING "************************************************************")
+    MESSAGE( WARNING "*      Git was not found! No pulling can be done.          *")
+    MESSAGE( WARNING "************************************************************")
+ENDIF( GIT_FOUND )
+ENDIF()
 
 ################################################################
 # Qt                                                           #
@@ -102,11 +129,7 @@ INCLUDE( Documentation )
 
 find_package(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
 
-if(Qt5_FOUND)
-message("Qt version 5 found")
-endif()
-
-SET(CMAKE_AUTOMOC OFF)
+SET(CMAKE_AUTOMOC ON)
 SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # include directories
@@ -126,8 +149,10 @@ subdirs(src)
 ################################################################
 MESSAGE( STATUS )
 MESSAGE( STATUS "-------------------------------------------------------------------------------" )
-MESSAGE( STATUS "CMAKE_PREFIX_PATH                       = ${CMAKE_PREFIX_PATH}" )
 MESSAGE( STATUS "CMAKE_INSTALL_PREFIX                    = ${CMAKE_INSTALL_PREFIX}" )
+MESSAGE( STATUS "USE_GIT                                 = ${USE_GIT}" )
+MESSAGE( STATUS "BUILD_DOCUMENTATION                     = ${BUILD_DOCUMENTATION}" )
+MESSAGE( STATUS "QT5 PATH                                = ${CMAKE_PREFIX_PATH}" )
 MESSAGE( STATUS "FULL_LIB_INSTALL_DIR                    = ${FULL_LIB_INSTALL_DIR}" )
 MESSAGE( STATUS "FULL_INCLUDE_INSTALL_DIR                = ${FULL_INCLUDE_INSTALL_DIR}" )
 

@@ -15,7 +15,7 @@ ui(new Ui::dCacheMainWindow)
 	m_logger = new Logger();
 	m_proxy = new ProxyTools();
 
-	timertime = 1000;
+	timertime = 500;
 	timeleft = 0;
 	type = -1;
 
@@ -300,7 +300,7 @@ void dCacheMainWindow::updateMainWindow()
 		ui->Configure->setEnabled(true);
 		ui->ListFiles->setEnabled(true);
 
-		timeleft = timeleft - timertime/1000;
+		timeleft = timeleft - timertime*2/1000;
 		int hours = timeleft/3600;
 		int minutes = timeleft%3600/60;
 

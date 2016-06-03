@@ -269,9 +269,6 @@ void dCacheTools::Check()
 
 		this->Check("srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/", m_base, m_output, filename);
 	}
-
-	m_check = false;
-	return;
 }
 
 void dCacheTools::Check(QString srm, QString base, QString output, QString file)

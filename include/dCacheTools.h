@@ -19,6 +19,7 @@ public:
 
 	void Copy();
 	void Check();
+	bool Check(QString srm, QString base, QString output, QString file);
 	void List();
 	void goToNextFile();
 

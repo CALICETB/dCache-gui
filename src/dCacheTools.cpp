@@ -31,9 +31,9 @@ dCacheTools::~dCacheTools()
 
 void dCacheTools::delay(int secs)
 {
-    QTime dieTime = QTime::currentTime().addSecs(secs);
-    while (QTime::currentTime() < dieTime)
-        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+	QTime dieTime = QTime::currentTime().addSecs(secs);
+	while (QTime::currentTime() < dieTime)
+		QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 }
 
 void dCacheTools::Configure(QString Input, QString BaseDir, QString OutputDir, bool isSingleFile)
@@ -162,24 +162,71 @@ void dCacheTools::Copy()
             str += filename;
 		 */
 
-		dCacheCopy = new QProcess();
-		dCacheCopy->setProcessChannelMode(QProcess::ForwardedChannels);
-		dCacheCopy->start(QString::fromStdString(str));
-
-		if(!dCacheCopy->waitForStarted())
+		if(!this->Check("srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/", m_base, m_output, filename))
 		{
-			emit log("ERROR", QString("gfal-copy %1").arg(dCacheCopy->errorString()));
-			//return;
-		}
+			dCacheCopy = new QProcess();
+			dCacheCopy->setProcessChannelMode(QProcess::ForwardedChannels);
+			dCacheCopy->start(QString::fromStdString(str));
 
-		connect(dCacheCopy, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(finishedProcess(int, QProcess::ExitStatus)));
-		idxProcess++;
+			if(!dCacheCopy->waitForStarted())
+			{
+				emit log("ERROR", QString("gfal-copy %1").arg(dCacheCopy->errorString()));
+				return;
+			}
+
+			connect(dCacheCopy, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(finishedProcess(int, QProcess::ExitStatus)));
+			idxProcess++;
+		}
+		else
+		{
+			emit log("DEBUG", QString("File %1 is already on dCache").arg(filename));
+			idxProcess++;
+			this->goToNextFile();
+			return;
+		}
 	}
 }
 
 void dCacheTools::Check()
 {
+
 	m_check = false;
+}
+
+bool dCacheTools::Check(QString srm, QString base, QString output, QString file)
+{
+	bool isOndCache = false;
+
+	dCacheCopy = new QProcess();
+	dCacheCopy->setProcessChannelMode(QProcess::ForwardedChannels);
+
+	std::string str = "/usr/bin/gfal-ls -l ";
+	str += srm.toStdString();
+	str += base.toStdString();
+	str += "/";
+	str += output.toStdString();
+	str += file.toStdString();
+
+	dCacheCopy->start(QString::fromStdString(str));
+
+	if(!dCacheCopy->waitForStarted())
+	{
+		emit log("ERROR", QString("gfal-ls %1").arg(dCacheCopy->errorString()));
+	}
+
+	dCacheCopy->waitForFinished();
+
+	if(dCacheCopy->exitCode() == 0)
+		isOndCache = true;
+	else
+	{
+		emit log("INFO", QString("File %1 is not on dCache").arg(file));
+		isOndCache = false;
+	}
+
+	dCacheCopy->deleteLater();
+
+	return isOndCache;
 }
 
 void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus)
@@ -234,20 +281,29 @@ void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus
     	            str += filename;
 		 */
 
-		/* create QProcess object */
-		dCacheCopy = new QProcess();
-		dCacheCopy->setProcessChannelMode(QProcess::ForwardedChannels);
-		dCacheCopy->start(QString::fromStdString(str));
-
-		/* show output */
-		if(!dCacheCopy->waitForStarted())
+		if(!this->Check("srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/", m_base, m_output, filename))
 		{
-			emit log("ERROR", QString("gfal-copy %1").arg(dCacheCopy->errorString()));
-			//return;
-		}
+			dCacheCopy = new QProcess();
+			dCacheCopy->setProcessChannelMode(QProcess::ForwardedChannels);
+			dCacheCopy->start(QString::fromStdString(str));
 
-		connect(dCacheCopy, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(finishedProcess(int, QProcess::ExitStatus)));
-		idxProcess++;
+			/* show output */
+			if(!dCacheCopy->waitForStarted())
+			{
+				emit log("ERROR", QString("gfal-copy %1").arg(dCacheCopy->errorString()));
+				return;
+			}
+
+			connect(dCacheCopy, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(finishedProcess(int, QProcess::ExitStatus)));
+			idxProcess++;
+		}
+		else
+		{
+			emit log("DEBUG", QString("File %1 is already on dCache").arg(filename));
+			idxProcess++;
+			this->goToNextFile();
+			return;
+		}
 	}
 	else
 		this->start();
@@ -303,20 +359,29 @@ void dCacheTools::goToNextFile()
     	            str += filename;
 		 */
 
-		/* create QProcess object */
-		dCacheCopy = new QProcess();
-		dCacheCopy->setProcessChannelMode(QProcess::ForwardedChannels);
-		dCacheCopy->start(QString::fromStdString(str));
-
-		/* show output */
-		if(!dCacheCopy->waitForStarted())
+		if(!this->Check("srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/", m_base, m_output, filename))
 		{
-			emit log("ERROR", QString("gfal-copy %1").arg(dCacheCopy->errorString()));
-			//return;
-		}
+			dCacheCopy = new QProcess();
+			dCacheCopy->setProcessChannelMode(QProcess::ForwardedChannels);
+			dCacheCopy->start(QString::fromStdString(str));
 
-		connect(dCacheCopy, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(finishedProcess(int, QProcess::ExitStatus)));
-		idxProcess++;
+			/* show output */
+			if(!dCacheCopy->waitForStarted())
+			{
+				emit log("ERROR", QString("gfal-copy %1").arg(dCacheCopy->errorString()));
+				//return;
+			}
+
+			connect(dCacheCopy, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(finishedProcess(int, QProcess::ExitStatus)));
+			idxProcess++;
+		}
+		else
+		{
+			emit log("DEBUG", QString("File %1 is already on dCache").arg(filename));
+			idxProcess++;
+			this->goToNextFile();
+			return;
+		}
 	}
 	else
 		this->start();

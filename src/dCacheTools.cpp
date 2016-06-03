@@ -97,8 +97,11 @@ void dCacheTools::Configure(QString Input, QString BaseDir, QString OutputDir, i
 
 void dCacheTools::start()
 {
-	this->run();
 	emit started();
+	this->run();
+	emit finished();
+
+	return;
 }
 
 void dCacheTools::run()

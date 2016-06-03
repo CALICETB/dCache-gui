@@ -208,7 +208,7 @@ void dCacheTools::Copy()
             str += filename;
 		 */
 
-		lastrunNumber = StripRunNumber(filename);
+		lastrunNumber = StripRunNumber(filename, m_type);
 
 		if(!this->Check("srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/", m_base, m_output, filename))
 		{
@@ -329,7 +329,7 @@ void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus
     	            str += filename;
 		 */
 
-		lastrunNumber = StripRunNumber(filename);
+		lastrunNumber = StripRunNumber(filename, m_type);
 
 		if(!this->Check("srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/", m_base, m_output, filename))
 		{
@@ -409,7 +409,7 @@ void dCacheTools::goToNextFile()
     	            str += filename;
 		 */
 
-		lastrunNumber = StripRunNumber(filename);
+		lastrunNumber = StripRunNumber(filename, m_type);
 
 		if(!this->Check("srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/", m_base, m_output, filename))
 		{

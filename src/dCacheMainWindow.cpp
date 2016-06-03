@@ -313,7 +313,7 @@ void dCacheMainWindow::updateMainWindow()
 			ui->OutputDir->setReadOnly(false);
 		}
 
-		if(m_running == false)
+		if(!m_running)
 		{
 			ui->Configure->setEnabled(true);
 			ui->ListFiles->setEnabled(true);

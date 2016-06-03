@@ -29,6 +29,8 @@ dCacheTools::dCacheTools()
 	isOndCache = false;
 	Checkfilename = "";
 	dry_run = false;
+
+	connect(this, SIGNAL(finished()), this, SLOT(quit()));
 }
 
 dCacheTools::~dCacheTools()

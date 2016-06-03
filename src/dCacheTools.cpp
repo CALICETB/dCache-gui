@@ -29,8 +29,6 @@ dCacheTools::dCacheTools()
 	isOndCache = false;
 	Checkfilename = "";
 	dry_run = false;
-
-	connect(this, SIGNAL(finished()), this, SLOT(quit()));
 }
 
 dCacheTools::~dCacheTools()
@@ -109,25 +107,14 @@ void dCacheTools::run()
 	{
 		if(!m_stop)
 			this->Copy();
-		else
-		{
-			emit finished();
-			return;
-		}
 	}
 	if(m_list)
 	{
 		this->List();
-
-		emit finished();
-		return;
 	}
 	if(m_check)
 	{
 		this->Check();
-
-		emit finished();
-		return;
 	}
 }
 
@@ -156,6 +143,8 @@ void dCacheTools::List()
 	{
 		emit log("ERROR", dCacheCopy->errorString());
 	}
+
+	emit finished();
 }
 
 void dCacheTools::Copy()

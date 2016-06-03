@@ -105,19 +105,21 @@ void dCacheTools::run()
 {
 	if(m_copy)
 	{
-		if(!m_stop)
-			this->Copy();
-		else
-			return;
+		this->Copy();
+		return;
 	}
 
 	if(m_list)
+	{
 		this->List();
+		return;
+	}
 
 	if(m_check)
+	{
 		this->Check();
-
-	return;
+		return;
+	}
 }
 
 void dCacheTools::List()

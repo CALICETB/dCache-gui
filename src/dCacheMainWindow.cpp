@@ -221,6 +221,7 @@ void dCacheMainWindow::ListFiles()
 	this->init();
 	m_tools->setFlags(false, false, true);
 	m_tools->start();
+	m_running = true;
 }
 
 void dCacheMainWindow::StopCopy()
@@ -245,6 +246,7 @@ void dCacheMainWindow::CheckCopy()
 	this->init();
 	m_tools->setFlags(false, true, false);
 	m_tools->start();
+	m_running = true;
 }
 
 void dCacheMainWindow::Close()

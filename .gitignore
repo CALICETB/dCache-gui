@@ -49,9 +49,4 @@ Temporary Items
 /.project
 
 # Documents
-.doc
-.tex
-.html
-.user
-.pdf
 /CMakeLists.txt.user

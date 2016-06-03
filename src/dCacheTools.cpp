@@ -24,6 +24,10 @@ dCacheTools::dCacheTools()
 	idxProcess = 0;
 	lastrunNumber = 0;
 	Threaddelay = 5;
+	indexfile = 0;
+
+	isOndCache = false;
+	Checkfilename = "";
 }
 
 dCacheTools::~dCacheTools()
@@ -208,9 +212,11 @@ void dCacheTools::Copy()
             str += filename;
 		 */
 
+		this->Check("srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/", m_base, m_output, filename);
 		lastrunNumber = StripRunNumber(filename, m_type);
+		Checkfilename = filename;
 
-		if(!this->Check("srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/", m_base, m_output, filename))
+		if(!isOndCache)
 		{
 			dCacheCopy = new QProcess();
 			dCacheCopy->setProcessChannelMode(QProcess::ForwardedChannels);
@@ -240,9 +246,8 @@ void dCacheTools::Check()
 	if(m_isSingleFile)
 	{
 		QFileInfo file(m_dir);
-		QString _file = file.fileName();
-
-		this->Check("srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/", m_base, m_output, _file);
+		list.push_back(file);
+		nfiles = list.size();
 	}
 	else
 	{
@@ -252,25 +257,27 @@ void dCacheTools::Check()
 
 		list = dir.entryInfoList();
 		nfiles = list.size();
+	}
 
-		for(int i = 0; i < nfiles; i++)
-		{
-			QFileInfo fileInfo = list.at(i);
-			QString filename = fileInfo.fileName();
+	if(nfiles > 0)
+	{
+		indexfile = 0;
+		QFileInfo fileInfo = list.at(indexfile);
+		QString filename = fileInfo.fileName();
 
-			this->Check("srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/", m_base, m_output, filename);
-		}
+		Checkfilename = filename;
+
+		this->Check("srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/", m_base, m_output, filename);
 	}
 
 	m_check = false;
+	return;
 }
 
-bool dCacheTools::Check(QString srm, QString base, QString output, QString file)
+void dCacheTools::Check(QString srm, QString base, QString output, QString file)
 {
-	bool isOndCache = false;
-
-	dCacheCopy = new QProcess();
-	dCacheCopy->setProcessChannelMode(QProcess::SeparateChannels);
+	QProcess *dCacheCheck = new QProcess();
+	dCacheCheck->setProcessChannelMode(QProcess::SeparateChannels);
 
 	std::string str = "/usr/bin/gfal-ls -l ";
 	str += srm.toStdString();
@@ -279,29 +286,50 @@ bool dCacheTools::Check(QString srm, QString base, QString output, QString file)
 	str += output.toStdString();
 	str += file.toStdString();
 
-	dCacheCopy->start(QString::fromStdString(str));
+	dCacheCheck->start(QString::fromStdString(str));
 
-	if(!dCacheCopy->waitForStarted())
+	if(!dCacheCheck->waitForStarted())
 	{
-		emit log("ERROR", QString("gfal-ls %1").arg(dCacheCopy->errorString()));
+		emit log("ERROR", QString("gfal-ls %1").arg(dCacheCheck->errorString()));
 	}
 
-	dCacheCopy->waitForFinished();
+	connect(dCacheCheck, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(finishedCheck(int, QProcess::ExitStatus)));
+	indexfile++;
+}
 
-	if(dCacheCopy->exitCode() == 0)
-		isOndCache = true;
-	else
+void dCacheTools::finishedCheck(int exitCode, QProcess::ExitStatus exitStatus)
+{
+	if(m_check)
 	{
-		if(m_copy)
-			emit log("INFO", QString("File %1 is not on dCache").arg(file));
-		if(m_check)
-			emit log("WARNING", QString("File %1 is not on dCache").arg(file));
-		isOndCache = false;
+		if(exitCode != 0)
+			emit log("WARNING", QString("File %1 is not on dCache").arg(Checkfilename));
+		else
+			emit log("INFO", QString("File %1 is on dCache").arg(Checkfilename));
+
+		if(indexfile < nfiles)
+		{
+			QFileInfo fileInfo = list.at(indexfile);
+			QString filename = fileInfo.fileName();
+
+			Checkfilename = filename;
+
+			this->Check("srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/", m_base, m_output, filename);
+		}
 	}
 
-	dCacheCopy->deleteLater();
-
-	return isOndCache;
+	if(m_copy)
+	{
+		if(exitCode != 0)
+		{
+			emit log("WARNING", QString("File %1 is not on dCache").arg(Checkfilename));
+			isOndCache = false;
+		}
+		else
+		{
+			emit log("INFO", QString("File %1 is on dCache").arg(Checkfilename));
+			isOndCache = true;
+		}
+	}
 }
 
 void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus)
@@ -356,9 +384,11 @@ void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus
     	            str += filename;
 		 */
 
+		this->Check("srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/", m_base, m_output, filename);
 		lastrunNumber = StripRunNumber(filename, m_type);
+		Checkfilename = filename;
 
-		if(!this->Check("srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/", m_base, m_output, filename))
+		if(!isOndCache)
 		{
 			dCacheCopy = new QProcess();
 			dCacheCopy->setProcessChannelMode(QProcess::ForwardedChannels);
@@ -436,9 +466,11 @@ void dCacheTools::goToNextFile()
     	            str += filename;
 		 */
 
+		this->Check("srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/", m_base, m_output, filename);
 		lastrunNumber = StripRunNumber(filename, m_type);
+		Checkfilename = filename;
 
-		if(!this->Check("srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/", m_base, m_output, filename))
+		if(!isOndCache)
 		{
 			dCacheCopy = new QProcess();
 			dCacheCopy->setProcessChannelMode(QProcess::ForwardedChannels);

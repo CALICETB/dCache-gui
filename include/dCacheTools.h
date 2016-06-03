@@ -20,7 +20,7 @@ public:
 
 	void Copy();
 	void Check();
-	bool Check(QString srm, QString base, QString output, QString file);
+	void Check(QString srm, QString base, QString output, QString file);
 	void List();
 	void goToNextFile();
 
@@ -40,12 +40,13 @@ public:
 	void Configure(QString Input, QString BaseDir, QString OutputDir, int type, bool isSingleFile);
 	void start();
 	void finishedProcess (int exitCode, QProcess::ExitStatus exitStatus);
+	void finishedCheck(int exitCode, QProcess::ExitStatus exitStatus);
 
 	private:
 	QProcess *dCacheCopy;
-	bool m_copy, m_check, m_list, m_isSingleFile, m_stop;
-	QString m_dir, m_base, m_output;
-	int idxProcess, nfiles, Threaddelay, lastrunNumber, m_type;
+	bool m_copy, m_check, m_list, m_isSingleFile, m_stop, isOndCache;
+	QString m_dir, m_base, m_output, Checkfilename;
+	int idxProcess, nfiles, Threaddelay, lastrunNumber, m_type, indexfile;
 	QFileInfoList list;
 };
 

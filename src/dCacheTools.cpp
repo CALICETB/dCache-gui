@@ -138,9 +138,6 @@ void dCacheTools::Copy()
 			return;
 		}
 
-		if(fileInfo.completeSuffix() != filetype && m_type != 4)
-			m_stop = true;
-
 		if(m_stop)
 			return;
 
@@ -299,8 +296,6 @@ void dCacheTools::goToNextFile()
 			this->goToNextFile();
 			return;
 		}
-
-		if(fileInfo.completeSuffix() != filetype && m_type != 4) m_stop = true;
 
 		std::string str = "/usr/bin/gfal-copy --dry-run -n 5 -t 6000 ";
 		str += "file:/";

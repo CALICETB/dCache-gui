@@ -44,11 +44,11 @@ int dCacheTools::StripRunNumber(QString filename)
 	int index = filename.indexOf("Run", 0, Qt::CaseSensitive);
 	if(index != -1)
 	{
-		QStringRef subString(&filename, index+3, 5);
+		QStringRef subString(&filename, index+4, 5);
 		runNumber = subString.toInt();
 	}
 
-	emit log("DEBUG", QString("Striped Run %1").arg(QString::number(runNumber)));
+	emit log("DEBUG", QString("Striped Run %1 - index %2").arg(QString::number(runNumber), QString::number(index)));
 
 	return runNumber;
 }

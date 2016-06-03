@@ -18,6 +18,17 @@ ui(new Ui::dCacheMainWindow)
 	timertime = 500;
 	timeleft = 0;
 	type = -1;
+	InputDir = "";
+	BaseDir = "";
+	OutputDir = "";
+	isLabview = false;
+	isEUDAQ = false;
+	isLED = false;
+	isRaw = false;
+	isOther = false;
+	isSingleFile = false;
+	type = -1;
+	m_running = false;
 
 	connect(this, SIGNAL(log(QString,QString)), m_logger, SLOT(Log(QString,QString)));
 
@@ -198,6 +209,7 @@ void dCacheMainWindow::StartCopy()
 	this->init();
 	m_tools->setFlags(true, false, false);
 	m_tools->start();
+	m_running = true;
 }
 
 void dCacheMainWindow::ListFiles()
@@ -220,6 +232,7 @@ void dCacheMainWindow::StopCopy()
 
 	emit log("MESSAGE", "Stop Copy");
 	m_tools->setStopFlag(true);
+	m_running = false;
 }
 
 void dCacheMainWindow::CheckCopy()
@@ -295,9 +308,7 @@ void dCacheMainWindow::updateMainWindow()
 			ui->OutputDir->setReadOnly(false);
 		}
 
-		ui->CheckProxy->setEnabled(true);
-
-		if(!m_tools->isRunning())
+		if(m_running == false)
 		{
 			ui->Configure->setEnabled(true);
 			ui->ListFiles->setEnabled(true);
@@ -307,6 +318,8 @@ void dCacheMainWindow::updateMainWindow()
 			ui->Configure->setEnabled(false);
 			ui->ListFiles->setEnabled(false);
 		}
+
+		ui->CheckProxy->setEnabled(true);
 
 		timeleft = timeleft - timertime*2/1000;
 		int hours = timeleft/3600;

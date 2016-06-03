@@ -49,8 +49,7 @@ public:
 	QTimer *timer;
 
 	QString InputDir, BaseDir, OutputDir;
-	bool isLabview, isEUDAQ, isLED, isRaw, isOther, isSingleFile;
-
+	bool isLabview, isEUDAQ, isLED, isRaw, isOther, isSingleFile, m_running;
 	int timeleft, timertime, type;
 
 };

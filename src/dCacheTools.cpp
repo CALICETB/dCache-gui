@@ -13,7 +13,6 @@ dCacheTools::dCacheTools()
 	m_dir = "";
 	m_base = "";
 	m_output = "";
-	m_type = -1;
 	m_isSingleFile = false;
 	m_stop = false;
 
@@ -26,12 +25,11 @@ dCacheTools::~dCacheTools()
 	dCacheCopy->deleteLater();
 }
 
-void dCacheTools::Configure(QString Input, QString BaseDir, QString OutputDir, int type, bool isSingleFile)
+void dCacheTools::Configure(QString Input, QString BaseDir, QString OutputDir, bool isSingleFile)
 {
 	m_dir = Input;
 	m_base = BaseDir;
 	m_output = OutputDir;
-	m_type = type;
 	m_isSingleFile = isSingleFile;
 }
 
@@ -45,9 +43,6 @@ void dCacheTools::run()
 	if(m_copy)
 	{
 		this->Copy();
-
-		m_copy = false;
-		emit CopyFinished();
 	}
 	if(m_list)
 		this->List();

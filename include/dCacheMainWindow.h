@@ -25,7 +25,7 @@ public:
 	signals :
 	//Signal to Logger
 	void log(QString type, QString message);
-	void Configure_dCacheTool(QString InputDir, QString BaseDir, QString OutputDir, int type, bool isSingleFile);
+	void Configure_dCacheTool(QString InputDir, QString BaseDir, QString OutputDir, bool isSingleFile);
 
 	private slots:
 	void on_toolButton_clicked();

@@ -30,10 +30,9 @@ public:
 
 	signals:
 	void log(QString type, QString message);
-	void CopyFinished();
 
 	public slots:
-	void Configure(QString Input, QString BaseDir, QString OutputDir, int type, bool isSingleFile);
+	void Configure(QString Input, QString BaseDir, QString OutputDir, bool isSingleFile);
 	void start();
 	void finishedProcess (int exitCode, QProcess::ExitStatus exitStatus);
 
@@ -41,7 +40,7 @@ public:
 	QProcess *dCacheCopy;
 	bool m_copy, m_check, m_list, m_isSingleFile, m_stop;
 	QString m_dir, m_base, m_output;
-	int m_type, idxProcess, nfiles;
+	int idxProcess, nfiles;
 	QFileInfoList list;
 };
 

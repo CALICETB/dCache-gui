@@ -78,8 +78,8 @@ void dCacheMainWindow::init()
 	m_tools = new dCacheTools();
 	connect(this, SIGNAL(Configure_dCacheTool(QString, QString, QString, int, bool)), m_tools, SLOT(Configure(QString, QString, QString, int, bool)));
 	connect(m_tools, SIGNAL(log(QString,QString)), m_logger, SLOT(Log(QString,QString)));
-	connect(m_tools, SIGNAL(finished()), this, SLOT(ThreadStopped()));
-	connect(m_tools, SIGNAL(started()), this, SLOT(ThreadRunning()));
+	connect(m_tools, SIGNAL(finished()), this, SLOT(ThreadStopped()), Qt::DirectConnection);
+	connect(m_tools, SIGNAL(started()), this, SLOT(ThreadRunning()), Qt::DirectConnection);
 
 	emit Configure_dCacheTool(InputDir, BaseDir, OutputDir, type, isSingleFile);
 }
@@ -254,21 +254,18 @@ void dCacheMainWindow::Close()
 		m_proxy->DestroyProxy(timeleft);
 
 	if(m_running)
-	{
 		m_tools->quit();
-		delete m_tools;
-	}
 
 	QEventLoop loop;
 	QTimer::singleShot(2000, &loop, SLOT(quit()));
 	loop.exec();
 
 	m_logger->close();
+	this->close();
 
+	delete m_tools;
 	delete m_proxy;
 	delete m_logger;
-
-	this->close();
 }
 
 void dCacheMainWindow::updateMainWindow()

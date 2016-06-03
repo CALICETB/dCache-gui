@@ -14,6 +14,7 @@ ui(new Ui::dCacheMainWindow)
 
 	m_logger = new Logger();
 	m_proxy = new ProxyTools();
+	m_tools = new dCacheTools();
 
 	timertime = 500;
 	timeleft = 0;
@@ -63,8 +64,6 @@ dCacheMainWindow::~dCacheMainWindow()
 
 void dCacheMainWindow::init()
 {
-	m_tools = new dCacheTools();
-
 	connect(this, SIGNAL(Configure_dCacheTool(QString, QString, QString, bool)), m_tools, SLOT(Configure(QString, QString, QString, bool)));
 	connect(m_tools, SIGNAL(log(QString,QString)), m_logger, SLOT(Log(QString,QString)));
 	connect(m_tools, SIGNAL(finished()), this, SLOT(StopCopy()));
@@ -294,6 +293,9 @@ void dCacheMainWindow::updateMainWindow()
 			ui->InputDir->setReadOnly(false);
 			ui->BaseDir->setReadOnly(false);
 			ui->OutputDir->setReadOnly(false);
+
+			if(!m_tools->isRunning())
+				ui->Configure->setEnabled(true);
 		}
 
 		ui->CheckProxy->setEnabled(true);

@@ -186,6 +186,7 @@ void dCacheTools::Copy()
 		QString filename = fileInfo.fileName();
 		QDateTime fileTime = fileInfo.lastModified();
 		QDateTime current = QDateTime::currentDateTime();
+		qint64 filesize = fileInfo.size();
 
 		emit log("DEBUG", QString("File : %1 \n "
 				"Last Modification : %2 \n "
@@ -194,6 +195,14 @@ void dCacheTools::Copy()
 		if(current.toTime_t() - fileTime.toTime_t() < 350)
 		{
 			emit log("DEBUG", "File too young. Will be copied later");
+			idxProcess++;
+			this->goToNextFile();
+			return;
+		}
+
+		if(filesize < 100000)
+		{
+			emit log("DEBUG", QString("File too small %1. Will be copied later").arg(QString::number(filesize)));
 			idxProcess++;
 			this->goToNextFile();
 			return;
@@ -231,7 +240,7 @@ void dCacheTools::Copy()
 		lastrunNumber = StripRunNumber(filename, m_type);
 		Checkfilename = filename;
 
-		this->delay(Threaddelay);
+		this->delay(Threaddelay/Threaddelay);
 
 		if(!isOndCache)
 		{
@@ -359,6 +368,7 @@ void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus
 		QString filename = fileInfo.fileName();
 		QDateTime fileTime = fileInfo.lastModified();
 		QDateTime current = QDateTime::currentDateTime();
+		qint64 filesize = fileInfo.size();
 
 		emit log("DEBUG", QString("File : %1 \n "
 				"Last Modification : %2 \n "
@@ -367,6 +377,14 @@ void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus
 		if(current.toTime_t() - fileTime.toTime_t() < 350)
 		{
 			emit log("DEBUG", "File too young. Going to next file.");
+			idxProcess++;
+			this->goToNextFile();
+			return;
+		}
+
+		if(filesize < 100000)
+		{
+			emit log("DEBUG", QString("File too small %1. Will be copied later").arg(QString::number(filesize)));
 			idxProcess++;
 			this->goToNextFile();
 			return;
@@ -404,7 +422,7 @@ void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus
 		lastrunNumber = StripRunNumber(filename, m_type);
 		Checkfilename = filename;
 
-		this->delay(Threaddelay);
+		this->delay(Threaddelay/Threaddelay);
 
 		if(!isOndCache)
 		{
@@ -448,6 +466,7 @@ void dCacheTools::goToNextFile()
 		QString filename = fileInfo.fileName();
 		QDateTime fileTime = fileInfo.lastModified();
 		QDateTime current = QDateTime::currentDateTime();
+		qint64 filesize = fileInfo.size();
 
 		emit log("DEBUG", QString("File : %1 \n "
 				"Last Modification : %2 \n "
@@ -456,6 +475,14 @@ void dCacheTools::goToNextFile()
 		if(current.toTime_t() - fileTime.toTime_t() < 350)
 		{
 			emit log("DEBUG", "File too young. Going to next file.");
+			idxProcess++;
+			this->goToNextFile();
+			return;
+		}
+
+		if(filesize < 100000)
+		{
+			emit log("DEBUG", QString("File too small %1. Will be copied later").arg(QString::number(filesize)));
 			idxProcess++;
 			this->goToNextFile();
 			return;
@@ -493,7 +520,7 @@ void dCacheTools::goToNextFile()
 		lastrunNumber = StripRunNumber(filename, m_type);
 		Checkfilename = filename;
 
-		this->delay(Threaddelay);
+		this->delay(Threaddelay/Threaddelay);
 
 		if(!isOndCache)
 		{

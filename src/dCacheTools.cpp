@@ -53,6 +53,10 @@ void dCacheTools::run()
 			if(m_stop)
 				break;
 		}
+
+		m_copy = false;
+		emit CopyFinished();
+
 	}
 	if(m_list)
 		this->List();
@@ -271,11 +275,6 @@ void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus
 		connect(dCacheCopy, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(finishedProcess(int, QProcess::ExitStatus)));
 		idxProcess++;
 	}
-	else
-	{
-		m_copy = false;
-		emit CopyFinished();
-	}
 }
 
 void dCacheTools::goToNextFile()
@@ -352,10 +351,5 @@ void dCacheTools::goToNextFile()
 
 		connect(dCacheCopy, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(finishedProcess(int, QProcess::ExitStatus)));
 		idxProcess++;
-	}
-	else
-	{
-		m_copy = false;
-		emit CopyFinished();
 	}
 }

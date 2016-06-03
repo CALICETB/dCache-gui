@@ -107,15 +107,17 @@ void dCacheTools::run()
 	{
 		if(!m_stop)
 			this->Copy();
+		else
+			return;
 	}
+
 	if(m_list)
-	{
 		this->List();
-	}
+
 	if(m_check)
-	{
 		this->Check();
-	}
+
+	return;
 }
 
 void dCacheTools::List()
@@ -143,8 +145,6 @@ void dCacheTools::List()
 	{
 		emit log("ERROR", dCacheCopy->errorString());
 	}
-
-	emit finished();
 }
 
 void dCacheTools::Copy()

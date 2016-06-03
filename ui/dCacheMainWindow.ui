@@ -237,7 +237,7 @@
      <item>
       <widget class="QLabel" name="RunLabel">
        <property name="text">
-        <string>Last Run :</string>
+        <string>Run :</string>
        </property>
       </widget>
      </item>

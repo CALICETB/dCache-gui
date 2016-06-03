@@ -1,15 +1,19 @@
 #include "Logger.h"
 
+//Qt headers
 #include <QHBoxLayout>
 #include <QScrollBar>
 
+//-----------------------------------------------------------------------------------------------
+
 Logger::Logger()
 {
+	//Set size of the QWidget
     setMaximumWidth(1000);
     setMaximumHeight(250);
 
     this->resize(this->maximumWidth(), this->maximumHeight());
-    this->setWindowTitle("dCache Logger");
+    this->setWindowTitle("dCache Logger");//Title of the widget
 
     //set layout
     QHBoxLayout *pLoggingLayout = new QHBoxLayout();
@@ -25,13 +29,17 @@ Logger::Logger()
 
 Logger::~Logger()
 {
-    m_pLoggingWidget->deleteLater();
+    m_pLoggingWidget->deleteLater();//Cleaning
 }
 
 //-----------------------------------------------------------------------------------------------
 
 void Logger::Log(QString type, QString message)
 {
+	/**
+	 * Does the printing of the message on the widget
+	 */
+
     QColor color = getColor(type);
 
     // scroll to the end of text edit
@@ -57,6 +65,10 @@ void Logger::Log(QString type, QString message)
 
 QColor Logger::getColor(QString type)
 {
+	/**
+	 * Handles the different type of messages and assign them a color
+	 */
+
     if(type == "ERROR")
         return QColor(Qt::red);
     else if(type == "MESSAGE")

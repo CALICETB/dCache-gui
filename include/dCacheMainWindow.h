@@ -36,6 +36,12 @@ namespace Ui {
 class dCacheMainWindow;
 }
 
+/*
+ * dCacheMainWindow Class
+ * Class handling the Qt GUI
+ * Interacts with the user and the different objects
+ */
+
 class dCacheMainWindow : public QMainWindow
 {
 	Q_OBJECT

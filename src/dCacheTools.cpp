@@ -198,7 +198,7 @@ bool dCacheTools::Check(QString srm, QString base, QString output, QString file)
 	bool isOndCache = false;
 
 	dCacheCopy = new QProcess();
-	dCacheCopy->setProcessChannelMode(QProcess::ForwardedChannels);
+	dCacheCopy->setProcessChannelMode(QProcess::SeparateChannels);
 
 	std::string str = "/usr/bin/gfal-ls -l ";
 	str += srm.toStdString();

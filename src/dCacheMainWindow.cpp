@@ -246,9 +246,10 @@ void dCacheMainWindow::Close()
 {
 	emit log("MESSAGE", "dCache-GUI exiting");
 
-	m_proxy->DestroyProxy(timeleft);
+	if(timeleft != 0)
+		m_proxy->DestroyProxy(timeleft);
 
-	if(m_tools->isRunning())
+	if(m_running)
 	{
 		m_tools->quit();
 		delete m_tools;
@@ -326,8 +327,8 @@ void dCacheMainWindow::updateMainWindow()
 		int minutes = timeleft%3600/60;
 
 		if(timeleft%2 == 0)
-			ui->ProxyValid_label->setText(QString("%1 : %2 time left").arg(QString::number(hours), QString::number(minutes)));
+			ui->ProxyValid_label->setText(QString("%1 : %2 time left").arg(QString::number(hours, 'i', 2), QString::number(minutes, 'i', 2)));
 		else
-			ui->ProxyValid_label->setText(QString("%1   %2 time left").arg(QString::number(hours), QString::number(minutes)));
+			ui->ProxyValid_label->setText(QString("%1   %2 time left").arg(QString::number(hours, 'i', 2), QString::number(minutes, 'i', 2)));
 	}
 }

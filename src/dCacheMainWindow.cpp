@@ -204,6 +204,7 @@ void dCacheMainWindow::StartCopy()
 	ui->StopCopy->setEnabled(true);
 	ui->Configure->setEnabled(false);
 	ui->ListFiles->setEnabled(false);
+	ui->CheckCopy->setEnabled(false);
 
 	ui->InputDir->setReadOnly(true);
 	ui->BaseDir->setReadOnly(true);
@@ -228,6 +229,7 @@ void dCacheMainWindow::StopCopy()
 	ui->StopCopy->setEnabled(false);
 	ui->Configure->setEnabled(true);
 	ui->ListFiles->setEnabled(true);
+	ui->CheckCopy->setEnabled(true);
 
 	ui->InputDir->setReadOnly(false);
 	ui->BaseDir->setReadOnly(false);

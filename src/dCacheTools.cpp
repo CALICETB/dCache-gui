@@ -292,7 +292,10 @@ bool dCacheTools::Check(QString srm, QString base, QString output, QString file)
 		isOndCache = true;
 	else
 	{
-		emit log("INFO", QString("File %1 is not on dCache").arg(file));
+		if(m_copy)
+			emit log("INFO", QString("File %1 is not on dCache").arg(file));
+		if(m_check)
+			emit log("WARNING", QString("File %1 is not on dCache").arg(file));
 		isOndCache = false;
 	}
 

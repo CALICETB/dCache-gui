@@ -104,7 +104,8 @@ void dCacheTools::run()
 {
 	if(m_copy)
 	{
-		this->Copy();
+		if(!m_stop)
+			this->Copy();
 	}
 	if(m_list)
 		this->List();
@@ -145,8 +146,6 @@ void dCacheTools::List()
 
 void dCacheTools::Copy()
 {
-	emit log("INFO", "Starting Copying..");
-
 	QLocale::setDefault(QLocale::English);
 
 	if(m_isSingleFile)
@@ -169,6 +168,8 @@ void dCacheTools::Copy()
 	{
 		if(m_stop)
 			return;
+
+		emit log("INFO", "Starting Copying..");
 
 		idxProcess = 0;
 
@@ -221,6 +222,8 @@ void dCacheTools::Copy()
 		this->Check("srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/", m_base, m_output, filename);
 		lastrunNumber = StripRunNumber(filename, m_type);
 		Checkfilename = filename;
+
+		this->delay(Threaddelay);
 
 		if(!isOndCache)
 		{
@@ -328,10 +331,7 @@ void dCacheTools::finishedCheck(int exitCode, QProcess::ExitStatus exitStatus)
 			isOndCache = false;
 		}
 		else
-		{
-			emit log("INFO", QString("File %1 is on dCache").arg(Checkfilename));
 			isOndCache = true;
-		}
 	}
 }
 
@@ -395,6 +395,8 @@ void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus
 		this->Check("srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/", m_base, m_output, filename);
 		lastrunNumber = StripRunNumber(filename, m_type);
 		Checkfilename = filename;
+
+		this->delay(Threaddelay);
 
 		if(!isOndCache)
 		{
@@ -482,6 +484,8 @@ void dCacheTools::goToNextFile()
 		this->Check("srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/", m_base, m_output, filename);
 		lastrunNumber = StripRunNumber(filename, m_type);
 		Checkfilename = filename;
+
+		this->delay(Threaddelay);
 
 		if(!isOndCache)
 		{

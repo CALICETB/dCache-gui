@@ -76,11 +76,11 @@ dCacheMainWindow::~dCacheMainWindow()
 void dCacheMainWindow::init()
 {
 	m_tools = new dCacheTools();
-	connect(this, SIGNAL(Configure_dCacheTool(QString, QString, QString, bool)), m_tools, SLOT(Configure(QString, QString, QString, bool)));
+	connect(this, SIGNAL(Configure_dCacheTool(QString, QString, QString, int, bool)), m_tools, SLOT(Configure(QString, QString, QString, int, bool)));
 	connect(m_tools, SIGNAL(log(QString,QString)), m_logger, SLOT(Log(QString,QString)));
 	connect(m_tools, SIGNAL(finished()), this, SLOT(StopCopy()));
 
-	emit Configure_dCacheTool(InputDir, BaseDir, OutputDir, isSingleFile);
+	emit Configure_dCacheTool(InputDir, BaseDir, OutputDir, type, isSingleFile);
 }
 
 void dCacheMainWindow::Configure()

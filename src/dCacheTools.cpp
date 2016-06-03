@@ -18,6 +18,7 @@ dCacheTools::dCacheTools()
 	m_output = "";
 	m_isSingleFile = false;
 	m_stop = false;
+	m_type = -1;
 
 	nfiles = 0;
 	idxProcess = 0;
@@ -37,15 +38,42 @@ void dCacheTools::delay(int secs)
 		QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 }
 
-int dCacheTools::StripRunNumber(QString filename)
+int dCacheTools::StripRunNumber(QString filename, int type)
 {
 	int runNumber = 0;
 
 	int index = filename.indexOf("Run", 0, Qt::CaseSensitive);
 	if(index != -1)
 	{
-		QStringRef subString(&filename, index+4, 5);
-		runNumber = subString.toInt();
+		if(type == 1)
+		{
+			QStringRef subString(&filename, index+4+3, 5);
+			runNumber = subString.toInt();
+		}
+		if(type == 2)
+		{
+			QStringRef subString(&filename, index+4, 5);
+			runNumber = subString.toInt();
+		}
+		if(type == 3)
+		{
+			QStringRef subString(&filename, index+4, 5);
+			runNumber = subString.toInt();
+		}
+		else
+			runNumber = 0;
+	}
+	else
+	{
+		int index = filename.indexOf("run", 0, Qt::CaseSensitive);
+
+		if(type == 3)
+		{
+			QStringRef subString(&filename, index+3, 5);
+			runNumber = subString.toInt();
+		}
+		else
+			runNumber = 0;
 	}
 
 	emit log("DEBUG", QString("Striped Run %1 - index %2").arg(QString::number(runNumber), QString::number(index)));
@@ -53,11 +81,12 @@ int dCacheTools::StripRunNumber(QString filename)
 	return runNumber;
 }
 
-void dCacheTools::Configure(QString Input, QString BaseDir, QString OutputDir, bool isSingleFile)
+void dCacheTools::Configure(QString Input, QString BaseDir, QString OutputDir, int type, bool isSingleFile)
 {
 	m_dir = Input;
 	m_base = BaseDir;
 	m_output = OutputDir;
+	m_type = type;
 	m_isSingleFile = isSingleFile;
 }
 

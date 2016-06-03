@@ -16,7 +16,7 @@ public:
 	void run();
 	void init();
 	void delay(int secs);
-	int StripRunNumber(QString filename);
+	int StripRunNumber(QString filename, int type);
 
 	void Copy();
 	void Check();
@@ -37,7 +37,7 @@ public:
 	void log(QString type, QString message);
 
 	public slots:
-	void Configure(QString Input, QString BaseDir, QString OutputDir, bool isSingleFile);
+	void Configure(QString Input, QString BaseDir, QString OutputDir, int type, bool isSingleFile);
 	void start();
 	void finishedProcess (int exitCode, QProcess::ExitStatus exitStatus);
 
@@ -45,7 +45,7 @@ public:
 	QProcess *dCacheCopy;
 	bool m_copy, m_check, m_list, m_isSingleFile, m_stop;
 	QString m_dir, m_base, m_output;
-	int idxProcess, nfiles, Threaddelay, lastrunNumber;
+	int idxProcess, nfiles, Threaddelay, lastrunNumber, m_type;
 	QFileInfoList list;
 };
 

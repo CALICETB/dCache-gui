@@ -3,6 +3,9 @@
 #include <QLocale>
 #include <QDir>
 #include <QDateTime>
+#include <QTime>
+#include <QCoreApplication>
+#include <QEventLoop>
 
 dCacheTools::dCacheTools()
 {
@@ -23,6 +26,13 @@ dCacheTools::dCacheTools()
 dCacheTools::~dCacheTools()
 {
 	dCacheCopy->deleteLater();
+}
+
+void dCacheTools::delay(int secs)
+{
+    QTime dieTime = QTime::currentTime().addSecs(secs);
+    while (QTime::currentTime() < dieTime)
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 }
 
 void dCacheTools::Configure(QString Input, QString BaseDir, QString OutputDir, bool isSingleFile)
@@ -105,6 +115,9 @@ void dCacheTools::Copy()
 
 	if(nfiles > 0)
 	{
+		if(m_stop)
+			return;
+
 		idxProcess = 0;
 
 		QFileInfo fileInfo = list.at(idxProcess);
@@ -124,9 +137,6 @@ void dCacheTools::Copy()
 			this->goToNextFile();
 			return;
 		}
-
-		if(m_stop)
-			return;
 
 		std::string str = "/usr/bin/gfal-copy --dry-run -n 5 -t 6000 ";
 		str += "file:/";
@@ -175,10 +185,13 @@ void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus
 {
 	emit log("INFO", QString("Completed with exit code %1").arg(QString::number(exitCode)));
 
-	this->sleep(10);
+	this->delay(10);
 
 	if(idxProcess < nfiles)
 	{
+		if(m_stop)
+			return;
+
 		QFileInfo fileInfo = list.at(idxProcess);
 
 		QString filename = fileInfo.fileName();
@@ -219,9 +232,6 @@ void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus
     	            str += OutputDir.toStdString();
     	            str += filename;
 		 */
-
-		if(m_stop)
-			return;
 
 		/* create QProcess object */
 		dCacheCopy = new QProcess();
@@ -244,10 +254,13 @@ void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus
 
 void dCacheTools::goToNextFile()
 {
-	this->sleep(10);
+	this->delay(10);
 
 	if(idxProcess < nfiles)
 	{
+		if(m_stop)
+			return;
+
 		QFileInfo fileInfo = list.at(idxProcess);
 
 		QString filename = fileInfo.fileName();
@@ -288,9 +301,6 @@ void dCacheTools::goToNextFile()
     	            str += OutputDir.toStdString();
     	            str += filename;
 		 */
-
-		if(m_stop)
-			return;
 
 		/* create QProcess object */
 		dCacheCopy = new QProcess();

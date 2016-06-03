@@ -15,6 +15,7 @@ public:
 
 	void run();
 	void init();
+	void delay(int secs);
 
 	void Copy();
 	void Check();

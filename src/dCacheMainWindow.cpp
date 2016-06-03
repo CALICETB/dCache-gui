@@ -3,6 +3,7 @@
 
 #include <QInputDialog>
 #include <QFileDialog>
+#include <QEventLoop>
 
 dCacheMainWindow::dCacheMainWindow(QWidget *parent) :
 QMainWindow(parent),
@@ -23,7 +24,6 @@ ui(new Ui::dCacheMainWindow)
 	connect(m_proxy, SIGNAL(log(QString,QString)), m_logger, SLOT(Log(QString,QString)));
 	connect(m_proxy, SIGNAL(PasswordRequired()), this, SLOT(showPassword()));
 	connect(m_proxy, SIGNAL(ProxyStatus(QString)), this, SLOT(updateProxy(QString)));
-	connect(m_proxy, SIGNAL(ProxyDestroyed()), m_logger, SLOT(close()));
 
 	emit log("MESSAGE", "dCache-GUI started");
 
@@ -239,6 +239,12 @@ void dCacheMainWindow::Close()
 		m_tools->quit();
 		delete m_tools;
 	}
+
+	QEventLoop loop;
+	QTimer::singleShot(2000, &loop, SLOT(quit()));
+	loop.exec();
+
+	m_logger->close();
 
 	delete m_proxy;
 	delete m_logger;

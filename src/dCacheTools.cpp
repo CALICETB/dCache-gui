@@ -110,14 +110,6 @@ void dCacheTools::Copy()
 
 	if(nfiles > 0)
 	{
-		QString filetype;
-		if(m_type == 1)
-			filetype = "txt";
-		if(m_type == 2)
-			filetype = "slcio";
-		if(m_type == 3)
-			filetype = "raw";
-
 		idxProcess = 0;
 
 		QFileInfo fileInfo = list.at(idxProcess);
@@ -192,14 +184,6 @@ void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus
 
 	if(idxProcess < nfiles)
 	{
-		QString filetype;
-		if(m_type == 1)
-			filetype = "txt";
-		if(m_type == 2)
-			filetype = "slcio";
-		if(m_type == 3)
-			filetype = "raw";
-
 		QFileInfo fileInfo = list.at(idxProcess);
 
 		QString filename = fileInfo.fileName();
@@ -217,8 +201,6 @@ void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus
 			this->goToNextFile();
 			return;
 		}
-
-		if(fileInfo.completeSuffix() != filetype && m_type != 4) m_stop = true;
 
 		std::string str = "/usr/bin/gfal-copy --dry-run -n 5 -t 6000 ";
 		str += "file:/";
@@ -271,14 +253,6 @@ void dCacheTools::goToNextFile()
 {
 	if(idxProcess < nfiles)
 	{
-		QString filetype;
-		if(m_type == 1)
-			filetype = "txt";
-		if(m_type == 2)
-			filetype = "slcio";
-		if(m_type == 3)
-			filetype = "raw";
-
 		QFileInfo fileInfo = list.at(idxProcess);
 
 		QString filename = fileInfo.fileName();

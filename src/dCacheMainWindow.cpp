@@ -61,6 +61,7 @@ ui(new Ui::dCacheMainWindow)
 
 	ui->ProxyValid_label->setText("<font color='Red'>Check Proxy!</font>");
 	ui->BaseDir->setText("tb-desy/native/desyAhcal2016/AHCAL_Testbeam_Raw_May_2016");
+	ui->LastRun->setText(".....");
 
 	timer = new QTimer();
 	connect(timer, SIGNAL(timeout()), this, SLOT(updateMainWindow()));
@@ -318,6 +319,8 @@ void dCacheMainWindow::updateMainWindow()
 		{
 			ui->Configure->setEnabled(false);
 			ui->ListFiles->setEnabled(false);
+
+			ui->LastRun->setText(QString::number(m_tools->getRunNumber()));
 		}
 
 		ui->CheckProxy->setEnabled(true);

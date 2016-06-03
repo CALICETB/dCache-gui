@@ -21,6 +21,7 @@ dCacheTools::dCacheTools()
 
 	nfiles = 0;
 	idxProcess = 0;
+	lastrunNumber = 0;
 	Threaddelay = 5;
 }
 
@@ -34,6 +35,20 @@ void dCacheTools::delay(int secs)
 	QTime dieTime = QTime::currentTime().addSecs(secs);
 	while (QTime::currentTime() < dieTime)
 		QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+}
+
+int dCacheTools::StripRunNumber(QString filename)
+{
+	int runNumber = 0;
+
+	int index = filename.indexOf("Run", 0, Qt::CaseSensitive);
+	if(index != -1)
+	{
+		QStringRef subString(&filename, index+3, 5);
+		runNumber = subString.toInt();
+	}
+
+	return runNumber;
 }
 
 void dCacheTools::Configure(QString Input, QString BaseDir, QString OutputDir, bool isSingleFile)
@@ -162,6 +177,8 @@ void dCacheTools::Copy()
             str += filename;
 		 */
 
+		lastrunNumber = StripRunNumber(filename);
+
 		if(!this->Check("srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/", m_base, m_output, filename))
 		{
 			dCacheCopy = new QProcess();
@@ -281,6 +298,8 @@ void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus
     	            str += filename;
 		 */
 
+		lastrunNumber = StripRunNumber(filename);
+
 		if(!this->Check("srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/", m_base, m_output, filename))
 		{
 			dCacheCopy = new QProcess();
@@ -358,6 +377,8 @@ void dCacheTools::goToNextFile()
     	            str += OutputDir.toStdString();
     	            str += filename;
 		 */
+
+		lastrunNumber = StripRunNumber(filename);
 
 		if(!this->Check("srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/", m_base, m_output, filename))
 		{

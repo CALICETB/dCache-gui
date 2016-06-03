@@ -16,6 +16,7 @@ public:
 	void run();
 	void init();
 	void delay(int secs);
+	int StripRunNumber(QString filename);
 
 	void Copy();
 	void Check();
@@ -30,6 +31,8 @@ public:
 	}
 	void setStopFlag(bool stop) {m_stop = stop;}
 
+	int getRunNumber() {return lastrunNumber;}
+
 	signals:
 	void log(QString type, QString message);
 
@@ -42,7 +45,7 @@ public:
 	QProcess *dCacheCopy;
 	bool m_copy, m_check, m_list, m_isSingleFile, m_stop;
 	QString m_dir, m_base, m_output;
-	int idxProcess, nfiles, Threaddelay;
+	int idxProcess, nfiles, Threaddelay, lastrunNumber;
 	QFileInfoList list;
 };
 

@@ -48,7 +48,7 @@ int dCacheTools::StripRunNumber(QString filename)
 		runNumber = subString.toInt();
 	}
 
-	emit log("DEBUG", QString("Striped Run %1").arg(QString::number(runNumber)));
+	emit log("DEBUG", QString("Striped Run %1 - index %2").arg(QString::number(runNumber), QString::number(index)));
 
 	return runNumber;
 }

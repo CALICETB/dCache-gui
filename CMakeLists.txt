@@ -84,15 +84,17 @@ INSTALL( FILES ${DCACHE_GUI_BINARY_DIR}/DCACHE_GUIConfig.cmake
          DESTINATION ${CONFIG_INSTALL_DIR}                               )
 
 ################################################################
-# documentation                                                #
+# GFAL Utils                                                   #
 ################################################################
 
-SET ( BUILD_DOCUMENTATION ON )
-MARK_AS_ADVANCED( BUILD_DOCUMENTATION )
+SET ( IS_DEVEL ON )
+MARK_AS_ADVANCED( IS_DEV )
 
-IF( BUILD_DOCUMENTATION )
-INCLUDE( Documentation )
-ENDIF()
+IF( NOT IS_DEVEL )
+FIND_PACKAGE( GFAL_UTILS REQUIRED )
+ELSE( NOT IS_DEVEL )
+SET( GFAL_UTILS_FOUND FALSE )
+ENDIF( NOT IS_DEVEL )
 
 ################################################################
 # Git                                                          #
@@ -145,11 +147,24 @@ include_directories (${HEADER_DIR})
 subdirs(src)
 
 ################################################################
+# documentation                                                #
+################################################################
+
+SET ( BUILD_DOCUMENTATION ON )
+MARK_AS_ADVANCED( BUILD_DOCUMENTATION )
+
+IF( BUILD_DOCUMENTATION )
+INCLUDE( Documentation )
+ENDIF()
+
+################################################################
 # print status report                                          #
 ################################################################
 MESSAGE( STATUS )
 MESSAGE( STATUS "-------------------------------------------------------------------------------" )
 MESSAGE( STATUS "CMAKE_INSTALL_PREFIX                    = ${CMAKE_INSTALL_PREFIX}" )
+MESSAGE( STATUS "IS_DEVEL                                = ${IS_DEVEL}" )
+MESSAGE( STATUS "GFAL_UTILS_FOUND                        = ${GFAL_UTILS_FOUND}" )
 MESSAGE( STATUS "USE_GIT                                 = ${USE_GIT}" )
 MESSAGE( STATUS "BUILD_DOCUMENTATION                     = ${BUILD_DOCUMENTATION}" )
 MESSAGE( STATUS "QT5 PATH                                = ${CMAKE_PREFIX_PATH}" )

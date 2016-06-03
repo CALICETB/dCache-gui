@@ -272,17 +272,6 @@ void dCacheMainWindow::updateMainWindow()
 	if(isOther)
 		type = 4;
 
-	if(type != -1)
-	{
-		ui->toolButton->setEnabled(true);
-		ui->InputDir->setReadOnly(false);
-		ui->BaseDir->setReadOnly(false);
-		ui->OutputDir->setReadOnly(false);
-
-		ui->ListFiles->setEnabled(true);
-		ui->Configure->setEnabled(true);
-	}
-
 	if(timeleft == 0)
 	{
 		ui->StartCopy->setEnabled(false);
@@ -290,6 +279,7 @@ void dCacheMainWindow::updateMainWindow()
 		ui->CheckCopy->setEnabled(false);
 		ui->ListFiles->setEnabled(false);
 		ui->Configure->setEnabled(false);
+
 		ui->InputDir->setReadOnly(true);
 		ui->BaseDir->setReadOnly(true);
 		ui->OutputDir->setReadOnly(true);
@@ -298,6 +288,14 @@ void dCacheMainWindow::updateMainWindow()
 	}
 	else
 	{
+		if(type != -1)
+		{
+			ui->toolButton->setEnabled(true);
+			ui->InputDir->setReadOnly(false);
+			ui->BaseDir->setReadOnly(false);
+			ui->OutputDir->setReadOnly(false);
+		}
+
 		ui->CheckProxy->setEnabled(true);
 		ui->ListFiles->setEnabled(true);
 

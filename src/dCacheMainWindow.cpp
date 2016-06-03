@@ -105,6 +105,7 @@ void dCacheMainWindow::Configure()
 
 			ui->StartCopy->setEnabled(true);
 			ui->StopCopy->setEnabled(false);
+			ui->CheckCopy->setEnabled(true);
 			ui->ListFiles->setEnabled(true);
 			ui->Configure->setEnabled(false);
 		}
@@ -132,6 +133,7 @@ void dCacheMainWindow::Configure()
 
 			ui->StartCopy->setEnabled(true);
 			ui->StopCopy->setEnabled(false);
+			ui->CheckCopy->setEnabled(true);
 			ui->ListFiles->setEnabled(true);
 			ui->Configure->setEnabled(false);
 		}

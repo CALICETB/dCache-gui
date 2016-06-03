@@ -237,6 +237,30 @@ void dCacheTools::Copy()
 
 void dCacheTools::Check()
 {
+	if(m_isSingleFile)
+	{
+		QFileInfo file(m_dir);
+		QString _file = file.fileName();
+
+		this->Check("srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/", m_base, m_output, _file);
+	}
+	else
+	{
+		QDir dir(m_dir);
+		dir.setFilter(QDir::Files | QDir::NoSymLinks);
+		dir.setSorting(QDir::Time | QDir::Reversed);
+
+		list = dir.entryInfoList();
+		nfiles = list.size();
+
+		for(int i = 0; i < nfiles; i++)
+		{
+			QFileInfo fileInfo = list.at(i);
+			QString filename = fileInfo.fileName();
+
+			this->Check("srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/", m_base, m_output, filename);
+		}
+	}
 
 	m_check = false;
 }

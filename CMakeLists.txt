@@ -88,7 +88,6 @@ INSTALL( FILES ${DCACHE_GUI_BINARY_DIR}/DCACHE_GUIConfig.cmake
 ################################################################
 
 SET ( IS_DEVEL ON )
-MARK_AS_ADVANCED( IS_DEV )
 
 IF( NOT IS_DEVEL )
 FIND_PACKAGE( GFAL_UTILS REQUIRED )
@@ -101,7 +100,6 @@ ENDIF( NOT IS_DEVEL )
 ################################################################
 
 SET ( USE_GIT ON )
-MARK_AS_ADVANCED( USE_GIT )
 
 IF( USE_GIT )
 FIND_PACKAGE( Git )
@@ -151,7 +149,6 @@ subdirs(src)
 ################################################################
 
 SET ( BUILD_DOCUMENTATION ON )
-MARK_AS_ADVANCED( BUILD_DOCUMENTATION )
 
 IF( BUILD_DOCUMENTATION )
 INCLUDE( Documentation )

@@ -19,7 +19,6 @@ public:
 	void Copy();
 	void Check();
 	void List();
-	void StopCopy();
 	void goToNextFile();
 
 	void setFlags(bool copy, bool check, bool list) {

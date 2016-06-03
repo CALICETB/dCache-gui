@@ -226,9 +226,14 @@ void dCacheMainWindow::Close()
 	emit log("MESSAGE", "dCache-GUI exiting");
 
 	m_proxy->DestroyProxy(timeleft);
-	m_tools->quit();
 
-	delete m_tools;
+	if(m_tools->isRunning())
+	{
+		m_tools->wait();
+		m_tools->quit();
+		delete m_tools;
+	}
+
 	delete m_proxy;
 	delete m_logger;
 

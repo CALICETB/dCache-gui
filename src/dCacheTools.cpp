@@ -43,7 +43,17 @@ void dCacheTools::start()
 void dCacheTools::run()
 {
 	if(m_copy)
-		this->Copy();
+	{
+		while(1)
+		{
+			this->Copy();
+
+			this->sleep(5000);
+
+			if(m_stop)
+				break;
+		}
+	}
 	if(m_list)
 		this->List();
 	if(m_check)
@@ -137,10 +147,7 @@ void dCacheTools::Copy()
 			m_stop = true;
 
 		if(m_stop)
-		{
-			this->StopCopy();
 			return;
-		}
 
 		std::string str = "/usr/bin/gfal-copy --dry-run -n 5 -t 6000 ";
 		str += "file:/";
@@ -179,24 +186,6 @@ void dCacheTools::Copy()
 
 		connect(dCacheCopy, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(finishedProcess(int, QProcess::ExitStatus)));
 		idxProcess++;
-	}
-}
-
-void dCacheTools::StopCopy()
-{
-	if(dCacheCopy->state() == QProcess::Running)
-	{
-		emit log("INFO", "Waiting for last Copy");
-		dCacheCopy->waitForFinished();
-
-		if(dCacheCopy->exitCode() != 0)
-		{
-			emit log("ERROR", dCacheCopy->errorString());
-		}
-
-		m_stop = false;
-
-		dCacheCopy->deleteLater();
 	}
 }
 
@@ -263,10 +252,7 @@ void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus
 		 */
 
 		if(m_stop)
-		{
-			this->StopCopy();
 			return;
-		}
 
 		emit log("DEBUG", QString::fromStdString(str));
 
@@ -348,10 +334,7 @@ void dCacheTools::goToNextFile()
 		 */
 
 		if(m_stop)
-		{
-			this->StopCopy();
 			return;
-		}
 
 		emit log("DEBUG", QString::fromStdString(str));
 

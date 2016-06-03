@@ -26,7 +26,8 @@ set ( CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
  
 find_package(Git)
 if(GIT_FOUND)
-    message("git found: ${GIT_EXECUTABLE}")
+    message("Git found: ${GIT_EXECUTABLE}")
+    message("Pulling last dCache-gui version")
     execute_process(
       COMMAND git pull
       WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
@@ -35,6 +36,8 @@ endif()
 
 # ----- Generate DOXYGEN documentation (optionnal) -----
 OPTION( INSTALL_DOC "Set to OFF to skip build/install Documentation" OFF )
+
+message("Document installation is set to ${INSTALL_DOC}")
 
 # ----- Install doc -----
 if( INSTALL_DOC )
@@ -51,6 +54,10 @@ if( INSTALL_DOC )
 endif()
 
 find_package(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
+
+if(Qt5_FOUND)
+message("Qt version 5 found")
+endif()
 
 SET(CMAKE_AUTOMOC OFF)
 SET(CMAKE_INCLUDE_CURRENT_DIR ON)

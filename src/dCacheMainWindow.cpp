@@ -36,8 +36,8 @@ ui(new Ui::dCacheMainWindow)
 	ui->setupUi(this);
 	this->setWindowTitle("dCache GUI"); //set title of the GUI
 
-	m_logger = new Logger(); //init Logger Widget
-	m_proxy = new ProxyTools(); //init Proxy handler object
+	m_logger = new Logger(this); //init Logger Widget
+	m_proxy = new ProxyTools(this); //init Proxy handler object
 
 	timertime = 500; //timer to update the GUI in ms
 
@@ -122,6 +122,11 @@ ui(new Ui::dCacheMainWindow)
 
 dCacheMainWindow::~dCacheMainWindow()
 {
+	//Cleaning
+	delete m_tools;
+	delete m_proxy;
+	delete m_logger;
+	delete timer;
 	delete ui;
 }
 
@@ -392,11 +397,6 @@ void dCacheMainWindow::Close()
 	//Close the logger widget and GUI
 	m_logger->close();
 	this->close();
-
-	//Cleaning
-	delete m_tools;
-	delete m_proxy;
-	delete m_logger;
 }
 
 //--------------------------------------------------------------------------------------------------------------

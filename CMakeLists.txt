@@ -35,7 +35,7 @@ if(GIT_FOUND)
 endif()
 
 # ----- Generate DOXYGEN documentation (optionnal) -----
-OPTION( INSTALL_DOC "Set to OFF to skip build/install Documentation" OFF )
+OPTION( INSTALL_DOC "Set to OFF to skip build/install Documentation" ON )
 
 message("Document installation is set to ${INSTALL_DOC}")
 

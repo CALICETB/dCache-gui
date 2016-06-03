@@ -44,6 +44,11 @@ public:
 	ProxyTools();
 
 	/**
+	 * Overloaded Constructor
+	 */
+	ProxyTools(QWidget *parent = 0);
+
+	/**
 	 * Destructor
 	 */
 	~ProxyTools();

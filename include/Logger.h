@@ -46,6 +46,11 @@ public:
 	Logger();
 
 	/**
+	 * Overloaded Constructor of the QWidget with QWidget as parent
+	 */
+	Logger(QWidget *parent = 0);
+
+	/**
 	 *  Destructor of the QWidget
 	 */
 	~Logger();

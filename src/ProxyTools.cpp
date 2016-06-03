@@ -35,6 +35,18 @@ ProxyTools::ProxyTools()
 
 //--------------------------------------------------------------------------------------------------------------
 
+ProxyTools::ProxyTools(QWidget *parent)
+{
+	/**
+	 * Constructor
+	 */
+	_password = "";//empty password
+	proxytool = new QProcess();//Initialization of QProcess
+
+}
+
+//--------------------------------------------------------------------------------------------------------------
+
 ProxyTools::~ProxyTools()
 {
 	//Cleaning

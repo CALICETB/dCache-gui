@@ -27,6 +27,27 @@ Logger::Logger()
 
 //-----------------------------------------------------------------------------------------------
 
+Logger::Logger(QWidget *parent)
+{
+	//Set size of the QWidget
+    setMaximumWidth(1000);
+    setMaximumHeight(250);
+
+    this->resize(this->maximumWidth(), this->maximumHeight());
+    this->setWindowTitle("dCache Logger");//Title of the widget
+
+    //set layout
+    QHBoxLayout *pLoggingLayout = new QHBoxLayout();
+    setLayout(pLoggingLayout);
+
+    //Read Only Log
+    m_pLoggingWidget = new QTextEdit();
+    m_pLoggingWidget->setReadOnly(true);
+    pLoggingLayout->addWidget(m_pLoggingWidget);
+}
+
+//-----------------------------------------------------------------------------------------------
+
 Logger::~Logger()
 {
     m_pLoggingWidget->deleteLater();//Cleaning

@@ -77,7 +77,7 @@ public:
 	 * Set the flags for the QThread
 	 * @param copy Boolean set to true if Copy
 	 * @param check Boolean set to true if checking
-	 * @param Boolean set to true if listing
+	 * @param list Boolean set to true if listing
 	 * @return void
 	 */
 	void setFlags(bool copy, bool check, bool list)

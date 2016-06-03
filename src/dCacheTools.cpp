@@ -28,6 +28,7 @@ dCacheTools::dCacheTools()
 
 	isOndCache = false;
 	Checkfilename = "";
+	dry_run = false;
 }
 
 dCacheTools::~dCacheTools()
@@ -189,7 +190,12 @@ void dCacheTools::Copy()
 			return;
 		}
 
-		std::string str = "/usr/bin/gfal-copy --dry-run -n 5 -t 6000 ";
+		std::string str;
+		if(dry_run)
+			str = "/usr/bin/gfal-copy --dry-run -n 5 -t 6000 ";
+		else
+			str = "/usr/bin/gfal-copy -n 5 -t 6000 ";
+
 		str += "file:/";
 		if(m_isSingleFile)
 			str += m_dir.toStdString();
@@ -358,7 +364,12 @@ void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus
 			return;
 		}
 
-		std::string str = "/usr/bin/gfal-copy --dry-run -n 5 -t 6000 ";
+		std::string str;
+		if(dry_run)
+			str = "/usr/bin/gfal-copy --dry-run -n 5 -t 6000 ";
+		else
+			str = "/usr/bin/gfal-copy -n 5 -t 6000 ";
+
 		str += "file:/";
 		if(m_isSingleFile)
 			str += m_dir.toStdString();
@@ -440,7 +451,12 @@ void dCacheTools::goToNextFile()
 			return;
 		}
 
-		std::string str = "/usr/bin/gfal-copy --dry-run -n 5 -t 6000 ";
+		std::string str;
+		if(dry_run)
+			str = "/usr/bin/gfal-copy --dry-run -n 5 -t 6000 ";
+		else
+			str = "/usr/bin/gfal-copy -n 5 -t 6000 ";
+
 		str += "file:/";
 		if(m_isSingleFile)
 			str += m_dir.toStdString();

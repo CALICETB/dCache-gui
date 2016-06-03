@@ -44,7 +44,7 @@ public:
 
 	private:
 	QProcess *dCacheCopy;
-	bool m_copy, m_check, m_list, m_isSingleFile, m_stop, isOndCache;
+	bool m_copy, m_check, m_list, m_isSingleFile, m_stop, isOndCache, dry_run;
 	QString m_dir, m_base, m_output, Checkfilename;
 	int idxProcess, nfiles, Threaddelay, lastrunNumber, m_type, indexfile;
 	QFileInfoList list;

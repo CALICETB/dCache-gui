@@ -107,13 +107,26 @@ void dCacheTools::run()
 	{
 		if(!m_stop)
 			this->Copy();
+		else
+		{
+			emit finished();
+			return;
+		}
 	}
 	if(m_list)
+	{
 		this->List();
+
+		emit finished();
+		return;
+	}
 	if(m_check)
+	{
 		this->Check();
 
-	emit finished();
+		emit finished();
+		return;
+	}
 }
 
 void dCacheTools::List()
@@ -283,8 +296,8 @@ void dCacheTools::Check()
 
 void dCacheTools::Check(QString srm, QString base, QString output, QString file)
 {
-	QProcess *dCacheCheck = new QProcess();
-	dCacheCheck->setProcessChannelMode(QProcess::SeparateChannels);
+	dCacheCopy = new QProcess();
+	dCacheCopy->setProcessChannelMode(QProcess::SeparateChannels);
 
 	std::string str = "/usr/bin/gfal-ls -l ";
 	str += srm.toStdString();
@@ -293,14 +306,14 @@ void dCacheTools::Check(QString srm, QString base, QString output, QString file)
 	str += output.toStdString();
 	str += file.toStdString();
 
-	dCacheCheck->start(QString::fromStdString(str));
+	dCacheCopy->start(QString::fromStdString(str));
 
-	if(!dCacheCheck->waitForStarted())
+	if(!dCacheCopy->waitForStarted())
 	{
-		emit log("ERROR", QString("gfal-ls %1").arg(dCacheCheck->errorString()));
+		emit log("ERROR", QString("gfal-ls %1").arg(dCacheCopy->errorString()));
 	}
 
-	connect(dCacheCheck, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(finishedCheck(int, QProcess::ExitStatus)));
+	connect(dCacheCopy, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(finishedCheck(int, QProcess::ExitStatus)));
 	indexfile++;
 }
 

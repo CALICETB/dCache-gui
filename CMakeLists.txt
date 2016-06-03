@@ -2,12 +2,18 @@
 CMAKE_MINIMUM_REQUIRED( VERSION 2.6 FATAL_ERROR )
 #################################################
 
+#As of CMake 2.6.0 the ELSE() and ENDIF() constructs can be empty
+SET( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS TRUE )
+
 # ----- project name -----
-PROJECT( dCache-gui )
+PROJECT( DCACHE_GUI )
 
 SET( ${PROJECT_NAME}_VERSION_MAJOR 1 )
 SET( ${PROJECT_NAME}_VERSION_MINOR 0 )
 SET( ${PROJECT_NAME}_VERSION_PATCH 0 )
+
+SET( ${PROJECT_NAME}_VERSION
+    "${${PROJECT_NAME}_MAJOR_VERSION}.${${PROJECT_NAME}_MINOR_VERSION}.${${PROJECT_NAME}_PATCH_LEVEL}" )
 
 ###############################
 # Require C++11
@@ -22,7 +28,13 @@ MESSAGE( SEND_ERROR "dCache-gui requires C++11 support. Please upgrade your comp
 ENDIF()
 
 ## Modules path cmake
-set ( CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+set ( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
+
+INCLUDE( FULL_INSTALL_PATH )
+ 
+################################################################
+# Git                                                          #
+################################################################
  
 find_package(Git)
 if(GIT_FOUND)
@@ -34,24 +46,59 @@ if(GIT_FOUND)
     )
 endif()
 
-# ----- Generate DOXYGEN documentation (optionnal) -----
-OPTION( INSTALL_DOC "Set to OFF to skip build/install Documentation" ON )
+#################################################################
+# installation options                                          #
+#################################################################
 
-message("Document installation is set to ${INSTALL_DOC}")
+# change default install prefix
+IF( CMAKE_INSTALL_PREFIX STREQUAL "/usr/local" )
+    SET( CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}" CACHE PATH "Install prefix" FORCE )
+ENDIF( CMAKE_INSTALL_PREFIX STREQUAL "/usr/local" )
 
-# ----- Install doc -----
-if( INSTALL_DOC )
+# default destination for header files: ${CMAKE_INSTALL_PREFIX}/install
+SET( INCLUDE_INSTALL_DIR "include" CACHE PATH "Directory to install the header files" )
+MARK_AS_ADVANCED( INCLUDE_INSTALL_DIR )
 
-    find_package( Doxygen )
+# default destination for executables: ${CMAKE_INSTALL_PREFIX}/install
+SET( BIN_INSTALL_DIR "bin" CACHE PATH "Directory to install the executables" )
+MARK_AS_ADVANCED( INCLUDE_INSTALL_DIR )
 
-    if( DOXYGEN_FOUND )
-        add_subdirectory( ./doc )
-    else()
-        message( SEND_ERROR "Could not find doxygen required to build documentation" )
-        message( "Please install doxygen or set INSTALL_DOC to OFF" )
-    endif()
+# default destination for library files: ${CMAKE_INSTALL_PREFIX}/install
+SET( LIB_INSTALL_DIR "lib" CACHE PATH "Directory to install the libraries" )
+MARK_AS_ADVANCED( LIB_INSTALL_DIR )
 
-endif()
+# default destination for .cmake files: ${CMAKE_INSTALL_PREFIX}/install
+SET( CONFIG_INSTALL_DIR "cmake" CACHE PATH "Directory to install the XXXConfig.cmake files" )
+MARK_AS_ADVANCED( CONFIG_INSTALL_DIR )
+
+# provide nicer directory layout in build directory
+SET( EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}/bin" CACHE PATH
+    "EXECUTABLE_OUTPUT_PATH" FORCE )
+SET( LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/lib" CACHE PATH
+    "LIBRARY_OUTPUT_PATH" FORCE )
+MARK_AS_ADVANCED( EXECUTABLE_OUTPUT_PATH LIBRARY_OUTPUT_PATH )
+
+##################################################################
+# install configuration                                          #
+##################################################################
+#compute install path for bin, lib and include
+FULL_INSTALL_PATH( LIB     FULL_LIB_INSTALL_DIR )
+FULL_INSTALL_PATH( INCLUDE FULL_INCLUDE_INSTALL_DIR )
+
+CONFIGURE_FILE( ${DCACHE_GUI_SOURCE_DIR}/cmake/DCACHE_GUIConfig.cmake.in
+                ${DCACHE_GUI_BINARY_DIR}/DCACHE_GUIConfig.cmake  @ONLY   )
+
+INSTALL( FILES ${DCACHE_GUI_BINARY_DIR}/DCACHE_GUIConfig.cmake
+         DESTINATION ${CONFIG_INSTALL_DIR}                               )
+
+################################################################
+# documentation                                                #
+################################################################
+INCLUDE( Documentation )
+
+################################################################
+# Qt                                                           #
+################################################################
 
 find_package(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
 
@@ -73,3 +120,16 @@ ADD_DEFINITIONS("-Wno-long-long -Wreturn-type -Werror")
 include_directories (${HEADER_DIR})
 
 subdirs(src)
+
+################################################################
+# print status report                                          #
+################################################################
+MESSAGE( STATUS )
+MESSAGE( STATUS "-------------------------------------------------------------------------------" )
+MESSAGE( STATUS "CMAKE_PREFIX_PATH                       = ${CMAKE_PREFIX_PATH}" )
+MESSAGE( STATUS "CMAKE_INSTALL_PREFIX                    = ${CMAKE_INSTALL_PREFIX}" )
+MESSAGE( STATUS "FULL_LIB_INSTALL_DIR                    = ${FULL_LIB_INSTALL_DIR}" )
+MESSAGE( STATUS "FULL_INCLUDE_INSTALL_DIR                = ${FULL_INCLUDE_INSTALL_DIR}" )
+
+MESSAGE( STATUS "Change a value with: cmake -D<Variable>=<Value>" )
+MESSAGE( STATUS "-------------------------------------------------------------------------------" )

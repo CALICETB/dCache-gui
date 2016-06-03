@@ -47,3 +47,10 @@ Temporary Items
 .apdisk
 /.cproject
 /.project
+
+# Documents
+.doc
+.tex
+.html
+.user
+.pdf

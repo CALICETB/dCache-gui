@@ -54,7 +54,7 @@ void dCacheTools::run()
 
 void dCacheTools::List()
 {
-	emit log("INFO", "Listing called");
+	emit log("INFO", QString("Listing Directory %1").arg(m_base+m_output));
 
 	dCacheCopy = new QProcess();
 	dCacheCopy->setProcessChannelMode(QProcess::ForwardedChannels);
@@ -83,7 +83,7 @@ void dCacheTools::List()
 
 void dCacheTools::Copy()
 {
-	emit log("MESSAGE", "gfal-cp");
+	emit log("INFO", "Starting Copying..");
 
 	QLocale::setDefault(QLocale::English);
 
@@ -151,8 +151,6 @@ void dCacheTools::Copy()
             str += filename;
 		 */
 
-		emit log("DEBUG", QString::fromStdString(str));
-
 		dCacheCopy = new QProcess();
 		dCacheCopy->setProcessChannelMode(QProcess::ForwardedChannels);
 		dCacheCopy->start(QString::fromStdString(str));
@@ -175,7 +173,9 @@ void dCacheTools::Check()
 
 void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus)
 {
-	emit log("INFO", "Complete");
+	emit log("INFO", QString("Completed with exit code %1").arg(QString::number(exitCode)));
+
+	this->sleep(10);
 
 	if(idxProcess < nfiles)
 	{
@@ -191,7 +191,7 @@ void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus
 
 		if(current.toTime_t() - fileTime.toTime_t() < 350)
 		{
-			emit log("DEBUG", "File too young. Will be copied later");
+			emit log("DEBUG", "File too young. Going to next file.");
 			idxProcess++;
 			this->goToNextFile();
 			return;
@@ -222,8 +222,6 @@ void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus
 
 		if(m_stop)
 			return;
-
-		emit log("DEBUG", QString::fromStdString(str));
 
 		/* create QProcess object */
 		dCacheCopy = new QProcess();
@@ -246,6 +244,8 @@ void dCacheTools::finishedProcess (int exitCode, QProcess::ExitStatus exitStatus
 
 void dCacheTools::goToNextFile()
 {
+	this->sleep(10);
+
 	if(idxProcess < nfiles)
 	{
 		QFileInfo fileInfo = list.at(idxProcess);
@@ -260,7 +260,7 @@ void dCacheTools::goToNextFile()
 
 		if(current.toTime_t() - fileTime.toTime_t() < 350)
 		{
-			emit log("DEBUG", "File too young. Will be copied later");
+			emit log("DEBUG", "File too young. Going to next file.");
 			idxProcess++;
 			this->goToNextFile();
 			return;
@@ -291,8 +291,6 @@ void dCacheTools::goToNextFile()
 
 		if(m_stop)
 			return;
-
-		emit log("DEBUG", QString::fromStdString(str));
 
 		/* create QProcess object */
 		dCacheCopy = new QProcess();

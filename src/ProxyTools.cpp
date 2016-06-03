@@ -78,7 +78,7 @@ void ProxyTools::DestroyProxy(int timeleft)
 {
 	proxytool->waitForFinished();
 
-	if(timeleft > 0)
+	if(timeleft < 2*3600)
 	{
 		emit log("INFO", "Destroying Proxy");
 

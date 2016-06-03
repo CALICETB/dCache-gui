@@ -39,7 +39,6 @@ ui(new Ui::dCacheMainWindow)
 	connect(ui->ListFiles, SIGNAL(clicked(bool)), this, SLOT(ListFiles()));
 	connect(ui->Exit, SIGNAL(clicked(bool)), this, SLOT(Close()));
 
-	ui->CheckProxy->setEnabled(false);
 	ui->StartCopy->setEnabled(false);
 	ui->StopCopy->setEnabled(false);
 	ui->ListFiles->setEnabled(false);
@@ -85,9 +84,13 @@ void dCacheMainWindow::Configure()
 		{
 			emit log("MESSAGE", "dCache Copy Settings :");
 			if(!OutputDir.isEmpty())
-				emit log("MESSAGE", QString("Input Dir %1\n\tBase Dir %2\n\tOutput Dir %3").arg(InputDir, BaseDir, OutputDir));
+				emit log("MESSAGE", QString("Input Directory : %1\n\t"
+						"Base Directory : %2\n\t"
+						"Output Directory : %3").arg(InputDir, BaseDir, OutputDir));
 			else
-				emit log("MESSAGE", QString("Input Dir %1\n\tBase Dir %2\n\tOutput Dir None").arg(InputDir, BaseDir));
+				emit log("MESSAGE", QString("Input Directory : %1\n\t"
+						"Base Directory : %2\n\t"
+						"No Output directory specified").arg(InputDir, BaseDir));
 
 			ui->StartCopy->setEnabled(true);
 			ui->StopCopy->setEnabled(false);
@@ -108,9 +111,13 @@ void dCacheMainWindow::Configure()
 		{
 			emit log("MESSAGE", "dCache Copy Settings :");
 			if(!OutputDir.isEmpty())
-				emit log("MESSAGE", QString("Input Dir %1\n\tBase Dir %2\n\tOutput Dir %3").arg(InputDir, BaseDir, OutputDir));
+				emit log("MESSAGE", QString("Input Directory : %1\n\t"
+						"Base Directory : %2\n\t"
+						"Output Directory : %3").arg(InputDir, BaseDir, OutputDir));
 			else
-				emit log("MESSAGE", QString("Input Dir %1\n\tBase Dir %2\n\tOutput Dir None").arg(InputDir, BaseDir));
+				emit log("MESSAGE", QString("Input Directory : %1\n\t"
+						"Base Directory : %2\n\t"
+						"No Output directory specified").arg(InputDir, BaseDir));
 
 			ui->StartCopy->setEnabled(true);
 			ui->StopCopy->setEnabled(false);
@@ -229,7 +236,6 @@ void dCacheMainWindow::Close()
 
 	if(m_tools->isRunning())
 	{
-		m_tools->wait();
 		m_tools->quit();
 		delete m_tools;
 	}

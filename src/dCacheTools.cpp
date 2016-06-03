@@ -154,8 +154,6 @@ void dCacheTools::List()
 	{
 		emit log("ERROR", dCacheCopy->errorString());
 	}
-
-	m_list = false;
 }
 
 void dCacheTools::Copy()

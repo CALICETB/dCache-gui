@@ -33,6 +33,8 @@ public:
 	void showPassword();
 	void updateProxy(QString status);
 	void updateMainWindow();
+	void ThreadRunning();
+	void ThreadStopped();
 
 	void StartCopy();
 	void StopCopy();

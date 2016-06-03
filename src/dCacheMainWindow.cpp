@@ -78,7 +78,8 @@ void dCacheMainWindow::init()
 	m_tools = new dCacheTools();
 	connect(this, SIGNAL(Configure_dCacheTool(QString, QString, QString, int, bool)), m_tools, SLOT(Configure(QString, QString, QString, int, bool)));
 	connect(m_tools, SIGNAL(log(QString,QString)), m_logger, SLOT(Log(QString,QString)));
-	connect(m_tools, SIGNAL(finished()), this, SLOT(StopCopy()));
+	connect(m_tools, SIGNAL(finished()), this, SLOT(ThreadStopped()));
+	connect(m_tools, SIGNAL(started()), this, SLOT(ThreadRunning()));
 
 	emit Configure_dCacheTool(InputDir, BaseDir, OutputDir, type, isSingleFile);
 }
@@ -213,7 +214,6 @@ void dCacheMainWindow::StartCopy()
 	this->init();
 	m_tools->setFlags(true, false, false);
 	m_tools->start();
-	m_running = true;
 }
 
 void dCacheMainWindow::ListFiles()
@@ -221,7 +221,6 @@ void dCacheMainWindow::ListFiles()
 	this->init();
 	m_tools->setFlags(false, false, true);
 	m_tools->start();
-	m_running = true;
 }
 
 void dCacheMainWindow::StopCopy()
@@ -238,7 +237,6 @@ void dCacheMainWindow::StopCopy()
 
 	emit log("MESSAGE", "Stop Copy");
 	m_tools->setStopFlag(true);
-	m_running = false;
 }
 
 void dCacheMainWindow::CheckCopy()
@@ -246,7 +244,6 @@ void dCacheMainWindow::CheckCopy()
 	this->init();
 	m_tools->setFlags(false, true, false);
 	m_tools->start();
-	m_running = true;
 }
 
 void dCacheMainWindow::Close()
@@ -340,4 +337,14 @@ void dCacheMainWindow::updateMainWindow()
 		else
 			ui->ProxyValid_label->setText(QString("%1   %2 time left").arg(QString::number(hours), QString::number(minutes)));
 	}
+}
+
+void dCacheMainWindow::ThreadRunning()
+{
+	m_running = true;
+}
+
+void dCacheMainWindow::ThreadStopped()
+{
+	m_running = false;
 }

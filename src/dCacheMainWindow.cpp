@@ -327,8 +327,8 @@ void dCacheMainWindow::updateMainWindow()
 		int minutes = timeleft%3600/60;
 
 		if(timeleft%2 == 0)
-			ui->ProxyValid_label->setText(QString("%1 : %2 time left").arg(QString::number(hours, 'i', 2), QString::number(minutes, 'i', 2)));
+			ui->ProxyValid_label->setText(QString("%1 : %2 time left").arg(QString::number(hours), QString::number(minutes)));
 		else
-			ui->ProxyValid_label->setText(QString("%1   %2 time left").arg(QString::number(hours, 'i', 2), QString::number(minutes, 'i', 2)));
+			ui->ProxyValid_label->setText(QString("%1   %2 time left").arg(QString::number(hours), QString::number(minutes)));
 	}
 }

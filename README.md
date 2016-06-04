@@ -8,6 +8,7 @@ A wiki is available at http://flcwiki.desy.de/GridInstall to install the environ
 
 ## Requirements
 
+* g++ 4.7 minimum
 * CMake 2.6 minimum
 * Qt version 5 REQUIRED
 * Doxygen (optional)

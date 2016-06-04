@@ -27,7 +27,14 @@ cd build
 </pre>
 Then do the build by typing :
 <pre>
-cmake -DCMAKE_PREFIX_PATH=<path/to/Qt5> -DIS_DEVEL=OFF -DCMAKE_INSTALL_PREFIX=<path/to/dCache_src>/build -DUSE_GIT=ON -DBUILD_DOCUMENTATION=ON ..
+cmake -DCMAKE_PREFIX_PATH=/path/to/Qt5/ -DIS_DEVEL=OFF -DCMAKE_INSTALL_PREFIX=/path/to/dCache_src/build -DUSE_GIT=ON -DBUILD_DOCUMENTATION=ON ..
+make
+make install
+</pre>
+or
+<pre>
+export QTDIR=/path/to/Qt5/
+cmake -DIS_DEVEL=OFF -DCMAKE_INSTALL_PREFIX=/path/to/dCache_src/build -DUSE_GIT=ON -DBUILD_DOCUMENTATION=ON ..
 make
 make install
 </pre>

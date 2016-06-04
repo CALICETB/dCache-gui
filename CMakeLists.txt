@@ -149,6 +149,8 @@ ENDIF()
 # Qt                                                           #
 ################################################################
 
+OPTION ( WITH_QT5 "Set to ON to build using Qt 5" OFF )
+
 IF( DEFINED ENV{QTDIR} )
 MESSAGE( STATUS "QT_ROOT_DIR Found in $ENV{QTDIR}" )
 SET( QT_ROOT_DIR "$ENV{QTDIR}" CACHE PATH "Qt directory" FORCE )
@@ -156,9 +158,17 @@ ENDIF ( DEFINED ENV{QTDIR} )
 
 SET( QT_QMAKE_EXECUTABLE ${QT_ROOT_DIR}/bin/qmake )
 
-FIND_PACKAGE(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
+IF( WITH_QT5 )
+FIND_PACKAGE( Qt5 COMPONENTS Core Gui Widgets REQUIRED )
+ELSE ( WITH_QT5 )
+FIND_PACKAGE( Qt4 COMPONENTS QtCore QtGui QtWidgets REQUIRED )
+INCLUDE_DIRECTORIES( ${QT_INCLUDE_DIRS} )
+ADD_DEFINITIONS ( ${QT_DEFINITIONS} )
+INCLUDE( ${QT_USE_FILE} )
+ENDIF( WITH_QT5 )
 
-subdirs(src)
+# ----- Add source directory -----
+ADD_SUBDIRECTORY( ./source )
 
 ################################################################
 # documentation                                                #
@@ -180,6 +190,7 @@ MESSAGE( STATUS "IS_DEVEL                                = ${IS_DEVEL}" )
 MESSAGE( STATUS "GRID_TOOLS_FOUND                        = ${GRID_TOOLS_FOUND}" )
 MESSAGE( STATUS "USE_GIT                                 = ${USE_GIT}" )
 MESSAGE( STATUS "BUILD_DOCUMENTATION                     = ${BUILD_DOCUMENTATION}" )
+MESSAGE( STATUS "WITH_QT5                                = ${WITH_QT5}" )
 MESSAGE( STATUS "QT_ROOT_DIR                             = ${QT_ROOT_DIR}" )
 MESSAGE( STATUS "FULL_LIB_INSTALL_DIR                    = ${FULL_LIB_INSTALL_DIR}" )
 MESSAGE( STATUS "FULL_INCLUDE_INSTALL_DIR                = ${FULL_INCLUDE_INSTALL_DIR}" )

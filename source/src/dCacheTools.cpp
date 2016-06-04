@@ -99,17 +99,17 @@ int dCacheTools::StripRunNumber(QString filename, int type)
 		if(type == 1)//Text files
 		{
 			QStringRef subString(&filename, index+4+3, 5);
-			runNumber = subString.toInt();
+			runNumber = (subString.toString()).toInt();
 		}
 		if(type == 2)//slcio files
 		{
 			QStringRef subString(&filename, index+4, 5);
-			runNumber = subString.toInt();
+			runNumber = (subString.toString()).toInt();
 		}
 		if(type == 3)//raw binary files
 		{
 			QStringRef subString(&filename, index+4, 5);
-			runNumber = subString.toInt();
+			runNumber = (subString.toString()).toInt();
 		}
 		else
 			runNumber = 0;
@@ -122,7 +122,7 @@ int dCacheTools::StripRunNumber(QString filename, int type)
 		if(type == 3)//raw binary files
 		{
 			QStringRef subString(&filename, index+3, 5);
-			runNumber = subString.toInt();
+			runNumber = (subString.toString()).toInt();
 		}
 		else
 			runNumber = 0;

@@ -18,6 +18,6 @@ find_package_handle_standard_args(GFAL_UTILS  DEFAULT_MSG
 MESSAGE( STATUS "" )
 MESSAGE( STATUS "---------------------------------------" )
 MESSAGE( STATUS "GFAL_LS                    = ${GFAL_LS}" )
-MESSAGE( STATUS "GFAL_COPY                = ${GFAL_COPY}" )
+MESSAGE( STATUS "GFAL_COPY                  = ${GFAL_COPY}" )
 MESSAGE( STATUS "---------------------------------------" )
 MESSAGE( STATUS "" )

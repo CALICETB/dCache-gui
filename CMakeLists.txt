@@ -132,6 +132,7 @@ ENDIF()
 ################################################################
 
 IF( DEFINED $ENV{QTDIR} )
+MESSAGE( STATUS "QT_ROOT_DIR Found in $ENV{QTDIR}" )
 SET( QT_ROOT_DIR "$ENV{QTDIR}" CACHE PATH "Qt directory" FORCE )
 ELSE ( DEFINED $ENV{QTDIR} )
 SET( QT_ROOT_DIR "${CMAKE_PREFIX_PATH}" CACHE PATH "Qt directory" FORCE )

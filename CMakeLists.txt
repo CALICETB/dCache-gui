@@ -131,9 +131,17 @@ ENDIF()
 # Qt                                                           #
 ################################################################
 
+IF( DEFINED $ENV{QTDIR} )
+SET( QT_ROOT_DIR $ENV{QTDIR} )
+ELSE ( DEFINED $ENV{QTDIR} )
+SET( QT_ROOT_DIR "${CMAKE_PREFIX_PATH}" CACHE PATH "Qt directory" FORCE )
+ENDIF ( DEFINED $ENV{QTDIR} )
+
+SET( QT_QMAKE_EXECUTABLE ${QT_ROOT_DIR}/bin/qmake )
+
 FIND_PACKAGE(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
 
-SET(CMAKE_AUTOMOC ON)
+SET(CMAKE_AUTOMOC OFF)
 SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # include directories
@@ -168,7 +176,7 @@ MESSAGE( STATUS "IS_DEVEL                                = ${IS_DEVEL}" )
 MESSAGE( STATUS "GRID_TOOLS_FOUND                        = ${GRID_TOOLS_FOUND}" )
 MESSAGE( STATUS "USE_GIT                                 = ${USE_GIT}" )
 MESSAGE( STATUS "BUILD_DOCUMENTATION                     = ${BUILD_DOCUMENTATION}" )
-MESSAGE( STATUS "QT5 PATH                                = ${CMAKE_PREFIX_PATH}" )
+MESSAGE( STATUS "QT_ROOT_DIR                             = ${QT_ROOT_DIR}" )
 MESSAGE( STATUS "FULL_LIB_INSTALL_DIR                    = ${FULL_LIB_INSTALL_DIR}" )
 MESSAGE( STATUS "FULL_INCLUDE_INSTALL_DIR                = ${FULL_INCLUDE_INSTALL_DIR}" )
 

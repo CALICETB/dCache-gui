@@ -1,14 +1,39 @@
 
-qt5_wrap_cpp(dCache_gui_SRC
-             ${HEADER_DIR}/dCacheMainWindow.h
-             ${HEADER_DIR}/dCacheTools.h
-             ${HEADER_DIR}/Logger.h
-             ${HEADER_DIR}/ProxyTools.h)
+SET(CMAKE_AUTOMOC OFF)
+SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-qt5_wrap_ui(dCache_gui_UI ${UI_DIR}/dCacheMainWindow.ui)
+INCLUDE_DIRECTORIES( BEFORE ../include ${Qt5Widgets_INCLUDE_DIRS})
+  
+# require proper c++
+ADD_DEFINITIONS( "-pedantic -Wunused-value -O2" )
+ADD_DEFINITIONS("-Wno-long-long -Wreturn-type -Werror")
 
-add_executable(dCache_gui dCacheMainWindow.cpp dCache-gui.cpp Logger.cpp dCacheTools.cpp ProxyTools.cpp
-               ${dCache_gui_UI} ${dCache_gui_SRC})
-target_link_libraries(dCache_gui ${LIBS})
+SET(QT_LIBRARIES ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES} ${Qt5Gui_LIBRARIES})
 
-qt5_use_modules(dCache_gui Widgets)
+SET ( SRC_FILES 
+	  ../src/dCacheMainWindow.cpp
+      ../src/dCacheTools.cpp
+      ../src/Logger.cpp
+      ../src/ProxyTools.cpp)
+
+SET ( INC_FILES
+      ../include/dCacheMainWindow.h
+      ../include/dCacheTools.h
+      ../include/Logger.h
+      ../include/ProxyTools.h)
+
+QT5_WRAP_CPP(MOC_SRC_FILES ${INC_FILES} )
+
+QT5_WRAP_UI(UI_FILES
+			../ui/dCacheMainWindow.ui)
+
+ADD_LIBRARY( ${PROJECT_NAME} SHARED ${SRC_FILES} ${MOC_SRC_FILES} ${UI_FILES} )
+TARGET_LINK_LIBRARIES( ${PROJECT_NAME} ${QT_LIBRARIES} )
+
+ADD_EXECUTABLE( dCache_start_gui ../main/dCache_gui.cpp )
+TARGET_LINK_LIBRARIES( dCache_start_gui ${PROJECT_NAME} ${PROJECT_NAME} )
+
+QT5_USE_MODULES(dCache_start_gui Core Gui Widgets)
+
+# ----- Install headers -----
+INSTALL_DIRECTORY( ../include DESTINATION . FILES_MATCHING PATTERN "*.h" )

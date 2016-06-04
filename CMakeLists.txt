@@ -13,9 +13,10 @@ SET( ${PROJECT_NAME}_MAJOR_VERSION 1 )
 SET( ${PROJECT_NAME}_MINOR_VERSION 0 )
 SET( ${PROJECT_NAME}_PATCH_LEVEL 0 )
 
-SET( ${PROJECT_NAME}_VERSION
-    "${${PROJECT_NAME}_MAJOR_VERSION}.${${PROJECT_NAME}_MINOR_VERSION}.${${PROJECT_NAME}_PATCH_LEVEL}" )
-
+# library *nix style versioning
+SET( ${PROJECT_NAME}_SOVERSION "${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}" )
+SET( ${PROJECT_NAME}_VERSION   "${${PROJECT_NAME}_SOVERSION}.${${PROJECT_NAME}_VERSION_PATCH}" )
+    
 #################################################################
 # Require C++11                                                 #
 #################################################################
@@ -34,12 +35,15 @@ IF(NOT CMAKE_BUILD_TYPE)
 SET(CMAKE_BUILD_TYPE RelWithDebInfo)
 ENDIF(NOT CMAKE_BUILD_TYPE)
 
+SET( CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}" CACHE STRING "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE )
+
 #################################################################
 # cmake modules                                                 #
 #################################################################
 
 SET ( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 
+INCLUDE ( MacroInstallDirectory )    
 INCLUDE( FULL_INSTALL_PATH )
 
 #################################################################
@@ -86,6 +90,20 @@ CONFIGURE_FILE( ${DCACHE_GUI_SOURCE_DIR}/cmake/DCACHE_GUIConfig.cmake.in
 
 INSTALL( FILES ${DCACHE_GUI_BINARY_DIR}/DCACHE_GUIConfig.cmake
          DESTINATION ${CONFIG_INSTALL_DIR}                               )
+
+# add library install path to the rpath list
+SET( CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib" )
+MARK_AS_ADVANCED( CMAKE_INSTALL_RPATH )
+
+# add install path to the rpath list (apple)
+IF( APPLE )
+    SET( CMAKE_INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib" )
+    MARK_AS_ADVANCED( CMAKE_INSTALL_NAME_DIR )
+ENDIF()
+
+# append link pathes to rpath list
+SET( CMAKE_INSTALL_RPATH_USE_LINK_PATH 1 )
+MARK_AS_ADVANCED( CMAKE_INSTALL_RPATH_USE_LINK_PATH )
 
 ################################################################
 # GFAL Utils                                                   #
@@ -139,19 +157,6 @@ ENDIF ( DEFINED ENV{QTDIR} )
 SET( QT_QMAKE_EXECUTABLE ${QT_ROOT_DIR}/bin/qmake )
 
 FIND_PACKAGE(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
-
-SET(CMAKE_AUTOMOC OFF)
-SET(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-# include directories
-set( HEADER_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include )
-set( UI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ui )
-
-# require proper c++
-ADD_DEFINITIONS( "-pedantic -Wunused-value -O2" )
-ADD_DEFINITIONS("-Wno-long-long -Wreturn-type -Werror")
-
-include_directories (${HEADER_DIR})
 
 subdirs(src)
 

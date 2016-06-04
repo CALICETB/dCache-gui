@@ -94,9 +94,9 @@ INSTALL( FILES ${DCACHE_GUI_BINARY_DIR}/DCACHE_GUIConfig.cmake
 OPTION( IS_DEVEL "Set to ON to skip gfal-utils check" ON )
 
 IF( NOT IS_DEVEL )
-FIND_PACKAGE( GFAL_UTILS REQUIRED )
+FIND_PACKAGE( GRID_TOOLS REQUIRED )
 ELSE( NOT IS_DEVEL )
-SET( GFAL_UTILS_FOUND FALSE )
+SET( GRID_TOOLS_FOUND FALSE )
 ENDIF( NOT IS_DEVEL )
 
 ################################################################
@@ -152,7 +152,7 @@ subdirs(src)
 # documentation                                                #
 ################################################################
 
-OPTION( BUILD_DOCUMENTATION  "Set to OFF to skip build/install Documentation" OFF )
+OPTION( BUILD_DOCUMENTATION  "Set to OFF to skip build/install Documentation" ON )
 
 IF( BUILD_DOCUMENTATION )
 INCLUDE( Documentation )
@@ -165,7 +165,7 @@ MESSAGE( STATUS )
 MESSAGE( STATUS "-------------------------------------------------------------------------------" )
 MESSAGE( STATUS "CMAKE_INSTALL_PREFIX                    = ${CMAKE_INSTALL_PREFIX}" )
 MESSAGE( STATUS "IS_DEVEL                                = ${IS_DEVEL}" )
-MESSAGE( STATUS "GFAL_UTILS_FOUND                        = ${GFAL_UTILS_FOUND}" )
+MESSAGE( STATUS "GRID_TOOLS_FOUND                        = ${GRID_TOOLS_FOUND}" )
 MESSAGE( STATUS "USE_GIT                                 = ${USE_GIT}" )
 MESSAGE( STATUS "BUILD_DOCUMENTATION                     = ${BUILD_DOCUMENTATION}" )
 MESSAGE( STATUS "QT5 PATH                                = ${CMAKE_PREFIX_PATH}" )

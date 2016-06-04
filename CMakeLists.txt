@@ -131,7 +131,7 @@ ENDIF()
 # Qt                                                           #
 ################################################################
 
-find_package(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
+FIND_PACKAGE(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
 
 SET(CMAKE_AUTOMOC ON)
 SET(CMAKE_INCLUDE_CURRENT_DIR ON)

@@ -123,10 +123,6 @@ ui(new Ui::dCacheMainWindow)
 dCacheMainWindow::~dCacheMainWindow()
 {
 	//Cleaning
-	delete m_tools;
-	delete m_proxy;
-	delete m_logger;
-	delete timer;
 	delete ui;
 }
 
@@ -397,6 +393,11 @@ void dCacheMainWindow::Close()
 	//Close the logger widget and GUI
 	m_logger->close();
 	this->close();
+
+	delete m_tools;
+	delete m_proxy;
+	delete m_logger;
+	delete timer;
 }
 
 //--------------------------------------------------------------------------------------------------------------

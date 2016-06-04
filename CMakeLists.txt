@@ -30,11 +30,15 @@ ELSE()
 MESSAGE( SEND_ERROR "dCache-gui requires C++11 support. Please upgrade your compiler !" )
 ENDIF()
 
+IF(NOT CMAKE_BUILD_TYPE)
+SET(CMAKE_BUILD_TYPE RelWithDebInfo)
+ENDIF(NOT CMAKE_BUILD_TYPE)
+
 #################################################################
 # cmake modules                                                 #
 #################################################################
 
-set ( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
+SET ( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 
 INCLUDE( FULL_INSTALL_PATH )
 
@@ -87,7 +91,7 @@ INSTALL( FILES ${DCACHE_GUI_BINARY_DIR}/DCACHE_GUIConfig.cmake
 # GFAL Utils                                                   #
 ################################################################
 
-SET ( IS_DEVEL ON CACHE BOOL "Devel" FORCE )
+OPTION( IS_DEVEL "Set to ON to skip gfal-utils check" ON )
 
 IF( NOT IS_DEVEL )
 FIND_PACKAGE( GFAL_UTILS REQUIRED )
@@ -99,7 +103,7 @@ ENDIF( NOT IS_DEVEL )
 # Git                                                          #
 ################################################################
 
-SET ( USE_GIT ON CACHE BOOL "git" FORCE )
+OPTION ( USE_GIT "Set to OFF to skip git pull" ON )
 
 IF( USE_GIT )
 FIND_PACKAGE( Git )
@@ -148,7 +152,7 @@ subdirs(src)
 # documentation                                                #
 ################################################################
 
-SET ( BUILD_DOCUMENTATION ON CACHE BOOL "Build Documentation" FORCE )
+OPTION( BUILD_DOCUMENTATION  "Set to OFF to skip build/install Documentation" OFF )
 
 IF( BUILD_DOCUMENTATION )
 INCLUDE( Documentation )

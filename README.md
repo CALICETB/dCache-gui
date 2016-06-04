@@ -10,7 +10,7 @@ A wiki is available at http://flcwiki.desy.de/GridInstall to install the environ
 
 * g++ 4.7 minimum
 * CMake 2.6 minimum
-* Qt version 5 REQUIRED
+* Qt version 4.7 or 5 REQUIRED
 * Doxygen (optional)
 * Git (optional)
 * Grid tools REQUIRED (gfal-utils and voms)
@@ -28,14 +28,15 @@ cd build
 </pre>
 Then do the build by typing :
 <pre>
-cmake -DCMAKE_PREFIX_PATH=/path/to/Qt5/ -DIS_DEVEL=OFF -DCMAKE_INSTALL_PREFIX=/path/to/dCache_src/build -DUSE_GIT=ON -DBUILD_DOCUMENTATION=ON ..
+export QTDIR=/path/to/Qt4/
+cmake -DWITH_QT5=OFF -DIS_DEVEL=OFF -DCMAKE_INSTALL_PREFIX=/path/to/dCache_src/build -DUSE_GIT=ON -DBUILD_DOCUMENTATION=ON ..
 make
 make install
 </pre>
 or
 <pre>
 export QTDIR=/path/to/Qt5/
-cmake -DIS_DEVEL=OFF -DCMAKE_INSTALL_PREFIX=/path/to/dCache_src/build -DUSE_GIT=ON -DBUILD_DOCUMENTATION=ON ..
+cmake -DWITH_QT5=ON -DIS_DEVEL=OFF -DCMAKE_INSTALL_PREFIX=/path/to/dCache_src/build -DUSE_GIT=ON -DBUILD_DOCUMENTATION=ON ..
 make
 make install
 </pre>

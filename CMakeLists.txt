@@ -4,7 +4,6 @@ CMAKE_MINIMUM_REQUIRED( VERSION 2.6 FATAL_ERROR )
 
 #As of CMake 2.6.0 the ELSE() and ENDIF() constructs can be empty
 SET( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS TRUE )
-cmake_policy(SET CMP0020 NEW)
 
 # ----- project name -----
 PROJECT( DCACHE_GUI )
@@ -118,56 +117,14 @@ SET( GRID_TOOLS_FOUND FALSE )
 ENDIF( NOT IS_DEVEL )
 
 ################################################################
-# Git                                                          #
-################################################################
-
-OPTION ( USE_GIT "Set to OFF to skip git pull" ON )
-
-IF( USE_GIT )
-FIND_PACKAGE( Git )
-IF( GIT_FOUND )
-
-	MESSAGE( STATUS "" )
-    MESSAGE( STATUS "---------------------------------------" )
-    MESSAGE( STATUS "    Git found: ${GIT_EXECUTABLE}       " )
-    MESSAGE( STATUS "    Pulling last dCache-gui version    " )
-    MESSAGE( STATUS "---------------------------------------" )
-    MESSAGE( STATUS "" )
-    
-    EXECUTE_PROCESS(
-      COMMAND git pull
-      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    )
-ELSE ( GIT_FOUND )
-    MESSAGE( WARNING "************************************************************")
-    MESSAGE( WARNING "*      Git was not found! No pulling can be done.          *")
-    MESSAGE( WARNING "************************************************************")
-ENDIF( GIT_FOUND )
-ENDIF()
-
-################################################################
 # Qt                                                           #
 ################################################################
 
-OPTION ( WITH_QT5 "Set to ON to build using Qt 5" OFF )
 
-IF( DEFINED ENV{QTDIR} )
-MESSAGE( STATUS "QT_ROOT_DIR Found in $ENV{QTDIR}" )
-SET( QT_ROOT_DIR "$ENV{QTDIR}" CACHE PATH "Qt directory" FORCE )
-ELSE ( DEFINED ENV{QTDIR} )
-SET( QT_ROOT_DIR "CMAKE_PREFIX_PATH" CACHE PATH "Qt directory" FORCE )
-ENDIF ( DEFINED ENV{QTDIR} )
-
-SET( QT_QMAKE_EXECUTABLE ${QT_ROOT_DIR}/bin/qmake )
-
-IF( WITH_QT5 )
-FIND_PACKAGE( Qt5 COMPONENTS Core Gui Widgets REQUIRED )
-ELSE ( WITH_QT5 )
 FIND_PACKAGE( Qt4 COMPONENTS QtCore QtGui REQUIRED )
 INCLUDE_DIRECTORIES( ${QT_INCLUDE_DIRS} )
 ADD_DEFINITIONS ( ${QT_DEFINITIONS} )
 INCLUDE( ${QT_USE_FILE} )
-ENDIF( WITH_QT5 )
 
 # ----- Add source directory -----
 ADD_SUBDIRECTORY( ./source )
@@ -190,9 +147,7 @@ MESSAGE( STATUS "---------------------------------------------------------------
 MESSAGE( STATUS "CMAKE_INSTALL_PREFIX                    = ${CMAKE_INSTALL_PREFIX}" )
 MESSAGE( STATUS "IS_DEVEL                                = ${IS_DEVEL}" )
 MESSAGE( STATUS "GRID_TOOLS_FOUND                        = ${GRID_TOOLS_FOUND}" )
-MESSAGE( STATUS "USE_GIT                                 = ${USE_GIT}" )
 MESSAGE( STATUS "BUILD_DOCUMENTATION                     = ${BUILD_DOCUMENTATION}" )
-MESSAGE( STATUS "WITH_QT5                                = ${WITH_QT5}" )
 MESSAGE( STATUS "QT_QMAKE_EXECUTABLE                     = ${QT_QMAKE_EXECUTABLE}" )
 MESSAGE( STATUS "FULL_LIB_INSTALL_DIR                    = ${FULL_LIB_INSTALL_DIR}" )
 MESSAGE( STATUS "FULL_INCLUDE_INSTALL_DIR                = ${FULL_INCLUDE_INSTALL_DIR}" )

@@ -29,6 +29,8 @@
 #include <QCoreApplication>
 #include <QEventLoop>
 
+#include <string>
+
 //--------------------------------------------------------------------------------------------------------------
 
 dCacheTools::dCacheTools()
@@ -451,10 +453,10 @@ void dCacheTools::Copy()
       str += m_output.toStdString();
       str += filename.toStdString();
       str += " lfn:/grid/calice/";
-      str += BaseDir.toStdString();
+      str += m_base.toStdString();
       str += "/";
-      str += OutputDir.toStdString();
-      str += filename;
+      str += m_output.toStdString();
+      str += filename.toStdString();
 
       //Check if the file exist already on the dCache
       this->Check("srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/", m_base, m_output, filename);
@@ -575,10 +577,10 @@ void dCacheTools::finishedProcess(int exitCode, QProcess::ExitStatus exitStatus)
       str += m_output.toStdString();
       str += filename.toStdString();
       str += " lfn:/grid/calice/";
-      str += BaseDir.toStdString();
+      str += m_base.toStdString();
       str += "/";
-      str += OutputDir.toStdString();
-      str += filename;
+      str += m_output.toStdString();
+      str += filename.toStdString();
 
       //Check if the file exist already on the dCache
       this->Check("srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/", m_base, m_output, filename);
@@ -699,10 +701,10 @@ void dCacheTools::goToNextFile()
       str += m_output.toStdString();
       str += filename.toStdString();
       str += " lfn:/grid/calice/";
-      str += BaseDir.toStdString();
+      str += m_base.toStdString();
       str += "/";
-      str += OutputDir.toStdString();
-      str += filename;
+      str += m_output.toStdString();
+      str += filename.toStdString();
 
       //Check if the file exist already on the dCache
       this->Check("srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/", m_base, m_output, filename);

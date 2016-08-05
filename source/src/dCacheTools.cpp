@@ -100,17 +100,17 @@ int dCacheTools::StripRunNumber(QString filename, int type)
     {
       if(type == 1)//Text files
 	{
-	  QStringRef subString(&filename, index+4+3, 5);
+	  QStringRef subString(&filename, index+4, 8);
 	  runNumber = (subString.toString()).toInt();
 	}
       if(type == 2)//slcio files
 	{
-	  QStringRef subString(&filename, index+4, 5);
+	  QStringRef subString(&filename, index+4, 8);
 	  runNumber = (subString.toString()).toInt();
 	}
       if(type == 3)//raw binary files
 	{
-	  QStringRef subString(&filename, index+4, 5);
+	  QStringRef subString(&filename, index+4, 8);
 	  runNumber = (subString.toString()).toInt();
 	}
       else
@@ -123,7 +123,7 @@ int dCacheTools::StripRunNumber(QString filename, int type)
 
       if(type == 3)//raw binary files
 	{
-	  QStringRef subString(&filename, index+3, 5);
+	  QStringRef subString(&filename, index+3, 8);
 	  runNumber = (subString.toString()).toInt();
 	}
       else
@@ -216,6 +216,7 @@ void dCacheTools::List()
   std::string str = "/usr/bin/gfal-ls -l ";
   str += "srm://dcache-se-desy03.desy.de:8443/pnfs/desy.de/calice/";
   str += (m_base+m_output).toStdString();
+  str += "/";
 
   //Start QProcess
   dCacheCopy->start(QString::fromStdString(str));
@@ -452,13 +453,13 @@ void dCacheTools::Copy()
 	}
       str += " srm://dcache-se-desy03.desy.de:8443/pnfs/desy.de/calice/";
       str += m_base.toStdString();
-      str += "/";
       str += m_output.toStdString();
+      str += "/";
       str += filename.toStdString();
       str += " lfn:/grid/calice/";
       str += m_base.toStdString();
-      str += "/";
       str += m_output.toStdString();
+      str += "/";
       str += filename.toStdString();
 
       //Check if the file exist already on the dCache
@@ -576,13 +577,13 @@ void dCacheTools::finishedProcess(int exitCode, QProcess::ExitStatus exitStatus)
 	}
       str += " srm://dcache-se-desy03.desy.de:8443/pnfs/desy.de/calice/";
       str += m_base.toStdString();
-      str += "/";
       str += m_output.toStdString();
+      str += "/";
       str += filename.toStdString();
       str += " lfn:/grid/calice/";
       str += m_base.toStdString();
-      str += "/";
       str += m_output.toStdString();
+      str += "/";
       str += filename.toStdString();
 
       //Check if the file exist already on the dCache
@@ -700,13 +701,13 @@ void dCacheTools::goToNextFile()
 	}
       str += " srm://dcache-se-desy03.desy.de:8443/pnfs/desy.de/calice/";
       str += m_base.toStdString();
-      str += "/";
       str += m_output.toStdString();
+      str += "/";
       str += filename.toStdString();
       str += " lfn:/grid/calice/";
       str += m_base.toStdString();
-      str += "/";
       str += m_output.toStdString();
+      str += "/";
       str += filename.toStdString();
 
       //Check if the file exist already on the dCache

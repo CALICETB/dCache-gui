@@ -1,0 +1,24 @@
+# dCache-guiConfig.cmake.in
+#
+# cmake config file for dCache-gui
+#  dCache-gui_INCLUDE_DIRS  - the dCache-gui include directory
+#  dCache-gui_LIBRARIES     - The libraries needed to use dCache-gui
+#  dCache-gui_DEFINITIONS   - the compile time definitions
+
+
+#fixme: not true if INCLUDE_INSTALL_DIR is absolute path
+SET( dCache-gui_INCLUDE_DIRS "@FULL_INCLUDE_INSTALL_DIR@" )
+SET( dCache-gui_INCLUDE_DIRS "${dCache-gui_INCLUDE_DIRS}")
+
+SET( dCache-gui_LIBRARIES "@FULL_LIB_INSTALL_DIR@/@FULL_LIBRARY_NAME@" )
+
+SET( dCache-gui_DEFINITIONS @dCache-gui_EXPORT_DEFINITIONS@ )
+
+SET( dCache-gui_ROOT_DIR "@CMAKE_INSTALL_PREFIX@" )
+
+SET( dCache-gui_MAJOR_VERSION "@dCache-gui_MAJOR_VERSION@" )
+SET( dCache-gui_MINOR_VERSION "@dCache-gui_MINOR_VERSION@" )
+SET( dCache-gui_PATCH_LEVEL    "@dCache-gui_PATCH_LEVEL@"    )
+
+
+SET( dCache-gui_FOUND TRUE )

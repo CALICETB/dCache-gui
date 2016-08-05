@@ -75,12 +75,8 @@ IF( BUILD_DOCUMENTATION )
     ENDIF()
 ENDIF()
 
-# ---- Generate dCache-guiConfig.h
-CONFIGURE_FILE( "${PROJECT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.h.cmake.in"
-    "${PROJECT_SOURCE_DIR}/source/include/${PROJECT_NAME}Config.h" @ONLY )
-
 # ----- display some variables and write them to cache -----
 DISPLAY_STD_VARIABLES()
 
 # ----- generate and install following configuration files -----
-GENERATE_PACKAGE_CONFIGURATION_FILES( ${PROJECT_NAME}Config.cmake ${PROJECT_NAME}ConfigVersion.cmake ${PROJECT_NAME}LibDeps.cmake )
+GENERATE_PACKAGE_CONFIGURATION_FILES( ${PROJECT_NAME}Config.cmake )

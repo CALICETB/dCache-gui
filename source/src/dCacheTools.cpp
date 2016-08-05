@@ -176,18 +176,21 @@ void dCacheTools::run()
 
   if(m_copy)
     {
+      emit log("INFO", "Copy flag");//Logging
       this->Copy();
       return;
     }
 
   if(m_list)
     {
+      emit log("INFO", "List flag");//Logging
       this->List();
       return;
     }
 
   if(m_check)
     {
+      emit log("INFO", "Check flag");//Logging
       this->Check();
       return;
     }
@@ -211,7 +214,7 @@ void dCacheTools::List()
    * GFAL-LS command
    */
   std::string str = "/usr/bin/gfal-ls -l ";
-  str += "srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/";
+  str += "srm://dcache-se-desy03.desy.de:8443/pnfs/desy.de/calice/";
   str += (m_base+m_output).toStdString();
 
   //Start QProcess
@@ -271,7 +274,7 @@ void dCacheTools::Check()
       /**
        * Call the QProcess method
        */
-      this->Check("srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/", m_base, m_output, filename);
+      this->Check("srm://dcache-se-desy03.desy.de:8443/pnfs/desy.de/calice/", m_base, m_output, filename);
     }
 }
 
@@ -336,7 +339,7 @@ void dCacheTools::finishedCheck(int exitCode, QProcess::ExitStatus exitStatus)
 	  Checkfilename = filename;
 
 	  //Start QProcess again
-	  this->Check("srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/", m_base, m_output, filename);
+	  this->Check("srm://dcache-se-desy03.desy.de:8443/pnfs/desy.de/calice/", m_base, m_output, filename);
 	}
     }
 
@@ -447,7 +450,7 @@ void dCacheTools::Copy()
 	  str += "/";
 	  str += filename.toStdString();
 	}
-      str += " srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/";
+      str += " srm://dcache-se-desy03.desy.de:8443/pnfs/desy.de/calice/";
       str += m_base.toStdString();
       str += "/";
       str += m_output.toStdString();
@@ -459,7 +462,7 @@ void dCacheTools::Copy()
       str += filename.toStdString();
 
       //Check if the file exist already on the dCache
-      this->Check("srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/", m_base, m_output, filename);
+      this->Check("srm://dcache-se-desy03.desy.de:8443/pnfs/desy.de/calice/", m_base, m_output, filename);
 
       //Get Run number
       lastrunNumber = StripRunNumber(filename, m_type);
@@ -507,7 +510,7 @@ void dCacheTools::finishedProcess(int exitCode, QProcess::ExitStatus exitStatus)
 
   emit log("INFO", QString("Completed with exit code %1").arg(QString::number(exitCode)));//Logging
 
-  this->delay(Threaddelay);//Delay QThread by 5 secs
+  this->delay(Threaddelay/Threaddelay);//Delay QThread by 1 secs
 
   //Continue if more files to upload
   if(idxProcess < nfiles)
@@ -571,7 +574,7 @@ void dCacheTools::finishedProcess(int exitCode, QProcess::ExitStatus exitStatus)
 	  str += "/";
 	  str += filename.toStdString();
 	}
-      str += " srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/";
+      str += " srm://dcache-se-desy03.desy.de:8443/pnfs/desy.de/calice/";
       str += m_base.toStdString();
       str += "/";
       str += m_output.toStdString();
@@ -583,7 +586,7 @@ void dCacheTools::finishedProcess(int exitCode, QProcess::ExitStatus exitStatus)
       str += filename.toStdString();
 
       //Check if the file exist already on the dCache
-      this->Check("srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/", m_base, m_output, filename);
+      this->Check("srm://dcache-se-desy03.desy.de:8443/pnfs/desy.de/calice/", m_base, m_output, filename);
 
       //Get Run number
       lastrunNumber = StripRunNumber(filename, m_type);
@@ -633,7 +636,7 @@ void dCacheTools::goToNextFile()
    * Handles case to go to next file
    */
 
-  this->delay(Threaddelay);//Delay QThread by 5 secs
+  this->delay(Threaddelay/Threaddelay);//Delay QThread by 1 secs
 
   if(idxProcess < nfiles)
     {
@@ -695,7 +698,7 @@ void dCacheTools::goToNextFile()
 	  str += "/";
 	  str += filename.toStdString();
 	}
-      str += " srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/";
+      str += " srm://dcache-se-desy03.desy.de:8443/pnfs/desy.de/calice/";
       str += m_base.toStdString();
       str += "/";
       str += m_output.toStdString();
@@ -707,7 +710,7 @@ void dCacheTools::goToNextFile()
       str += filename.toStdString();
 
       //Check if the file exist already on the dCache
-      this->Check("srm://dcache-se-desy.desy.de/pnfs/desy.de/calice/", m_base, m_output, filename);
+      this->Check("srm://dcache-se-desy03.desy.de:8443/pnfs/desy.de/calice/", m_base, m_output, filename);
 
       //Get run number
       lastrunNumber = StripRunNumber(filename, m_type);

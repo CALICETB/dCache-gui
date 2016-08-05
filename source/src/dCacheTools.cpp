@@ -438,9 +438,9 @@ void dCacheTools::Copy()
        */
       std::string str;
       if(dry_run)
-	str = "/usr/bin/gfal-copy --dry-run -n 5 -t 6000 ";
+	str = "/usr/bin/gfal-copy --dry-run -t 6000 ";
       else
-	str = "/usr/bin/gfal-copy -n 5 -t 6000 ";
+	str = "/usr/bin/gfal-copy -t 6000 ";
 
       str += "file:/";
       if(m_isSingleFile)
@@ -562,9 +562,9 @@ void dCacheTools::finishedProcess(int exitCode, QProcess::ExitStatus exitStatus)
        */
       std::string str;
       if(dry_run)
-	str = "/usr/bin/gfal-copy --dry-run -n 5 -t 6000 ";
+	str = "/usr/bin/gfal-copy --dry-run -t 6000 ";
       else
-	str = "/usr/bin/gfal-copy -n 5 -t 6000 ";
+	str = "/usr/bin/gfal-copy -t 6000 ";
 
       str += "file:/";
       if(m_isSingleFile)
@@ -686,9 +686,9 @@ void dCacheTools::goToNextFile()
        */
       std::string str;
       if(dry_run)
-	str = "/usr/bin/gfal-copy --dry-run -n 5 -t 6000 ";
+	str = "/usr/bin/gfal-copy --dry-run -t 6000 ";
       else
-	str = "/usr/bin/gfal-copy -n 5 -t 6000 ";
+	str = "/usr/bin/gfal-copy -t 6000 ";
 
       str += "file:/";
       if(m_isSingleFile)
